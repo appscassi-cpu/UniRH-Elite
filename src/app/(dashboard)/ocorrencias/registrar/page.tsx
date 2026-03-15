@@ -234,7 +234,7 @@ function RegistrarOcorrenciaContent() {
                       <Input
                         type="date"
                         required
-                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-black text-slate-900 opacity-100"
+                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-black text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100"
                         value={p.dataInicio}
                         onChange={(e) => handlePeriodoChange(index, 'dataInicio', e.target.value)}
                       />
@@ -244,7 +244,7 @@ function RegistrarOcorrenciaContent() {
                       <Input
                         type="date"
                         required
-                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-black text-slate-900 opacity-100"
+                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-black text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100"
                         value={p.dataFim}
                         onChange={(e) => handlePeriodoChange(index, 'dataFim', e.target.value)}
                       />

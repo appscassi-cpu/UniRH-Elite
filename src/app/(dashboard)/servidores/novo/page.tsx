@@ -165,7 +165,7 @@ export default function NewServidorPage() {
                   required
                   value={formData.dataNascimento}
                   onChange={(e) => setFormData({ ...formData, dataNascimento: e.target.value })}
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 opacity-100"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100"
                 />
               </div>
               <div className="grid gap-2">
@@ -176,7 +176,7 @@ export default function NewServidorPage() {
                   required
                   value={formData.dataAdmissao}
                   onChange={(e) => setFormData({ ...formData, dataAdmissao: e.target.value })}
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 opacity-100"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100"
                 />
               </div>
             </div>
