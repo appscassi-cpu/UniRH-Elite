@@ -9,10 +9,12 @@ import {
   UserCircle, 
   ChevronRight,
   Trophy,
-  Timer
+  Timer,
+  Plus
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { format, isAfter, isBefore, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import Link from 'next/link';
@@ -66,9 +68,15 @@ export default function FeriasRankingPage() {
           <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
             Ranking de <span className="text-amber-500 italic">Férias</span>
           </h1>
-          <p className="text-slate-500 font-medium text-lg italic">
+          <p className="text-slate-500 font-medium text-lg italic mb-6">
             Cronograma estratégico de descanso do quadro elite
           </p>
+          <Button asChild className="w-full h-16 text-xl font-black rounded-2xl shadow-2xl shadow-amber-500/20 transition-all hover:scale-[1.01] active:scale-[0.99] mt-4 bg-amber-500 hover:bg-amber-600">
+            <Link href="/ocorrencias/registrar?tipo=Férias">
+              <Plus className="w-6 h-6 mr-3" />
+              Registrar Novo Período de Férias
+            </Link>
+          </Button>
         </div>
       </div>
 

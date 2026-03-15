@@ -52,7 +52,9 @@ function RegistrarOcorrenciaContent() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
-  const [tipo, setTipo] = useState('');
+  // Pre-seleciona o tipo se vier via URL (útil para o acesso rápido de férias)
+  const initialTipo = searchParams.get('tipo') || '';
+  const [tipo, setTipo] = useState(initialTipo);
   const [servidorId, setServidorId] = useState(searchParams.get('servidorId') || '');
   const [observacao, setObservacao] = useState('');
   const [periodos, setPeriodos] = useState<Periodo[]>([{ dataInicio: '', dataFim: '', dias: 0 }]);
