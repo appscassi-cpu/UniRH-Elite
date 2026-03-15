@@ -90,7 +90,7 @@ export default function DashboardPage() {
           Analytics em tempo real
         </div>
         <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center justify-center gap-3">
-          Olá, {profile?.nome?.split(' ')[0]}
+          Olá, {profile?.nome || 'Lilian Tenório'}
           {isAdmin && <ShieldCheck className="w-6 h-6 text-primary animate-pulse" />}
         </h1>
         <p className="text-slate-500 font-medium">Bem-vindo ao centro de comando.</p>

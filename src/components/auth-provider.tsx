@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // Lógica de Inicialização Automática para o Administrador Mestre
             if (firebaseUser.email === 'litencarv@uems.br') {
               const newProfile: UserProfile = {
-                nome: "Lilian",
+                nome: "Lilian Tenório",
                 email: firebaseUser.email,
                 perfil: 'admin'
               };
