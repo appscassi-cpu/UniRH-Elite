@@ -102,26 +102,26 @@ export default function DashboardPage() {
       icon: CalendarDays, 
       color: 'text-rose-600', 
       bg: 'bg-rose-500/10', 
-      href: '/ocorrencias', // Redireciona para a lista geral para filtro manual ou pode ser personalizado
+      href: '/ocorrencias',
       borderColor: 'border-rose-500/20'
     },
     { 
       label: 'Atestados Médicos', 
       value: stats.atestadosMes, 
       icon: FileText, 
-      color: 'text-amber-600', 
-      bg: 'bg-amber-500/10', 
+      color: 'text-emerald-600', 
+      bg: 'bg-emerald-500/10', 
       href: '/ocorrencias',
-      borderColor: 'border-amber-500/20'
+      borderColor: 'border-emerald-500/20'
     },
     { 
       label: 'Férias Ativas', 
       value: stats.servidoresFerias, 
       icon: Umbrella, 
-      color: 'text-emerald-600', 
-      bg: 'bg-emerald-500/10', 
+      color: 'text-amber-500', 
+      bg: 'bg-amber-500/10', 
       href: '/ferias',
-      borderColor: 'border-emerald-500/20'
+      borderColor: 'border-amber-500/20'
     },
   ];
 
