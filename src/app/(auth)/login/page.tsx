@@ -10,11 +10,11 @@ import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck, Lock } from 'lucide-react';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('litencarv@uems.br');
+  const [password, setPassword] = useState('Ltc7650');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
@@ -29,7 +29,7 @@ export default function LoginPage() {
       toast({
         variant: "destructive",
         title: "Erro ao entrar",
-        description: "Verifique suas credenciais e tente novamente.",
+        description: "Verifique as credenciais de acesso único e tente novamente.",
       });
     } finally {
       setLoading(false);
@@ -46,14 +46,20 @@ export default function LoginPage() {
             </div>
           </div>
           <CardTitle className="text-3xl font-headline font-bold text-primary">UniRH</CardTitle>
-          <CardDescription>
-            Controle de servidores e ocorrências escolares
+          <CardDescription className="text-balance">
+            Sistema de acesso único para gestão de servidores e ocorrências escolares.
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleLogin}>
           <CardContent className="space-y-4">
+            <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg flex items-start gap-3 mb-2">
+              <Lock className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+              <p className="text-xs text-blue-700">
+                Este sistema utiliza um <strong>cadastro único</strong>. As credenciais já foram preenchidas para sua conveniência.
+              </p>
+            </div>
             <div className="space-y-2">
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="email">E-mail de Acesso</Label>
               <Input
                 id="email"
                 type="email"
@@ -61,7 +67,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="h-12"
+                className="h-12 border-2 focus:ring-primary"
               />
             </div>
             <div className="space-y-2">
@@ -73,13 +79,13 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="h-12"
+                className="h-12 border-2 focus:ring-primary"
               />
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full h-12 text-lg font-semibold" disabled={loading}>
-              {loading ? "Entrando..." : "Entrar no Sistema"}
+            <Button type="submit" className="w-full h-12 text-lg font-semibold shadow-md" disabled={loading}>
+              {loading ? "Autenticando..." : "Entrar no Sistema"}
             </Button>
           </CardFooter>
         </form>
