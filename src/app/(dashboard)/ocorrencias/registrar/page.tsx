@@ -52,12 +52,15 @@ function RegistrarOcorrenciaContent() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
-  // Pre-seleciona o tipo se vier via URL (útil para o acesso rápido de férias)
+  // Pre-seleciona o tipo se vier via URL
   const initialTipo = searchParams.get('tipo') || '';
   const [tipo, setTipo] = useState(initialTipo);
   const [servidorId, setServidorId] = useState(searchParams.get('servidorId') || '');
   const [observacao, setObservacao] = useState('');
   const [periodos, setPeriodos] = useState<Periodo[]>([{ dataInicio: '', dataFim: '', dias: 0 }]);
+
+  // Filtra as opções de tipos baseado na origem do acesso
+  const tiposDisponiveis = initialTipo === 'Férias' ? ['Férias'] : OCORRENCIA_TIPOS;
 
   useEffect(() => {
     async function fetchServidores() {
@@ -216,7 +219,7 @@ function RegistrarOcorrenciaContent() {
                   <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
-                  {OCORRENCIA_TIPOS.map((t) => (
+                  {tiposDisponiveis.map((t) => (
                     <SelectItem key={t} value={t}>{t}</SelectItem>
                   ))}
                 </SelectContent>
