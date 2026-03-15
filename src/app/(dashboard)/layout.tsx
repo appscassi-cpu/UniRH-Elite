@@ -78,8 +78,8 @@ export default function DashboardLayout({
         
         <div className="mt-8 text-center space-y-2">
           <h2 className="text-3xl font-black text-slate-800 tracking-tight flex items-center justify-center gap-3">
-            <ShieldCheck className="w-8 h-8 text-primary animate-pulse" />
             Olá, Lilian Tenório
+            <ShieldCheck className="w-8 h-8 text-primary animate-pulse" />
           </h2>
           <p className="text-slate-500 font-medium">
             Bem-vinda ao centro de comando UniRH
