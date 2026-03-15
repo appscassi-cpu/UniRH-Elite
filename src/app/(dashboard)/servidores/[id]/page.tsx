@@ -2,13 +2,12 @@
 "use client";
 
 import { useEffect, useState, use } from 'react';
-import { doc, getDoc, collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
-  ArrowLeft, 
   Phone, 
   MapPin, 
   Briefcase, 
@@ -40,14 +39,24 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
       }
     }
 
+    // Buscamos ocorrências apenas por servidorId e ordenamos em memória para evitar erros de índice composto
     const oQuery = query(
       collection(db, 'ocorrencias'), 
-      where('servidorId', '==', id),
-      orderBy('dataRegistro', 'desc')
+      where('servidorId', '==', id)
     );
     
     const unsubscribe = onSnapshot(oQuery, (snapshot) => {
-      setOcorrencias(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      // Ordenação manual em memória (mais recente primeiro)
+      const sortedData = data.sort((a: any, b: any) => {
+        const dateA = a.dataRegistro?.seconds || 0;
+        const dateB = b.dataRegistro?.seconds || 0;
+        return dateB - dateA;
+      });
+      setOcorrencias(sortedData);
+      setLoading(false);
+    }, (error) => {
+      console.error("Erro ao carregar linha do tempo:", error);
       setLoading(false);
     });
 

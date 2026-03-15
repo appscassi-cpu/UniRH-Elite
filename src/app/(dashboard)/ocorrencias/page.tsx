@@ -3,7 +3,7 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { collection, query, onSnapshot, orderBy, where } from 'firebase/firestore';
+import { collection, query, onSnapshot, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { 
   Table, 
@@ -16,16 +16,13 @@ import {
 import { 
   Search, 
   CalendarPlus, 
-  FileText,
-  Filter,
-  ArrowLeft
+  Filter
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
 function OcorrenciasListContent() {
@@ -36,14 +33,21 @@ function OcorrenciasListContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let q = query(collection(db, 'ocorrencias'), orderBy('dataRegistro', 'desc'));
+    // Buscamos todas as ocorrências ordenadas por data para evitar a necessidade de índices compostos complexos
+    const q = query(collection(db, 'ocorrencias'), orderBy('dataRegistro', 'desc'));
     
-    if (tipoFilter) {
-      q = query(collection(db, 'ocorrencias'), where('tipo', '==', tipoFilter), orderBy('dataRegistro', 'desc'));
-    }
-
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      setOcorrencias(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      let data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      
+      // Filtramos por tipo em memória caso o filtro esteja ativo
+      if (tipoFilter) {
+        data = data.filter(item => item.tipo === tipoFilter);
+      }
+      
+      setOcorrencias(data);
+      setLoading(false);
+    }, (error) => {
+      console.error("Erro ao sincronizar ocorrências:", error);
       setLoading(false);
     });
 
