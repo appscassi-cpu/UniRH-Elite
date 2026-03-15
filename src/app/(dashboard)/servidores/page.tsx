@@ -105,82 +105,84 @@ export default function ServidoresListPage() {
             <p className="text-xl font-medium text-muted-foreground">Nenhum servidor encontrado na base de dados.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 w-full">
+          <div className="grid grid-cols-1 gap-4 w-full">
             {filtered.map((servidor) => (
-              <Card key={servidor.id} className="rounded-[2.5rem] border-2 border-slate-100 shadow-xl overflow-hidden group hover:border-primary/40 transition-all bg-white">
-                <CardContent className="p-6 md:p-8 space-y-6">
-                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+              <Card key={servidor.id} className="rounded-[2rem] border-2 border-slate-100 shadow-xl overflow-hidden group hover:border-primary/40 transition-all bg-white">
+                <CardContent className="p-4 md:p-6 space-y-4">
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 lg:gap-8">
                     {/* Identificação Principal */}
-                    <div className="flex items-center gap-6 min-w-[300px]">
-                      <div className="p-4 bg-primary/10 rounded-[2rem] shrink-0 group-hover:bg-primary group-hover:rotate-6 transition-all duration-500">
-                        <UserCircle className="w-10 h-10 text-primary group-hover:text-white" />
+                    <div className="flex items-center gap-4 lg:gap-6 flex-1 min-w-0">
+                      <div className="p-3 bg-primary/10 rounded-2xl shrink-0 group-hover:bg-primary group-hover:rotate-6 transition-all duration-500 hidden sm:flex">
+                        <UserCircle className="w-8 h-8 text-primary group-hover:text-white" />
                       </div>
-                      <div className="space-y-1">
-                        <h3 className="font-black text-slate-900 text-2xl tracking-tight leading-none uppercase">{servidor.nome}</h3>
-                        <div className="flex items-center gap-2 text-slate-500 font-mono text-sm font-bold tracking-widest uppercase">
-                          <IdCard className="w-4 h-4" />
+                      <div className="space-y-1 flex-1 min-w-0">
+                        <h3 className="font-black text-slate-900 text-xl md:text-2xl tracking-tight leading-none uppercase truncate whitespace-nowrap">
+                          {servidor.nome}
+                        </h3>
+                        <div className="flex items-center gap-2 text-slate-500 font-mono text-xs md:text-sm font-bold tracking-widest uppercase">
+                          <IdCard className="w-3.5 h-3.5" />
                           MAT: {servidor.matricula}
                         </div>
                       </div>
                     </div>
 
                     {/* Dados Cadastrais */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 flex-1 lg:px-12">
-                      <div className="flex items-center gap-4 text-slate-700">
-                        <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center shrink-0">
-                          <Briefcase className="w-6 h-6 text-primary/70" />
+                    <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 flex-1 lg:px-6">
+                      <div className="flex items-center gap-3 text-slate-700 min-w-0">
+                        <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 hidden sm:flex">
+                          <Briefcase className="w-5 h-5 text-primary/70" />
                         </div>
-                        <div>
-                          <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Cargo</p>
-                          <p className="font-bold text-lg text-slate-800">{servidor.cargo}</p>
+                        <div className="min-w-0">
+                          <p className="text-[9px] text-slate-400 uppercase font-black tracking-widest">Cargo</p>
+                          <p className="font-bold text-sm md:text-lg text-slate-800 truncate">{servidor.cargo}</p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-4 text-slate-600">
-                        <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center shrink-0">
-                          <MapPin className="w-6 h-6 text-slate-400" />
+                      <div className="flex items-center gap-3 text-slate-600 min-w-0">
+                        <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 hidden sm:flex">
+                          <MapPin className="w-5 h-5 text-slate-400" />
                         </div>
-                        <div>
-                          <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Setor</p>
-                          <p className="font-bold text-lg text-slate-800">{servidor.setor}</p>
+                        <div className="min-w-0">
+                          <p className="text-[9px] text-slate-400 uppercase font-black tracking-widest">Setor</p>
+                          <p className="font-bold text-sm md:text-lg text-slate-800 truncate">{servidor.setor}</p>
                         </div>
                       </div>
                     </div>
 
                     {/* Botões de Ação */}
-                    <div className="flex items-center gap-3 pt-6 lg:pt-0 border-t lg:border-t-0 border-dashed border-slate-200">
-                      <Button variant="outline" size="lg" asChild className="flex-1 lg:flex-none h-14 rounded-2xl font-black border-2 hover:bg-primary/5 hover:text-primary transition-all shadow-md px-8 hover-3d">
+                    <div className="flex items-center gap-2 pt-4 lg:pt-0 border-t lg:border-t-0 border-dashed border-slate-200">
+                      <Button variant="outline" size="sm" asChild className="flex-1 lg:flex-none h-10 md:h-12 rounded-xl font-black border-2 hover:bg-primary/5 hover:text-primary transition-all shadow-md px-4 md:px-6 hover-3d text-xs md:text-sm">
                         <Link href={`/servidores/${servidor.id}`}>
-                          <Eye className="w-6 h-6 mr-2" />
-                          Ver Perfil
+                          <Eye className="w-4 h-4 md:w-5 md:h-5 mr-2" />
+                          Perfil
                         </Link>
                       </Button>
                       
                       {isAdmin && (
-                        <div className="flex gap-3">
-                          <Button variant="outline" size="icon" asChild className="w-14 h-14 rounded-2xl border-2 hover:bg-indigo-50 hover:text-indigo-600 transition-all shadow-md hover-3d">
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="icon" asChild className="w-10 h-10 md:w-12 md:h-12 rounded-xl border-2 hover:bg-indigo-50 hover:text-indigo-600 transition-all shadow-md hover-3d">
                             <Link href={`/servidores/${servidor.id}/editar`}>
-                              <Edit className="w-6 h-6" />
+                              <Edit className="w-4 h-4 md:w-5 md:h-5" />
                             </Link>
                           </Button>
                           
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button variant="outline" size="icon" className="w-14 h-14 rounded-2xl border-2 text-destructive hover:bg-rose-50 transition-all shadow-md hover-3d">
-                                <Trash2 className="w-6 h-6" />
+                              <Button variant="outline" size="icon" className="w-10 h-10 md:w-12 md:h-12 rounded-xl border-2 text-destructive hover:bg-rose-50 transition-all shadow-md hover-3d">
+                                <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
                               </Button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent className="rounded-[3rem] p-10 border-2 shadow-3xl">
+                            <AlertDialogContent className="rounded-[2.5rem] p-6 md:p-10 border-2 shadow-3xl">
                               <AlertDialogHeader>
-                                <AlertDialogTitle className="text-3xl font-black tracking-tighter text-slate-900">Protocolo de Exclusão</AlertDialogTitle>
-                                <AlertDialogDescription className="text-lg font-medium leading-relaxed text-slate-500 italic mt-4">
+                                <AlertDialogTitle className="text-2xl md:text-3xl font-black tracking-tighter text-slate-900 leading-tight">Protocolo de Exclusão</AlertDialogTitle>
+                                <AlertDialogDescription className="text-base md:text-lg font-medium leading-relaxed text-slate-500 italic mt-4">
                                   Confirmar a remoção definitiva de <strong className="text-slate-900 not-italic">{servidor.nome}</strong>? Todos os dados históricos e ocorrências serão perdidos permanentemente.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
-                              <AlertDialogFooter className="mt-8 gap-4">
-                                <AlertDialogCancel className="rounded-2xl h-14 text-lg font-black border-2">Cancelar Operação</AlertDialogCancel>
+                              <AlertDialogFooter className="mt-8 gap-3">
+                                <AlertDialogCancel className="rounded-xl h-12 md:h-14 text-sm md:text-lg font-black border-2">Cancelar</AlertDialogCancel>
                                 <AlertDialogAction 
                                   onClick={() => handleDelete(servidor.id)} 
-                                  className="bg-destructive hover:bg-destructive/90 rounded-2xl h-14 text-lg font-black shadow-2xl shadow-destructive/20"
+                                  className="bg-destructive hover:bg-destructive/90 rounded-xl h-12 md:h-14 text-sm md:text-lg font-black shadow-2xl shadow-destructive/20"
                                 >
                                   Confirmar Exclusão
                                 </AlertDialogAction>
