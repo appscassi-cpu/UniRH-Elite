@@ -43,7 +43,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const profileDoc = await getDoc(profileRef);
           
           if (profileDoc.exists()) {
-            setProfile(profileDoc.data() as UserProfile);
+            const data = profileDoc.data() as UserProfile;
+            // Força a atualização do nome se for a Lilian e estiver com o nome antigo
+            if (firebaseUser.email === 'litencarv@uems.br' && data.nome !== 'Lilian Tenório') {
+              await setDoc(profileRef, { ...data, nome: 'Lilian Tenório' }, { merge: true });
+              setProfile({ ...data, nome: 'Lilian Tenório' });
+            } else {
+              setProfile(data);
+            }
           } else {
             // Lógica de Inicialização Automática para Lilian Tenório
             if (firebaseUser.email === 'litencarv@uems.br') {
