@@ -1,13 +1,15 @@
+
 "use client";
 
 import { useAuth } from '@/components/auth-provider';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ShieldAlert, LogOut, ScrollText, ShieldCheck } from 'lucide-react';
+import { ShieldAlert, LogOut, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
 import { auth as firebaseAuth } from '@/lib/firebase';
+import Link from 'next/link';
 
 export default function DashboardLayout({
   children,
@@ -16,6 +18,8 @@ export default function DashboardLayout({
 }) {
   const { user, profile, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+  const isHome = pathname === '/';
 
   useEffect(() => {
     if (!loading && !user) {
@@ -60,31 +64,24 @@ export default function DashboardLayout({
 
   return (
     <main className="container mx-auto px-4 py-8 pb-32 animate-in fade-in duration-500">
-      <div className="flex flex-col items-center justify-center mb-12 animate-in zoom-in-95 duration-700">
-        <div className="p-4 bg-primary rounded-[2.5rem] shadow-2xl shadow-primary/40 mb-4 rotate-3 hover:rotate-0 transition-transform duration-500">
-          <ScrollText className="w-12 h-12 text-white" />
+      {!isHome && (
+        <div className="mb-8 flex justify-start">
+          <Button 
+            variant="ghost" 
+            asChild 
+            className="group hover:bg-primary/10 rounded-full pl-2 pr-6 h-12 transition-all duration-300 shadow-sm hover:shadow-md border border-transparent hover:border-primary/20"
+          >
+            <Link href="/">
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mr-3 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+              </div>
+              <span className="font-bold text-slate-700 group-hover:text-primary transition-colors">
+                Voltar ao Início
+              </span>
+            </Link>
+          </Button>
         </div>
-        <h1 className="text-5xl font-black text-slate-900 tracking-tighter text-center">
-          UniRH <span className="text-primary italic">Elite</span>
-        </h1>
-        <div className="flex items-center gap-2 mt-2">
-          <div className="h-[2px] w-4 bg-primary/30 rounded-full" />
-          <p className="text-[10px] font-bold text-primary uppercase tracking-[0.3em]">
-            Gestão de Alta Performance
-          </p>
-          <div className="h-[2px] w-4 bg-primary/30 rounded-full" />
-        </div>
-        
-        <div className="mt-8 text-center space-y-2">
-          <h2 className="text-3xl font-black text-slate-800 tracking-tight flex items-center justify-center gap-3">
-            Olá, Lilian Tenório
-            <ShieldCheck className="w-8 h-8 text-primary animate-pulse" />
-          </h2>
-          <p className="text-slate-500 font-medium">
-            Bem-vinda ao centro de comando UniRH
-          </p>
-        </div>
-      </div>
+      )}
       {children}
     </main>
   );

@@ -2,9 +2,8 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { collection, query, onSnapshot, where, Timestamp, getDocs } from 'firebase/firestore';
+import { collection, query, where, Timestamp, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { Card, CardContent } from '@/components/ui/card';
 import { 
   Users, 
   CalendarDays, 
@@ -13,7 +12,9 @@ import {
   Plus, 
   List, 
   ClipboardPen, 
-  ChevronRight
+  ChevronRight,
+  ScrollText,
+  ShieldCheck
 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth-provider';
@@ -115,7 +116,34 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 perspective-container">
-      {/* Estatísticas - Formato Escudo Institucional */}
+      {/* Cabeçalho de Boas-vindas Exclusivo do Painel */}
+      <div className="flex flex-col items-center justify-center mb-12 animate-in zoom-in-95 duration-700">
+        <div className="p-4 bg-primary rounded-[2.5rem] shadow-2xl shadow-primary/40 mb-4 rotate-3 hover:rotate-0 transition-transform duration-500">
+          <ScrollText className="w-12 h-12 text-white" />
+        </div>
+        <h1 className="text-5xl font-black text-slate-900 tracking-tighter text-center">
+          UniRH <span className="text-primary italic">Elite</span>
+        </h1>
+        <div className="flex items-center gap-2 mt-2">
+          <div className="h-[2px] w-4 bg-primary/30 rounded-full" />
+          <p className="text-[10px] font-bold text-primary uppercase tracking-[0.3em]">
+            Gestão de Alta Performance
+          </p>
+          <div className="h-[2px] w-4 bg-primary/30 rounded-full" />
+        </div>
+        
+        <div className="mt-8 text-center space-y-2">
+          <h2 className="text-3xl font-black text-slate-800 tracking-tight flex items-center justify-center gap-3">
+            Olá, Lilian Tenório
+            <ShieldCheck className="w-8 h-8 text-primary animate-pulse" />
+          </h2>
+          <p className="text-slate-500 font-medium">
+            Bem-vinda ao centro de comando UniRH
+          </p>
+        </div>
+      </div>
+
+      {/* Estatísticas */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
         {statsCards.map((card) => (
           <Link href={card.href} key={card.label} className="group">
@@ -148,7 +176,7 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Ações do Sistema - Formato Horizontal Elite Badge */}
+      {/* Ações do Sistema */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-black tracking-tight text-slate-900 uppercase italic">Ações do Sistema</h2>
