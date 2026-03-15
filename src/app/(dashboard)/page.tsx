@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -83,12 +84,12 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 perspective-container">
-      <header className="space-y-2 text-center sm:text-left">
-        <div className="flex items-center justify-center sm:justify-start gap-2 text-primary font-bold tracking-widest text-[10px] uppercase">
+      <header className="space-y-2 text-center">
+        <div className="flex items-center justify-center gap-2 text-primary font-bold tracking-widest text-[10px] uppercase">
           <TrendingUp className="w-3 h-3" />
           Analytics em tempo real
         </div>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center justify-center sm:justify-start gap-3">
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center justify-center gap-3">
           Olá, {profile?.nome?.split(' ')[0]}
           {isAdmin && <ShieldCheck className="w-6 h-6 text-primary animate-pulse" />}
         </h1>
