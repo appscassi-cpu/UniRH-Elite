@@ -184,7 +184,7 @@ function RegistrarOcorrenciaContent() {
                 value={servidorId} 
                 onValueChange={setServidorId}
               >
-                <SelectTrigger className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg">
+                <SelectTrigger className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900">
                   <SelectValue placeholder="Selecione um servidor" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -201,11 +201,10 @@ function RegistrarOcorrenciaContent() {
                 value={tipo} 
                 onValueChange={(val) => {
                   setTipo(val);
-                  // Se mudar para férias, inicializa com 1 mas permite adicionar mais
                   if (val === 'Férias' && periodos.length === 0) setPeriodos([{dataInicio: '', dataFim: '', dias: 0}]);
                 }}
               >
-                <SelectTrigger className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg">
+                <SelectTrigger className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900">
                   <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -236,7 +235,7 @@ function RegistrarOcorrenciaContent() {
                       <Input
                         type="date"
                         required
-                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-bold"
+                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-black text-slate-900"
                         value={p.dataInicio}
                         onChange={(e) => handlePeriodoChange(index, 'dataInicio', e.target.value)}
                       />
@@ -246,7 +245,7 @@ function RegistrarOcorrenciaContent() {
                       <Input
                         type="date"
                         required
-                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-bold"
+                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-black text-slate-900"
                         value={p.dataFim}
                         onChange={(e) => handlePeriodoChange(index, 'dataFim', e.target.value)}
                       />
@@ -298,7 +297,7 @@ function RegistrarOcorrenciaContent() {
               <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Memória de Observações</Label>
               <Textarea
                 placeholder="Descreva detalhes importantes para o histórico..."
-                className="min-h-[120px] border-none bg-slate-100/50 rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-medium text-lg"
+                className="min-h-[120px] border-none bg-slate-100/50 rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-400"
                 value={observacao}
                 onChange={(e) => setObservacao(e.target.value)}
               />
@@ -318,7 +317,7 @@ function RegistrarOcorrenciaContent() {
                     <div className="p-3 bg-primary/10 rounded-full">
                       <Upload className="w-8 h-8 text-primary" />
                     </div>
-                    <span className="text-base font-black text-slate-700">
+                    <span className="text-base font-black text-slate-900">
                       {file ? file.name : "Anexar Documento"}
                     </span>
                     <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Imagens ou PDF • Máx 5MB</span>
