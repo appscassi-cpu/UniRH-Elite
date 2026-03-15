@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -46,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (profileDoc.exists()) {
             setProfile(profileDoc.data() as UserProfile);
           } else {
-            // Lógica de Inicialização Automática para o Administrador Mestre
+            // Lógica de Inicialização Automática para Lilian Tenório
             if (firebaseUser.email === 'litencarv@uems.br') {
               const newProfile: UserProfile = {
                 nome: "Lilian Tenório",
