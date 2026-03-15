@@ -67,15 +67,15 @@ export default function DashboardLayout({
       {!isHome && (
         <div className="mb-8 flex justify-start">
           <Button 
-            variant="ghost" 
+            variant="outline" 
             asChild 
-            className="group hover:bg-primary/10 rounded-full pl-2 pr-6 h-12 transition-all duration-300 shadow-sm hover:shadow-md border border-transparent hover:border-primary/20"
+            className="group hover:bg-primary/5 rounded-full pl-2 pr-6 h-12 transition-all duration-300 shadow-lg hover:shadow-xl border-2 border-primary/30 hover:border-primary hover-3d bg-white/50 backdrop-blur-sm"
           >
             <Link href="/">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center mr-3 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
-                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center mr-3 shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">
+                <ArrowLeft className="w-4 h-4 text-white" />
               </div>
-              <span className="font-bold text-slate-700 group-hover:text-primary transition-colors">
+              <span className="font-black text-slate-800 group-hover:text-primary transition-colors uppercase text-xs tracking-wider">
                 Voltar ao Início
               </span>
             </Link>
