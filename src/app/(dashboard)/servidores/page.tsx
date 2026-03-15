@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -112,7 +111,7 @@ export default function ServidoresListPage() {
       <div className="space-y-6">
         {loading ? (
           <div className="p-12 text-center text-muted-foreground animate-pulse font-medium text-xl bg-white rounded-[2rem] shadow-xl">
-            Carregando lista elite...
+            Sincronizando base elite...
           </div>
         ) : filtered.length === 0 ? (
           <div className="p-16 text-center bg-white rounded-[2rem] shadow-xl border-2 border-slate-100">
