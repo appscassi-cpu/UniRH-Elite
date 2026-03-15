@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, Suspense } from 'react';
@@ -12,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { FileText, Upload, X, Plus, Calendar, Trash2, Info } from 'lucide-react';
 import { differenceInDays, parseISO } from 'date-fns';
@@ -360,4 +360,3 @@ export default function RegistrarOcorrenciaPage() {
     </Suspense>
   );
 }
-    
