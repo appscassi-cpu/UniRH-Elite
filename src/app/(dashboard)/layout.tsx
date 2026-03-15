@@ -5,7 +5,7 @@ import { useAuth } from '@/components/auth-provider';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ShieldAlert, LogOut, Fingerprint } from 'lucide-react';
+import { ShieldAlert, LogOut, Fingerprint, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
 import { auth as firebaseAuth } from '@/lib/firebase';
@@ -77,7 +77,8 @@ export default function DashboardLayout({
         </div>
         
         <div className="mt-8 text-center space-y-2">
-          <h2 className="text-3xl font-black text-slate-800 tracking-tight">
+          <h2 className="text-3xl font-black text-slate-800 tracking-tight flex items-center justify-center gap-3">
+            <ShieldCheck className="w-8 h-8 text-primary animate-pulse" />
             Olá, Lilian Tenório
           </h2>
           <p className="text-slate-500 font-medium">
