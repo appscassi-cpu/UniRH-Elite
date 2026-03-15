@@ -41,6 +41,7 @@ export default function ServidoresListPage() {
   const { toast } = useToast();
 
   useEffect(() => {
+    // A lista é sempre mantida em ordem alfabética através do orderBy no Firestore
     const q = query(collection(db, 'servidores'), orderBy('nome', 'asc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -107,7 +108,10 @@ export default function ServidoresListPage() {
         ) : (
           <div className="grid grid-cols-1 gap-4 w-full">
             {filtered.map((servidor) => (
-              <Card key={servidor.id} className="rounded-[2rem] border-2 border-slate-100 shadow-xl overflow-hidden group hover:border-primary/40 transition-all bg-white">
+              <Card 
+                key={servidor.id} 
+                className="rounded-[2rem] border-2 border-primary/20 shadow-xl overflow-hidden group hover:border-primary/60 transition-all bg-white hover:scale-[1.01] hover:shadow-2xl active:scale-[0.99] active:shadow-inner"
+              >
                 <CardContent className="p-3 md:p-6 space-y-3">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-8">
                     {/* Identificação Principal */}
