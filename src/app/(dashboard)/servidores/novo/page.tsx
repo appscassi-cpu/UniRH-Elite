@@ -25,9 +25,31 @@ export default function NewServidorPage() {
     cargo: '',
     setor: '',
     telefone: '',
+    dataNascimento: '',
     dataAdmissao: '',
     observacao: ''
   });
+
+  const formatPhone = (value: string) => {
+    if (!value) return value;
+    const phoneNumber = value.replace(/[^\d]/g, '');
+    const phoneNumberLength = phoneNumber.length;
+    if (phoneNumberLength <= 2) {
+      return phoneNumberLength > 0 ? `(${phoneNumber}` : phoneNumber;
+    }
+    if (phoneNumberLength <= 6) {
+      return `(${phoneNumber.slice(0, 2)}) ${phoneNumber.slice(2)}`;
+    }
+    if (phoneNumberLength <= 10) {
+      return `(${phoneNumber.slice(0, 2)}) ${phoneNumber.slice(2, 6)}-${phoneNumber.slice(6)}`;
+    }
+    return `(${phoneNumber.slice(0, 2)}) ${phoneNumber.slice(2, 7)}-${phoneNumber.slice(7, 11)}`;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedValue = formatPhone(e.target.value);
+    setFormData({ ...formData, telefone: formattedValue });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,6 +101,7 @@ export default function NewServidorPage() {
                 value={formData.nome}
                 onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                 placeholder="Ex: João da Silva"
+                className="h-12 border-2 focus:ring-primary"
               />
             </div>
             
@@ -91,6 +114,7 @@ export default function NewServidorPage() {
                   value={formData.matricula}
                   onChange={(e) => setFormData({ ...formData, matricula: e.target.value })}
                   placeholder="000000-0"
+                  className="h-12 border-2 focus:ring-primary"
                 />
               </div>
               <div className="grid gap-2">
@@ -101,19 +125,21 @@ export default function NewServidorPage() {
                   value={formData.cargo}
                   onChange={(e) => setFormData({ ...formData, cargo: e.target.value })}
                   placeholder="Ex: Professor"
+                  className="h-12 border-2 focus:ring-primary"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="setor">Setor ou Escola</Label>
+                <Label htmlFor="setor">Setor</Label>
                 <Input
                   id="setor"
                   required
                   value={formData.setor}
                   onChange={(e) => setFormData({ ...formData, setor: e.target.value })}
-                  placeholder="Ex: Unidade Escolar X"
+                  placeholder="Ex: Secretaria"
+                  className="h-12 border-2 focus:ring-primary"
                 />
               </div>
               <div className="grid gap-2">
@@ -121,21 +147,37 @@ export default function NewServidorPage() {
                 <Input
                   id="telefone"
                   value={formData.telefone}
-                  onChange={(e) => setFormData({ ...formData, telefone: e.target.value })}
+                  onChange={handlePhoneChange}
                   placeholder="(00) 00000-0000"
+                  maxLength={15}
+                  className="h-12 border-2 focus:ring-primary"
                 />
               </div>
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="dataAdmissao">Data de Admissão</Label>
-              <Input
-                id="dataAdmissao"
-                type="date"
-                required
-                value={formData.dataAdmissao}
-                onChange={(e) => setFormData({ ...formData, dataAdmissao: e.target.value })}
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="dataNascimento">Data de Nascimento</Label>
+                <Input
+                  id="dataNascimento"
+                  type="date"
+                  required
+                  value={formData.dataNascimento}
+                  onChange={(e) => setFormData({ ...formData, dataNascimento: e.target.value })}
+                  className="h-12 border-2 focus:ring-primary"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="dataAdmissao">Data de Admissão</Label>
+                <Input
+                  id="dataAdmissao"
+                  type="date"
+                  required
+                  value={formData.dataAdmissao}
+                  onChange={(e) => setFormData({ ...formData, dataAdmissao: e.target.value })}
+                  className="h-12 border-2 focus:ring-primary"
+                />
+              </div>
             </div>
 
             <div className="grid gap-2">
@@ -145,12 +187,12 @@ export default function NewServidorPage() {
                 value={formData.observacao}
                 onChange={(e) => setFormData({ ...formData, observacao: e.target.value })}
                 placeholder="Informações adicionais..."
-                className="min-h-[100px]"
+                className="min-h-[100px] border-2 focus:ring-primary"
               />
             </div>
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full h-12 text-lg" disabled={loading}>
+            <Button type="submit" className="w-full h-14 text-lg font-bold shadow-lg" disabled={loading}>
               {loading ? "Salvando..." : "Salvar Servidor"}
             </Button>
           </CardFooter>

@@ -25,6 +25,7 @@
         "cargo": { "type": "string" },
         "setor": { "type": "string" },
         "telefone": { "type": "string" },
+        "dataNascimento": { "type": "string", "format": "date" },
         "dataAdmissao": { "type": "string", "format": "date" },
         "observacao": { "type": "string" },
         "dataCadastro": { "type": "string", "format": "date-time" }
