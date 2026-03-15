@@ -122,33 +122,35 @@ function RegistrarOcorrenciaContent() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/"><ArrowLeft /></Link>
-        </Button>
-        <h1 className="text-2xl font-bold text-primary">Registrar Ocorrência</h1>
+    <div className="max-w-2xl mx-auto space-y-10">
+      <div className="text-center space-y-2">
+        <h1 className="text-5xl font-black text-slate-900 tracking-tighter">
+          Novo <span className="text-primary italic">Registro</span>
+        </h1>
+        <p className="text-slate-500 font-medium italic">Protocolo de lançamento de ocorrência administrativa</p>
       </div>
 
-      <Card className="shadow-lg border-t-4 border-t-primary">
+      <Card className="shadow-2xl border-t-8 border-t-primary rounded-[3rem] overflow-hidden bg-white/80 backdrop-blur-sm">
         <form onSubmit={handleSubmit}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <FileText className="w-5 h-5 text-primary" />
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-3 text-2xl font-black text-slate-800">
+              <div className="p-2 bg-primary/10 rounded-xl">
+                <FileText className="w-6 h-6 text-primary" />
+              </div>
               Detalhes da Ocorrência
             </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-6">
+          <CardContent className="grid gap-6 p-8">
             <div className="grid gap-2">
-              <Label>Servidor</Label>
+              <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Servidor Alvo</Label>
               <Select 
                 value={formData.servidorId} 
                 onValueChange={(val) => setFormData({ ...formData, servidorId: val })}
               >
-                <SelectTrigger className="h-12 border-2 focus:ring-primary">
+                <SelectTrigger className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg">
                   <SelectValue placeholder="Selecione um servidor" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl">
                   {servidores.map((s) => (
                     <SelectItem key={s.id} value={s.id}>{s.nome}</SelectItem>
                   ))}
@@ -157,15 +159,15 @@ function RegistrarOcorrenciaContent() {
             </div>
 
             <div className="grid gap-2">
-              <Label>Tipo de Ocorrência</Label>
+              <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Natureza da Ocorrência</Label>
               <Select 
                 value={formData.tipo} 
                 onValueChange={(val) => setFormData({ ...formData, tipo: val })}
               >
-                <SelectTrigger className="h-12 border-2 focus:ring-primary">
+                <SelectTrigger className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg">
                   <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="rounded-xl">
                   {OCORRENCIA_TIPOS.map((t) => (
                     <SelectItem key={t} value={t}>{t}</SelectItem>
                   ))}
@@ -173,25 +175,23 @@ function RegistrarOcorrenciaContent() {
               </Select>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="dataInicio">Data de Início</Label>
+                <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Início do Período</Label>
                 <Input
-                  id="dataInicio"
                   type="date"
                   required
-                  className="h-12 border-2 focus:ring-primary"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg"
                   value={formData.dataInicio}
                   onChange={(e) => setFormData({ ...formData, dataInicio: e.target.value })}
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="dataFim">Data de Fim</Label>
+                <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Término do Período</Label>
                 <Input
-                  id="dataFim"
                   type="date"
                   required
-                  className="h-12 border-2 focus:ring-primary"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg"
                   value={formData.dataFim}
                   onChange={(e) => setFormData({ ...formData, dataFim: e.target.value })}
                 />
@@ -199,61 +199,63 @@ function RegistrarOcorrenciaContent() {
             </div>
 
             <div className="grid gap-2">
-              <Label>Total de Dias</Label>
-              <div className="h-12 flex items-center px-4 bg-muted/50 rounded-md font-bold text-primary border-2 border-dashed border-primary/20">
-                {formData.dias} {formData.dias === 1 ? 'dia' : 'dias'}
+              <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Cálculo de Vigência</Label>
+              <div className="h-14 flex items-center px-6 bg-primary/5 rounded-2xl font-black text-primary border-2 border-dashed border-primary/20 text-xl italic">
+                {formData.dias} {formData.dias === 1 ? 'dia corrido' : 'dias corridos'}
               </div>
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="observacao">Observações (opcional)</Label>
+              <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Memória de Observações</Label>
               <Textarea
-                id="observacao"
-                placeholder="Descreva detalhes importantes aqui..."
-                className="min-h-[100px] border-2 focus:ring-primary"
+                placeholder="Descreva detalhes importantes para o histórico..."
+                className="min-h-[120px] border-none bg-slate-100/50 rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-medium text-lg"
                 value={formData.observacao}
                 onChange={(e) => setFormData({ ...formData, observacao: e.target.value })}
               />
             </div>
 
             <div className="grid gap-2">
-              <Label>Anexo (Documento/Atestado - Máx 5MB)</Label>
+              <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Anexo Comprobatório</Label>
               <div className="flex flex-col gap-4">
-                <div className="relative border-2 border-dashed rounded-xl p-8 hover:bg-slate-50 transition-colors text-center border-primary/30">
+                <div className="relative border-4 border-dashed rounded-[2rem] p-10 hover:bg-primary/5 transition-all text-center border-primary/20 group">
                   <Input 
                     type="file" 
                     className="absolute inset-0 opacity-0 cursor-pointer" 
                     accept="image/*,application/pdf"
                     onChange={handleFileChange}
                   />
-                  <div className="flex flex-col items-center gap-2 pointer-events-none">
-                    <Upload className="w-10 h-10 text-primary/50" />
-                    <span className="text-sm font-semibold text-primary/70">
-                      {file ? file.name : "Clique para anexar arquivo"}
+                  <div className="flex flex-col items-center gap-3 pointer-events-none group-hover:scale-105 transition-transform">
+                    <div className="p-4 bg-primary/10 rounded-full">
+                      <Upload className="w-10 h-10 text-primary" />
+                    </div>
+                    <span className="text-lg font-black text-slate-700">
+                      {file ? file.name : "Clique ou arraste o documento"}
                     </span>
+                    <span className="text-sm font-medium text-slate-400 italic">Formatos aceitos: Imagens ou PDF (Máx 5MB)</span>
                   </div>
                 </div>
 
                 {preview && (
-                  <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-primary/20 shadow-inner">
+                  <div className="relative w-full aspect-video rounded-[2rem] overflow-hidden border-4 border-primary/10 shadow-2xl">
                     <img src={preview} alt="Preview" className="w-full h-full object-cover" />
                     <Button 
                       type="button" 
                       variant="destructive" 
                       size="icon" 
-                      className="absolute top-2 right-2 rounded-full h-8 w-8 shadow-md"
+                      className="absolute top-4 right-4 rounded-full h-12 w-12 shadow-xl hover:scale-110 transition-transform"
                       onClick={() => { setFile(null); setPreview(null); }}
                     >
-                      <X className="w-4 h-4" />
+                      <X className="w-6 h-6" />
                     </Button>
                   </div>
                 )}
               </div>
             </div>
           </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full h-14 text-lg font-bold shadow-lg" disabled={loading}>
-              {loading ? "Processando..." : "Salvar Registro"}
+          <CardFooter className="p-8">
+            <Button type="submit" className="w-full h-20 text-2xl font-black rounded-[2rem] shadow-2xl shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95" disabled={loading}>
+              {loading ? "Validando Dados..." : "Finalizar Registro Elite"}
             </Button>
           </CardFooter>
         </form>
@@ -264,7 +266,7 @@ function RegistrarOcorrenciaContent() {
 
 export default function RegistrarOcorrenciaPage() {
   return (
-    <Suspense fallback={<div className="flex justify-center p-20"><div className="animate-spin rounded-full h-10 w-10 border-t-2 border-primary"></div></div>}>
+    <Suspense fallback={<div className="flex justify-center p-20"><div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div></div>}>
       <RegistrarOcorrenciaContent />
     </Suspense>
   );

@@ -76,124 +76,126 @@ export default function NewServidorPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" asChild>
-          <Link href="/servidores"><ArrowLeft /></Link>
-        </Button>
-        <h1 className="text-2xl font-headline font-bold">Novo Servidor</h1>
+    <div className="max-w-2xl mx-auto space-y-10">
+      <div className="text-center space-y-2">
+        <h1 className="text-5xl font-black text-slate-900 tracking-tighter">
+          Cadastrar <span className="text-primary italic">Servidor</span>
+        </h1>
+        <p className="text-slate-500 font-medium italic">Inserção de novo ativo no quadro de pessoal universitário</p>
       </div>
 
-      <Card className="shadow-lg">
+      <Card className="shadow-2xl border-t-8 border-t-primary rounded-[3rem] overflow-hidden bg-white/80 backdrop-blur-sm">
         <form onSubmit={handleSubmit}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <UserPlus className="w-5 h-5 text-primary" />
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-3 text-2xl font-black text-slate-800">
+              <div className="p-2 bg-primary/10 rounded-xl">
+                <UserPlus className="w-6 h-6 text-primary" />
+              </div>
               Dados do Servidor
             </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-6">
+          <CardContent className="grid gap-8 p-8">
             <div className="grid gap-2">
-              <Label htmlFor="nome">Nome Completo</Label>
+              <Label htmlFor="nome" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Nome Completo</Label>
               <Input
                 id="nome"
                 required
                 value={formData.nome}
                 onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                 placeholder="Ex: João da Silva"
-                className="h-12 border-2 focus:ring-primary"
+                className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg"
               />
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="matricula">Matrícula</Label>
+                <Label htmlFor="matricula" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Matrícula</Label>
                 <Input
                   id="matricula"
                   required
                   value={formData.matricula}
                   onChange={(e) => setFormData({ ...formData, matricula: e.target.value })}
                   placeholder="000000-0"
-                  className="h-12 border-2 focus:ring-primary"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="cargo">Cargo</Label>
+                <Label htmlFor="cargo" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Cargo</Label>
                 <Input
                   id="cargo"
                   required
                   value={formData.cargo}
                   onChange={(e) => setFormData({ ...formData, cargo: e.target.value })}
                   placeholder="Ex: Professor"
-                  className="h-12 border-2 focus:ring-primary"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="setor">Setor</Label>
+                <Label htmlFor="setor" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Setor / Lotação</Label>
                 <Input
                   id="setor"
                   required
                   value={formData.setor}
                   onChange={(e) => setFormData({ ...formData, setor: e.target.value })}
                   placeholder="Ex: Secretaria"
-                  className="h-12 border-2 focus:ring-primary"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="telefone">Telefone</Label>
+                <Label htmlFor="telefone" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Telefone de Contato</Label>
                 <Input
                   id="telefone"
                   value={formData.telefone}
                   onChange={handlePhoneChange}
                   placeholder="(00) 00000-0000"
                   maxLength={15}
-                  className="h-12 border-2 focus:ring-primary"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="dataNascimento">Data de Nascimento</Label>
+                <Label htmlFor="dataNascimento" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Data de Nascimento</Label>
                 <Input
                   id="dataNascimento"
                   type="date"
                   required
                   value={formData.dataNascimento}
                   onChange={(e) => setFormData({ ...formData, dataNascimento: e.target.value })}
-                  className="h-12 border-2 focus:ring-primary"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg"
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="dataAdmissao">Data de Admissão</Label>
+                <Label htmlFor="dataAdmissao" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Data de Admissão</Label>
                 <Input
                   id="dataAdmissao"
                   type="date"
                   required
                   value={formData.dataAdmissao}
                   onChange={(e) => setFormData({ ...formData, dataAdmissao: e.target.value })}
-                  className="h-12 border-2 focus:ring-primary"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg"
                 />
               </div>
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="observacao">Observações (opcional)</Label>
+              <Label htmlFor="observacao" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Histórico / Observações</Label>
               <Textarea
                 id="observacao"
                 value={formData.observacao}
                 onChange={(e) => setFormData({ ...formData, observacao: e.target.value })}
-                placeholder="Informações adicionais..."
-                className="min-h-[100px] border-2 focus:ring-primary"
+                placeholder="Informações adicionais relevantes para o RH..."
+                className="min-h-[120px] border-none bg-slate-100/50 rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-medium text-lg"
               />
             </div>
           </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full h-14 text-lg font-bold shadow-lg" disabled={loading}>
-              {loading ? "Salvando..." : "Salvar Servidor"}
+          <CardFooter className="p-8">
+            <Button type="submit" className="w-full h-20 text-2xl font-black rounded-[2rem] shadow-2xl shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95" disabled={loading}>
+              {loading ? "Processando Cadastro..." : "Efetivar Novo Servidor"}
             </Button>
           </CardFooter>
         </form>
