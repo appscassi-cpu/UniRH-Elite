@@ -150,7 +150,7 @@ export default function ServidoresListPage() {
 
                     {/* Botões de Ação */}
                     <div className="flex items-center gap-2 pt-3 lg:pt-0 border-t lg:border-t-0 border-dashed border-slate-200">
-                      <Button variant="outline" size="sm" asChild className="flex-1 lg:flex-none h-10 md:h-12 rounded-xl font-black border-2 hover:bg-primary/5 hover:text-primary transition-all shadow-md px-4 md:px-6 hover-3d text-[10px] md:text-sm">
+                      <Button variant="outline" size="sm" asChild className="flex-1 lg:flex-none h-10 md:h-12 rounded-xl font-black border-2 hover:bg-primary/5 hover:text-primary transition-all shadow-md px-4 md:px-6 hover-3d text-xs md:text-sm">
                         <Link href={`/servidores/${servidor.id}`}>
                           <Eye className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                           Perfil
