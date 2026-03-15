@@ -308,7 +308,7 @@ function RegistrarOcorrenciaContent() {
               <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Memória de Observações</Label>
               <Textarea
                 placeholder="Descreva detalhes importantes para o histórico..."
-                className="min-h-[120px] border-2 border-slate-200 bg-white rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-900 placeholder:opacity-100"
+                className="min-h-[120px] border-2 border-slate-200 bg-white rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-400"
                 value={observacao}
                 onChange={(e) => setObservacao(e.target.value)}
               />

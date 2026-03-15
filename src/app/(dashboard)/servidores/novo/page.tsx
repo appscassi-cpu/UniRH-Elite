@@ -67,7 +67,7 @@ export default function NewServidorPage() {
       toast({
         variant: "destructive",
         title: "Erro",
-        description: "Não foi possível salvar o servidor.",
+        description: "Não foi possível salvar the servidor.",
       });
     } finally {
       setLoading(false);
@@ -102,7 +102,7 @@ export default function NewServidorPage() {
                 value={formData.nome}
                 onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
                 placeholder="Ex: João da Silva"
-                className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-900 placeholder:opacity-100"
+                className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-400"
               />
             </div>
             
@@ -115,7 +115,7 @@ export default function NewServidorPage() {
                   value={formData.matricula}
                   onChange={(e) => setFormData({ ...formData, matricula: e.target.value })}
                   placeholder="000000-0"
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-900 placeholder:opacity-100"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-400"
                 />
               </div>
               <div className="grid gap-2">
@@ -126,7 +126,7 @@ export default function NewServidorPage() {
                   value={formData.cargo}
                   onChange={(e) => setFormData({ ...formData, cargo: e.target.value })}
                   placeholder="Ex: Professor"
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-900 placeholder:opacity-100"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-400"
                 />
               </div>
             </div>
@@ -140,7 +140,7 @@ export default function NewServidorPage() {
                   value={formData.setor}
                   onChange={(e) => setFormData({ ...formData, setor: e.target.value })}
                   placeholder="Ex: Secretaria"
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-900 placeholder:opacity-100"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-400"
                 />
               </div>
               <div className="grid gap-2">
@@ -151,7 +151,7 @@ export default function NewServidorPage() {
                   onChange={handlePhoneChange}
                   placeholder="(00) 00000-0000"
                   maxLength={15}
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-900 placeholder:opacity-100"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-400"
                 />
               </div>
             </div>
@@ -188,7 +188,7 @@ export default function NewServidorPage() {
                 value={formData.observacao}
                 onChange={(e) => setFormData({ ...formData, observacao: e.target.value })}
                 placeholder="Informações adicionais relevantes para o RH..."
-                className="min-h-[120px] border-none bg-slate-100/50 rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-900 placeholder:opacity-100"
+                className="min-h-[120px] border-none bg-slate-100/50 rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-400"
               />
             </div>
           </CardContent>
