@@ -74,7 +74,7 @@ export default function DashboardPage() {
     fetchStats();
   }, []);
 
-  const cards = [
+  const statsCards = [
     { 
       label: 'Servidores Ativos', 
       value: stats.totalServidores, 
@@ -115,8 +115,9 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 perspective-container">
+      {/* Estatísticas - Formato Escudo Institucional */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
-        {cards.map((card) => (
+        {statsCards.map((card) => (
           <Link href={card.href} key={card.label} className="group">
             <div className={cn(
               "relative h-full glass-card p-4 sm:p-8 flex flex-col items-center text-center transition-all duration-500",
@@ -147,47 +148,60 @@ export default function DashboardPage() {
         ))}
       </div>
 
+      {/* Ações do Sistema - Formato Horizontal Elite Badge */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-black tracking-tight text-slate-900 uppercase italic">Ações do Sistema</h2>
           <div className="h-[2px] flex-1 bg-slate-200 ml-6 rounded-full opacity-30" />
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {isAdmin && (
             <Link href="/servidores/novo" className="group">
-              <div className="h-40 glass-card rounded-[2.5rem] p-8 flex flex-col justify-between hover-3d ring-1 ring-primary/20 hover:ring-primary/50 transition-all border-b-4 border-primary/20">
-                <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20">
-                  <Plus className="w-6 h-6 text-white" />
+              <div className="relative overflow-hidden h-28 glass-card rounded-[2rem] flex items-center p-6 gap-6 hover-3d ring-1 ring-primary/20 hover:ring-primary/50 transition-all border-l-8 border-primary shadow-xl">
+                <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 shrink-0 group-hover:rotate-6 transition-transform">
+                  <Plus className="w-8 h-8 text-white" />
                 </div>
-                <div className="flex justify-between items-end">
-                  <span className="font-black text-slate-800 tracking-tight leading-none text-xl">Novo<br/>Servidor</span>
-                  <ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
+                <div className="flex-1 flex items-center justify-between">
+                  <span className="font-black text-slate-800 tracking-tight text-xl leading-tight">
+                    Novo<br/>Servidor
+                  </span>
+                  <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                    <ChevronRight className="w-6 h-6 text-primary group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
               </div>
             </Link>
           )}
           
           <Link href="/servidores" className="group">
-            <div className="h-40 glass-card rounded-[2.5rem] p-8 flex flex-col justify-between hover-3d ring-1 ring-slate-200 hover:ring-primary/50 transition-all border-b-4 border-slate-200">
-              <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg">
-                <List className="w-6 h-6 text-white" />
+            <div className="relative overflow-hidden h-28 glass-card rounded-[2rem] flex items-center p-6 gap-6 hover-3d ring-1 ring-slate-200 hover:ring-primary/50 transition-all border-l-8 border-slate-900 shadow-xl">
+              <div className="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg shrink-0 group-hover:rotate-6 transition-transform">
+                <List className="w-8 h-8 text-white" />
               </div>
-              <div className="flex justify-between items-end">
-                <span className="font-black text-slate-800 tracking-tight leading-none text-xl">Listagem<br/>Geral</span>
-                <ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
+              <div className="flex-1 flex items-center justify-between">
+                <span className="font-black text-slate-800 tracking-tight text-xl leading-tight">
+                  Listagem<br/>Geral
+                </span>
+                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                  <ChevronRight className="w-6 h-6 text-primary group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
             </div>
           </Link>
 
           <Link href="/ocorrencias" className="group">
-            <div className="h-40 glass-card rounded-[2.5rem] p-8 flex flex-col justify-between hover-3d ring-1 ring-slate-200 hover:ring-primary/50 transition-all border-b-4 border-slate-200">
-              <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center shadow-inner">
-                <ClipboardPen className="w-6 h-6 text-primary" />
+            <div className="relative overflow-hidden h-28 glass-card rounded-[2rem] flex items-center p-6 gap-6 hover-3d ring-1 ring-slate-200 hover:ring-primary/50 transition-all border-l-8 border-amber-500 shadow-xl">
+              <div className="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center shadow-lg shrink-0 group-hover:rotate-6 transition-transform">
+                <ClipboardPen className="w-8 h-8 text-white" />
               </div>
-              <div className="flex justify-between items-end">
-                <span className="font-black text-slate-800 tracking-tight leading-none text-xl">Gestão de<br/>Ocorrências</span>
-                <ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
+              <div className="flex-1 flex items-center justify-between">
+                <span className="font-black text-slate-800 tracking-tight text-xl leading-tight">
+                  Gestão de<br/>Ocorrências
+                </span>
+                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                  <ChevronRight className="w-6 h-6 text-primary group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
             </div>
           </Link>
