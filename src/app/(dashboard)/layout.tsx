@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useAuth } from '@/components/auth-provider';
@@ -73,6 +74,15 @@ export default function DashboardLayout({
             Gestão de Alta Performance
           </p>
           <div className="h-[2px] w-4 bg-primary/30 rounded-full" />
+        </div>
+        
+        <div className="mt-8 text-center space-y-2">
+          <h2 className="text-3xl font-black text-slate-800 tracking-tight">
+            Olá, Lilian Tenório
+          </h2>
+          <p className="text-slate-500 font-medium">
+            Bem-vinda ao centro de comando UniRH
+          </p>
         </div>
       </div>
       {children}
