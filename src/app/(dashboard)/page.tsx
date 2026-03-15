@@ -115,31 +115,31 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 perspective-container">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
         {cards.map((card) => (
           <Link href={card.href} key={card.label} className="group">
             <div className={cn(
-              "relative h-full glass-card p-8 flex flex-col items-center text-center transition-all duration-500",
-              "rounded-[3rem] rounded-tr-lg rounded-bl-lg", // Formato de Escudo/Diploma
+              "relative h-full glass-card p-4 sm:p-8 flex flex-col items-center text-center transition-all duration-500",
+              "rounded-[2rem] sm:rounded-[3rem] rounded-tr-lg rounded-bl-lg", 
               "hover:scale-[1.05] hover:shadow-2xl hover:-translate-y-2 active:scale-95",
               "border-b-4 border-r-4",
               card.borderColor
             )}>
               <div className={cn(
-                "w-16 h-16 rounded-[2rem] flex items-center justify-center mb-4 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110 shadow-lg",
+                "w-12 h-12 sm:w-16 sm:h-16 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center mb-4 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110 shadow-lg",
                 card.bg
               )}>
-                <card.icon className={cn("w-8 h-8", card.color)} />
+                <card.icon className={cn("w-6 h-6 sm:w-8 sm:h-8", card.color)} />
               </div>
               <div className="space-y-1">
-                <p className="text-4xl font-black tracking-tighter text-slate-900">
+                <p className="text-2xl sm:text-4xl font-black tracking-tighter text-slate-900">
                   {card.value}
                 </p>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] leading-tight">
+                <p className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest leading-tight">
                   {card.label}
                 </p>
               </div>
-              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:block">
                 <ChevronRight className={cn("w-5 h-5", card.color)} />
               </div>
             </div>
