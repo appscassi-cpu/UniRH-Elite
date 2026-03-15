@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -6,21 +7,12 @@ import { db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
-  Table, 
-  TableHeader, 
-  TableBody, 
-  TableHead, 
-  TableRow, 
-  TableCell 
-} from '@/components/ui/table';
-import { 
   Search, 
   UserPlus, 
   Eye, 
   Edit, 
   Trash2,
   UserCircle,
-  MoreVertical,
   Briefcase,
   MapPin,
   IdCard
@@ -39,12 +31,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function ServidoresListPage() {
@@ -119,70 +105,82 @@ export default function ServidoresListPage() {
             <p className="text-xl font-medium text-muted-foreground">Nenhum servidor encontrado na base de dados.</p>
           </div>
         ) : (
-          <>
-            {/* Mobile Card Layout */}
-            <div className="grid grid-cols-1 gap-4 md:hidden">
-              {filtered.map((servidor) => (
-                <Card key={servidor.id} className="rounded-[2rem] border-2 border-slate-100 shadow-lg overflow-hidden group hover:border-primary/30 transition-all">
-                  <CardContent className="p-6 space-y-4">
-                    <div className="flex items-start justify-between gap-4">
+          <div className="grid grid-cols-1 gap-6 w-full">
+            {filtered.map((servidor) => (
+              <Card key={servidor.id} className="rounded-[2.5rem] border-2 border-slate-100 shadow-xl overflow-hidden group hover:border-primary/40 transition-all bg-white">
+                <CardContent className="p-6 md:p-8 space-y-6">
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+                    {/* Identificação Principal */}
+                    <div className="flex items-center gap-6 min-w-[300px]">
+                      <div className="p-4 bg-primary/10 rounded-[2rem] shrink-0 group-hover:bg-primary group-hover:rotate-6 transition-all duration-500">
+                        <UserCircle className="w-10 h-10 text-primary group-hover:text-white" />
+                      </div>
                       <div className="space-y-1">
-                        <h3 className="font-black text-slate-900 text-xl leading-tight">{servidor.nome}</h3>
-                        <div className="flex items-center gap-2 text-slate-500 font-mono text-xs">
-                          <IdCard className="w-3 h-3" />
+                        <h3 className="font-black text-slate-900 text-2xl tracking-tight leading-none uppercase">{servidor.nome}</h3>
+                        <div className="flex items-center gap-2 text-slate-500 font-mono text-sm font-bold tracking-widest uppercase">
+                          <IdCard className="w-4 h-4" />
                           MAT: {servidor.matricula}
                         </div>
                       </div>
-                      <div className="p-3 bg-primary/10 rounded-2xl">
-                        <UserCircle className="w-6 h-6 text-primary" />
+                    </div>
+
+                    {/* Dados Cadastrais */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 flex-1 lg:px-12">
+                      <div className="flex items-center gap-4 text-slate-700">
+                        <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center shrink-0">
+                          <Briefcase className="w-6 h-6 text-primary/70" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Cargo</p>
+                          <p className="font-bold text-lg text-slate-800">{servidor.cargo}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 text-slate-600">
+                        <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center shrink-0">
+                          <MapPin className="w-6 h-6 text-slate-400" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Setor</p>
+                          <p className="font-bold text-lg text-slate-800">{servidor.setor}</p>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-2">
-                      <div className="flex items-center gap-2 text-slate-600">
-                        <Briefcase className="w-4 h-4 text-primary" />
-                        <span className="font-bold text-sm">{servidor.cargo}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-slate-500 italic">
-                        <MapPin className="w-4 h-4 text-slate-400" />
-                        <span className="text-sm font-medium">{servidor.setor}</span>
-                      </div>
-                    </div>
-
-                    <div className="pt-4 border-t border-dashed flex items-center justify-between gap-2">
-                      <Button variant="outline" size="sm" asChild className="flex-1 h-12 rounded-xl font-bold border-2 hover:bg-primary/5 hover:text-primary transition-all">
+                    {/* Botões de Ação */}
+                    <div className="flex items-center gap-3 pt-6 lg:pt-0 border-t lg:border-t-0 border-dashed border-slate-200">
+                      <Button variant="outline" size="lg" asChild className="flex-1 lg:flex-none h-14 rounded-2xl font-black border-2 hover:bg-primary/5 hover:text-primary transition-all shadow-md px-8 hover-3d">
                         <Link href={`/servidores/${servidor.id}`}>
-                          <Eye className="w-5 h-5 mr-2" />
+                          <Eye className="w-6 h-6 mr-2" />
                           Ver Perfil
                         </Link>
                       </Button>
                       
                       {isAdmin && (
-                        <div className="flex gap-2">
-                          <Button variant="outline" size="icon" asChild className="w-12 h-12 rounded-xl border-2 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+                        <div className="flex gap-3">
+                          <Button variant="outline" size="icon" asChild className="w-14 h-14 rounded-2xl border-2 hover:bg-indigo-50 hover:text-indigo-600 transition-all shadow-md hover-3d">
                             <Link href={`/servidores/${servidor.id}/editar`}>
-                              <Edit className="w-5 h-5" />
+                              <Edit className="w-6 h-6" />
                             </Link>
                           </Button>
                           
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button variant="outline" size="icon" className="w-12 h-12 rounded-xl border-2 text-destructive hover:bg-rose-50 transition-all">
-                                <Trash2 className="w-5 h-5" />
+                              <Button variant="outline" size="icon" className="w-14 h-14 rounded-2xl border-2 text-destructive hover:bg-rose-50 transition-all shadow-md hover-3d">
+                                <Trash2 className="w-6 h-6" />
                               </Button>
                             </AlertDialogTrigger>
-                            <AlertDialogContent className="rounded-[2.5rem] p-10 border-2 shadow-3xl">
+                            <AlertDialogContent className="rounded-[3rem] p-10 border-2 shadow-3xl">
                               <AlertDialogHeader>
-                                <AlertDialogTitle className="text-3xl font-black tracking-tight text-slate-900">Protocolo de Exclusão</AlertDialogTitle>
-                                <AlertDialogDescription className="text-lg font-medium leading-relaxed">
-                                  Confirmar a remoção definitiva de <strong>{servidor.nome}</strong>? Todos os dados históricos e ocorrências serão perdidos permanentemente.
+                                <AlertDialogTitle className="text-3xl font-black tracking-tighter text-slate-900">Protocolo de Exclusão</AlertDialogTitle>
+                                <AlertDialogDescription className="text-lg font-medium leading-relaxed text-slate-500 italic mt-4">
+                                  Confirmar a remoção definitiva de <strong className="text-slate-900 not-italic">{servidor.nome}</strong>? Todos os dados históricos e ocorrências serão perdidos permanentemente.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter className="mt-8 gap-4">
-                                <AlertDialogCancel className="rounded-2xl h-14 text-lg font-bold border-2">Cancelar Operação</AlertDialogCancel>
+                                <AlertDialogCancel className="rounded-2xl h-14 text-lg font-black border-2">Cancelar Operação</AlertDialogCancel>
                                 <AlertDialogAction 
                                   onClick={() => handleDelete(servidor.id)} 
-                                  className="bg-destructive hover:bg-destructive/90 rounded-2xl h-14 text-lg font-bold shadow-lg shadow-destructive/20"
+                                  className="bg-destructive hover:bg-destructive/90 rounded-2xl h-14 text-lg font-black shadow-2xl shadow-destructive/20"
                                 >
                                   Confirmar Exclusão
                                 </AlertDialogAction>
@@ -192,91 +190,11 @@ export default function ServidoresListPage() {
                         </div>
                       )}
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            {/* Desktop Table Layout */}
-            <div className="hidden md:block bg-white rounded-[2rem] shadow-xl border-2 border-slate-100 overflow-hidden">
-              <Table>
-                <TableHeader className="bg-slate-50/50">
-                  <TableRow className="h-14 border-b-2">
-                    <TableHead className="font-bold text-primary pl-6">Nome / Matrícula</TableHead>
-                    <TableHead className="font-bold text-primary">Cargo</TableHead>
-                    <TableHead className="font-bold text-primary">Setor</TableHead>
-                    <TableHead className="text-right pr-6 font-bold text-primary">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filtered.map((servidor) => (
-                    <TableRow key={servidor.id} className="h-20 hover:bg-slate-50 transition-colors">
-                      <TableCell className="pl-6">
-                        <div className="flex flex-col">
-                          <span className="font-bold text-slate-800 text-lg">{servidor.nome}</span>
-                          <span className="text-xs text-muted-foreground font-mono">MAT: {servidor.matricula}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="font-medium text-slate-600">{servidor.cargo}</TableCell>
-                      <TableCell className="text-muted-foreground font-medium">{servidor.setor}</TableCell>
-                      <TableCell className="text-right pr-6">
-                        <div className="flex justify-end gap-1">
-                          <Button variant="ghost" size="icon" asChild className="rounded-full h-12 w-12 hover:bg-blue-50 text-blue-600">
-                            <Link href={`/servidores/${servidor.id}`}>
-                              <Eye className="w-6 h-6" />
-                            </Link>
-                          </Button>
-                          
-                          {isAdmin && (
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="rounded-full h-12 w-12">
-                                  <MoreVertical className="w-6 h-6 text-slate-400" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-48 rounded-xl p-2 shadow-2xl">
-                                <DropdownMenuItem asChild>
-                                  <Link href={`/servidores/${servidor.id}/editar`} className="flex items-center gap-3 cursor-pointer py-3">
-                                    <Edit className="w-5 h-5 text-slate-600" />
-                                    <span className="font-semibold">Editar Dados</span>
-                                  </Link>
-                                </DropdownMenuItem>
-                                <AlertDialog>
-                                  <AlertDialogTrigger asChild>
-                                    <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="flex items-center gap-3 text-destructive cursor-pointer py-3">
-                                      <Trash2 className="w-5 h-5" />
-                                      <span className="font-semibold">Excluir Registro</span>
-                                    </DropdownMenuItem>
-                                  </AlertDialogTrigger>
-                                  <AlertDialogContent className="rounded-[2.5rem] p-10 border-2 shadow-3xl">
-                                    <AlertDialogHeader>
-                                      <AlertDialogTitle className="text-3xl font-black tracking-tight text-slate-900">Protocolo de Exclusão</AlertDialogTitle>
-                                      <AlertDialogDescription className="text-lg font-medium leading-relaxed">
-                                        Confirmar a remoção definitiva de <strong>{servidor.nome}</strong>? Todos os dados históricos e ocorrências serão perdidos permanentemente.
-                                      </AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter className="mt-8 gap-4">
-                                      <AlertDialogCancel className="rounded-2xl h-14 text-lg font-bold border-2">Cancelar Operação</AlertDialogCancel>
-                                      <AlertDialogAction 
-                                        onClick={() => handleDelete(servidor.id)} 
-                                        className="bg-destructive hover:bg-destructive/90 rounded-2xl h-14 text-lg font-bold shadow-lg shadow-destructive/20"
-                                      >
-                                        Confirmar Exclusão
-                                      </AlertDialogAction>
-                                    </AlertDialogFooter>
-                                  </AlertDialogContent>
-                                </AlertDialog>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         )}
       </div>
     </div>
