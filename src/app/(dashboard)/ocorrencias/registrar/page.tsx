@@ -19,14 +19,21 @@ import { useAuth } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
 
 const OCORRENCIA_TIPOS = [
-  "Falta",
-  "Falta Justificada",
-  "Atestado Médico",
+  "Afastamento para estudo",
+  "Doação de sangue",
+  "Doença em família",
+  "Falta justificada",
+  "Falta não justificada",
   "Férias",
-  "Licença",
-  "Abono",
-  "Afastamento",
-  "Outro"
+  "Licença gala",
+  "Licença maternidade",
+  "Licença médica",
+  "Licença nojo",
+  "Licença paternidade",
+  "Outros",
+  "Serviço eleitoral",
+  "Serviço judiciário",
+  "Viagem à trabalho"
 ];
 
 interface Periodo {
