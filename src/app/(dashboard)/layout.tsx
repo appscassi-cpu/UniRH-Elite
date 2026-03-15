@@ -27,6 +27,18 @@ export default function DashboardLayout({
     }
   }, [user, loading, router]);
 
+  const getBackConfig = () => {
+    if (pathname.startsWith('/servidores/') && pathname !== '/servidores') {
+      return { href: '/servidores', label: 'Voltar para Servidores' };
+    }
+    if (pathname.startsWith('/ocorrencias/') && pathname !== '/ocorrencias') {
+      return { href: '/ocorrencias', label: 'Voltar para Ocorrências' };
+    }
+    return { href: '/', label: 'Voltar ao Início' };
+  };
+
+  const backConfig = getBackConfig();
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -71,12 +83,12 @@ export default function DashboardLayout({
             asChild 
             className="group hover:bg-primary/5 rounded-full pl-2 pr-6 h-12 transition-all duration-300 shadow-lg hover:shadow-xl border-2 border-primary/30 hover:border-primary hover-3d bg-white/50 backdrop-blur-sm"
           >
-            <Link href="/">
+            <Link href={backConfig.href}>
               <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center mr-3 shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">
                 <ArrowLeft className="w-4 h-4 text-white" />
               </div>
               <span className="font-black text-slate-800 group-hover:text-primary transition-colors uppercase text-xs tracking-wider">
-                Voltar ao Início
+                {backConfig.label}
               </span>
             </Link>
           </Button>
