@@ -79,9 +79,9 @@ export default function NewServidorPage() {
     <div className="max-w-2xl mx-auto space-y-10">
       <div className="text-center space-y-2">
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
-          Cadastrar <span className="text-primary italic">Servidor</span>
+          Novo <span className="text-primary italic">Servidor</span>
         </h1>
-        <p className="text-slate-500 font-medium italic">Inserção de novo ativo no quadro de pessoal universitário</p>
+        <p className="text-slate-500 font-medium italic">Inserção de ativo no quadro de pessoal</p>
       </div>
 
       <Card className="shadow-2xl border-t-8 border-t-primary rounded-[3rem] overflow-hidden bg-white/80 backdrop-blur-sm">
@@ -91,7 +91,7 @@ export default function NewServidorPage() {
               <div className="p-2 bg-primary/10 rounded-xl">
                 <UserPlus className="w-6 h-6 text-primary" />
               </div>
-              Dados do Servidor
+              Dados Cadastrais
             </CardTitle>
           </CardHeader>
           <CardContent className="grid gap-8 p-8">

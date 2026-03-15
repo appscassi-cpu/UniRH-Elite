@@ -77,13 +77,12 @@ export default function ServidoresListPage() {
 
   return (
     <div className="space-y-10">
-      {/* Header Centralizado Elite */}
       <div className="flex flex-col items-center text-center gap-6 mb-12">
         <div className="space-y-2">
           <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
-            Quadro de <span className="text-primary italic">Servidores</span>
+            Quadro <span className="text-primary italic">Pessoal</span>
           </h1>
-          <p className="text-slate-500 font-medium text-lg italic">Controle e consulta estratégica do quadro de pessoal</p>
+          <p className="text-slate-500 font-medium text-lg italic">Controle estratégico do quadro universitário</p>
         </div>
         
         {isAdmin && (
