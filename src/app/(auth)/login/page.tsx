@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { ShieldCheck, Lock, Eye, EyeOff, Landmark } from 'lucide-react';
+import { ShieldCheck, Lock, Eye, EyeOff, School } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('litencarv@uems.br');
@@ -64,7 +64,7 @@ export default function LoginPage() {
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center mb-2">
             <div className="p-4 bg-primary rounded-[2rem] shadow-2xl shadow-primary/40 rotate-12">
-              <Landmark className="w-12 h-12 text-white" />
+              <School className="w-12 h-12 text-white" />
             </div>
           </div>
           <div className="space-y-1">
