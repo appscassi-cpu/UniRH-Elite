@@ -1,115 +1,48 @@
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    /**
-     * GESTÃO DE SERVIDORES - SECURITY RULES CONFIGURATION
-     * 
-     * CORE PHILOSOPHY:
-     * This ruleset implements a Role-Based Access Control (RBAC) model optimized for school staff management.
-     * It prioritizes administrative control while allowing standard users to register occurrences and 
-     * view necessary information for their daily routines.
-     * 
-     * DATA STRUCTURE:
-     * - /users/{userId}: User profiles (Admin/Usuario roles).
-     * - /roles_admin/{userId}: A high-performance lookup collection for administrative privileges.
-     * - /staff/{staffId}: Master records of school employees.
-     * - /occurrences/{occurrenceId}: Transactional records of employee events (absences, leaves, etc.).
-     * 
-     * KEY SECURITY DECISIONS:
-     * - Authorization Independence: Administrative status is verified using a dedicated lookup 
-     *   collection (/roles_admin) to avoid costly get() calls on user profile documents.
-     * - Immutable Ownership: When a user creates an occurrence, their UID is hard-linked 
-     *   to the record to ensure an audit trail that cannot be forged.
-     * - Administrative Supremacy: Only users with the 'admin' role can modify staff records 
-     *   or edit/delete historical occurrence data.
-     * 
-     * DENORMALIZATION FOR AUTHORIZATION:
-     * - Administrative roles are denormalized into the '/roles_admin' collection, allowing 
-     *   the rules to use the highly efficient 'exists()' function for permission checks.
-     * - Occurrences store the 'registeredByUserId' directly to allow for easy auditing 
-     *   and future expansion of user-specific views without joining collections.
-     */
-
-    // --- GLOBAL HELPER FUNCTIONS ---
-
-    /** Checks if the request is from an authenticated user. */
+    // Funções Auxiliares
     function isSignedIn() {
       return request.auth != null;
     }
 
-    /** 
-     * Checks if the authenticated user has administrative privileges.
-     * Uses the roles_admin lookup collection for atomic, independent authorization.
-     */
     function isAdmin() {
       return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
     }
 
-    /** Checks if the user's UID matches the provided ID (Ownership check). */
-    function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
+    function isRegistered() {
+      return isSignedIn() && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid));
     }
 
-    /** Combines admin check with document existence for safe updates/deletes. */
-    function isExistingAdmin() {
-      return isAdmin() && resource != null;
+    // Regras para Usuários
+    match /usuarios/{userId} {
+      allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow list: if isAdmin();
+      allow create: if isAdmin() || (isSignedIn() && request.auth.uid == userId);
+      allow update, delete: if isAdmin();
     }
 
-    // --- COLLECTION RULES ---
-
-    /**
-     * @description Rules for user profiles. Admins manage all profiles; users can see their own.
-     * @path /users/{userId}
-     * @allow (get) If the user is viewing their own profile.
-     * @deny (update) If a non-admin tries to change their profile role.
-     * @principle Ownership for personal data; Admin control for system roles.
-     */
-    match /users/{userId} {
-      allow get, list: if isOwner(userId) || isAdmin();
-      allow create: if isOwner(userId);
-      allow update, delete: if isAdmin() && resource != null;
-    }
-
-    /**
-     * @description Lookup collection to grant 'admin' status.
-     * @path /roles_admin/{userId}
-     * @allow (get) Any authenticated user can verify admin status for UI logic.
-     * @deny (write) Any direct client-side modification of administrative roles.
-     * @principle Structural segregation of roles for secure, independent authorization.
-     */
     match /roles_admin/{userId} {
       allow read: if isSignedIn();
-      allow write: if false; // Typically managed via Admin SDK/Cloud Functions for extreme security
+      allow write: if false; // Gerenciado apenas via Admin SDK/Console
     }
 
-    /**
-     * @description Rules for staff records. All staff can see names, but only admins manage the data.
-     * @path /staff/{staffId}
-     * @allow (list) Any authenticated teacher/staff to see the directory.
-     * @deny (create) A standard 'usuario' trying to add a new staff member.
-     * @principle Role-based write access with public-authenticated read access.
-     */
-    match /staff/{staffId} {
-      allow get, list: if isSignedIn();
-      allow create: if isAdmin();
-      allow update, delete: if isExistingAdmin();
+    // Regras para Servidores
+    match /servidores/{id} {
+      allow read: if isRegistered();
+      allow create, update, delete: if isAdmin();
     }
 
-    /**
-     * @description Rules for occurrences. Users can register new ones; Admins manage history.
-     * @path /occurrences/{occurrenceId}
-     * @allow (create) An authenticated user registering a new occurrence for a staff member.
-     * @deny (update) A standard user trying to modify a previously registered medical certificate.
-     * @principle Relational integrity for registration and admin-only modification of records.
-     */
-    match /occurrences/{occurrenceId} {
-      allow get, list: if isSignedIn();
-      allow create: if isSignedIn() && request.resource.data.registeredByUserId == request.auth.uid;
-      allow update, delete: if isExistingAdmin();
+    // Regras para Ocorrências
+    match /ocorrencias/{id} {
+      allow read: if isRegistered();
+      allow create: if isRegistered();
+      allow update, delete: if isAdmin();
     }
 
-    // --- DEFAULT DENY ---
+    // Default Deny
     match /{document=**} {
       allow read, write: if false;
     }

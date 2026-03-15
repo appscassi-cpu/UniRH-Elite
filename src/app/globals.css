@@ -5,34 +5,29 @@
 
 @layer base {
   :root {
-    /* Primary: #2D60B2 (HSL 217, 60%, 44%) */
-    /* Background: #F1F4F8 (HSL 216, 33%, 96%) */
-    /* Accent: #7164B2 (HSL 250, 30%, 55%) */
-    --background: 216 33% 96%;
+    /* Cores solicitadas: Azul Escuro, Branco, Cinza Claro */
+    /* Primary: Azul Escuro #1E3A8A (HSL 226, 64%, 33%) */
+    /* Background: Cinza Claro #F3F4F6 (HSL 220, 14%, 96%) */
+    --background: 220 14% 96%;
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
-    --primary: 217 60% 44%;
+    --primary: 226 64% 33%;
     --primary-foreground: 210 40% 98%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222 47% 11%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 250 30% 55%;
+    --accent: 226 64% 45%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 217 60% 44%;
+    --ring: 226 64% 33%;
     --radius: 0.75rem;
-    --chart-1: 217 60% 44%;
-    --chart-2: 250 30% 55%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
   }
   .dark {
     --background: 222 47% 11%;
@@ -62,6 +57,9 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body;
+    @apply bg-background text-foreground font-sans;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
   }
 }

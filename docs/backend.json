@@ -1,238 +1,75 @@
+
 {
   "entities": {
     "User": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "User",
       "type": "object",
-      "description": "Represents a user of the UniRH application, including their authentication details and role.",
+      "description": "Perfil do usuário no sistema.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the User entity."
-        },
-        "name": {
-          "type": "string",
-          "description": "The full name of the user."
-        },
-        "email": {
-          "type": "string",
-          "description": "The email address of the user, used for login.",
-          "format": "email"
-        },
-        "profile": {
-          "type": "string",
-          "description": "The authorization role of the user within the system (e.g., 'admin', 'usuario')."
-        },
-        "creationDate": {
-          "type": "string",
-          "description": "Timestamp indicating when the user account was created.",
-          "format": "date-time"
-        }
+        "id": { "type": "string" },
+        "nome": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "perfil": { "type": "string", "enum": ["admin", "usuario"] },
+        "dataCriacao": { "type": "string", "format": "date-time" }
       },
-      "required": [
-        "id",
-        "name",
-        "email",
-        "profile",
-        "creationDate"
-      ]
+      "required": ["id", "nome", "email", "perfil", "dataCriacao"]
     },
     "Staff": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Staff",
       "type": "object",
-      "description": "Represents a staff member in the school system.",
+      "description": "Dados cadastrais do servidor escolar.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Staff entity."
-        },
-        "name": {
-          "type": "string",
-          "description": "The full name of the staff member."
-        },
-        "registrationNumber": {
-          "type": "string",
-          "description": "The unique registration or enrollment number of the staff member."
-        },
-        "role": {
-          "type": "string",
-          "description": "The job role or position of the staff member."
-        },
-        "sector": {
-          "type": "string",
-          "description": "The department, sector, or school where the staff member works."
-        },
-        "phoneNumber": {
-          "type": "string",
-          "description": "The contact phone number of the staff member."
-        },
-        "admissionDate": {
-          "type": "string",
-          "description": "The date when the staff member was admitted or hired.",
-          "format": "date"
-        },
-        "observation": {
-          "type": "string",
-          "description": "Any additional notes or observations about the staff member."
-        },
-        "registrationDate": {
-          "type": "string",
-          "description": "Timestamp indicating when this staff record was created in the system.",
-          "format": "date-time"
-        }
+        "id": { "type": "string" },
+        "nome": { "type": "string" },
+        "matricula": { "type": "string" },
+        "cargo": { "type": "string" },
+        "setor": { "type": "string" },
+        "telefone": { "type": "string" },
+        "dataAdmissao": { "type": "string", "format": "date" },
+        "observacao": { "type": "string" },
+        "dataCadastro": { "type": "string", "format": "date-time" }
       },
-      "required": [
-        "id",
-        "name",
-        "registrationNumber",
-        "role",
-        "sector",
-        "admissionDate",
-        "registrationDate"
-      ]
+      "required": ["id", "nome", "matricula", "cargo", "setor", "dataAdmissao", "dataCadastro"]
     },
     "Occurrence": {
-      "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Occurrence",
       "type": "object",
-      "description": "Records various types of events or occurrences related to a staff member, such as absences, medical leaves, or holidays.",
+      "description": "Registro de ocorrência de um servidor.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the Occurrence entity."
-        },
-        "staffId": {
-          "type": "string",
-          "description": "Reference to the Staff member. (Relationship: Staff 1:N Occurrence)"
-        },
-        "staffName": {
-          "type": "string",
-          "description": "The name of the staff member associated with this occurrence (denormalized for display purposes)."
-        },
-        "type": {
-          "type": "string",
-          "description": "The type of occurrence (e.g., 'Falta', 'Atestado Médico', 'Férias', 'Licença', 'Abono', 'Afastamento', 'Outro')."
-        },
-        "startDate": {
-          "type": "string",
-          "description": "The start date of the occurrence.",
-          "format": "date"
-        },
-        "endDate": {
-          "type": "string",
-          "description": "The end date of the occurrence.",
-          "format": "date"
-        },
-        "days": {
-          "type": "number",
-          "description": "The total number of days covered by the occurrence."
-        },
-        "observation": {
-          "type": "string",
-          "description": "Any specific observations or details about the occurrence."
-        },
-        "attachmentUrl": {
-          "type": "string",
-          "description": "URL to an attached document or image related to the occurrence (e.g., a medical certificate).",
-          "format": "uri"
-        },
-        "registrationDate": {
-          "type": "string",
-          "description": "Timestamp indicating when this occurrence record was created.",
-          "format": "date-time"
-        },
-        "registeredByUserId": {
-          "type": "string",
-          "description": "Reference to the User who registered this occurrence. (Relationship: User 1:N Occurrence)"
-        }
+        "id": { "type": "string" },
+        "servidorId": { "type": "string" },
+        "servidorNome": { "type": "string" },
+        "tipo": { "type": "string" },
+        "dataInicio": { "type": "string", "format": "date" },
+        "dataFim": { "type": "string", "format": "date" },
+        "dias": { "type": "number" },
+        "observacao": { "type": "string" },
+        "anexo": { "type": "string", "format": "uri" },
+        "dataRegistro": { "type": "string", "format": "date-time" },
+        "usuarioRegistro": { "type": "string" }
       },
-      "required": [
-        "id",
-        "staffId",
-        "staffName",
-        "type",
-        "startDate",
-        "endDate",
-        "days",
-        "registrationDate",
-        "registeredByUserId"
-      ]
+      "required": ["id", "servidorId", "servidorNome", "tipo", "dataInicio", "dataFim", "dias", "dataRegistro", "usuarioRegistro"]
     }
   },
   "auth": {
-    "providers": [
-      "password",
-      "anonymous"
-    ]
+    "providers": ["password"]
   },
   "firestore": {
-    "structure": [
-      {
-        "path": "/users/{userId}",
-        "definition": {
-          "entityName": "User",
-          "schema": {
-            "$ref": "#/backend/entities/User"
-          },
-          "description": "Stores system user profiles, including name, email, and designated profile (admin/usuario). The document ID is the Firebase Authentication UID. This collection acts as the master list of authorized system users. Admin users manage these profiles. Includes 'profile' field for client-side UI logic and activation status, but authorization rules do NOT depend on 'profile' field content for server-side access control.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique Firebase Authentication UID of the user."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/roles_admin/{userId}",
-        "definition": {
-          "entityName": "User",
-          "schema": {
-            "$ref": "#/backend/entities/User"
-          },
-          "description": "An auxiliary collection where the existence of a document signifies that the corresponding userId has 'admin' privileges. This collection is used for atomic, independent authorization checks in Firestore Security Rules (e.g., using `exists()`) to avoid `get()` dependencies. The document ID is the Firebase Authentication UID of the administrator. Documents in this collection can be empty or contain minimal metadata.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique Firebase Authentication UID of the user who is an administrator."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/staff/{staffId}",
-        "definition": {
-          "entityName": "Staff",
-          "schema": {
-            "$ref": "#/backend/entities/Staff"
-          },
-          "description": "Stores details for all school staff members. All documents in this collection have a homogeneous security posture: read access for all authenticated users, and create/update/delete access restricted to administrators. Wildcard `{staffId}` is used for document identification.",
-          "params": [
-            {
-              "name": "staffId",
-              "description": "The unique identifier for a staff member document."
-            }
-          ]
-        }
-      },
-      {
-        "path": "/occurrences/{occurrenceId}",
-        "definition": {
-          "entityName": "Occurrence",
-          "schema": {
-            "$ref": "#/backend/entities/Occurrence"
-          },
-          "description": "Records various occurrences (e.g., absences, holidays) related to staff members. Includes denormalized fields like 'staffName', 'servidorId', 'registeredByUserId', and 'registrationDate' for audit and display purposes, ensuring Authorization Independence (no 'get()' calls to parent staff documents for authorization). All documents in this collection have a homogeneous security posture: read and create access for all authenticated users, and update/delete access restricted to administrators.",
-          "params": [
-            {
-              "name": "occurrenceId",
-              "description": "The unique identifier for an occurrence document."
-            }
-          ]
-        }
-      }
-    ],
-    "reasoning": "The Firestore structure is designed to be secure, scalable, and highly debuggable by strictly adhering to the core design principles and mandates, especially Authorization Independence and QAPs (Rules are not Filters).\n\n**Authorization Independence via Denormalization (CRITICAL):**\nThe most critical aspect addressed is the user's initial reliance on `get()` calls in security rules to determine a user's role (`get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.perfil == \"admin\"`). This violates Authorization Independence and can lead to non-atomic operations and debugging challenges. To overcome this, the design introduces a dedicated **role collection**: `/roles_admin/{userId}`.\n*   Instead of fetching the `profile` field from a user's document in `/users`, administrative access is determined by the *existence* of a document in `/roles_admin` where the document ID matches `request.auth.uid`. \n*   Firestore security rules will leverage `exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid))`. This `exists()` check is atomic, highly performant, and completely independent of any other document's data, thus fulfilling the Authorization Independence mandate. It allows for atomic creation of related documents (e.g., creating a staff record and simultaneously adding an admin role if needed, though typically roles are set up separately).\n*   The `/users/{userId}` collection still stores the `profile` string (`admin` or `usuario`) for client-side UI logic and initial admin setup of user accounts, but this field is explicitly not used for server-side authorization checks in security rules.\n\n**QAPs (Rules are not Filters):**\nThe structure ensures QAPs are supported by designing collections with homogeneous security postures and explicit access patterns:\n*   **`/staff/{staffId}`:** All documents in this collection share the same read requirements (all authenticated users can read) and write requirements (only admin users can create, update, or delete). This allows `list` queries to be performed securely and efficiently without the need for complex server-side filtering by rules. Any authenticated user can query `/staff` and receive all relevant staff records, which is permissible by design.\n*   **`/occurrences/{occurrenceId}`:** Similar to `/staff`, all documents here allow read access to all authenticated users. Create access is also granted to all authenticated users. Update and delete operations are restricted to admin users. Again, `list` queries will return all occurrences for any authenticated user, supporting QAPs. The `servidorId` and `registeredByUserId` fields are for data linkage and audit, not for rule-based filtering or `get()` calls.\n*   **Structural Segregation:** By having separate top-level collections for `staff` and `occurrences`, we avoid mixing data with different security needs within the same collection. This simplifies rule logic significantly. The `roles_admin` collection serves as a prime example of structural segregation for authorization purposes.\n\n**Access Modeling:**\n*   **Global Roles (DBAC):** The `/roles_admin/{userId}` collection implements DBAC using the "
+    "/usuarios/{userId}": {
+      "schema": "User",
+      "description": "Perfis de usuários do sistema."
+    },
+    "/roles_admin/{userId}": {
+      "schema": "User",
+      "description": "Coleção auxiliar para verificação rápida de privilégios admin."
+    },
+    "/servidores/{staffId}": {
+      "schema": "Staff",
+      "description": "Cadastro de servidores escolares."
+    },
+    "/ocorrencias/{occurrenceId}": {
+      "schema": "Occurrence",
+      "description": "Histórico de ocorrências dos servidores."
+    }
   }
 }

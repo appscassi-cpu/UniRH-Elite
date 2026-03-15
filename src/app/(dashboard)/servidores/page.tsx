@@ -20,11 +20,12 @@ import {
   Eye, 
   Edit, 
   Trash2,
-  ChevronRight,
-  UserCircle
+  UserCircle,
+  MoreVertical
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/components/auth-provider';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,8 +37,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function ServidoresListPage() {
+  const { isAdmin } = useAuth();
   const [servidores, setServidores] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
@@ -70,89 +78,107 @@ export default function ServidoresListPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-headline font-bold text-primary">Servidores</h1>
-        <Button asChild>
-          <Link href="/servidores/novo">
-            <UserPlus className="w-4 h-4 mr-2" />
-            Novo Servidor
-          </Link>
-        </Button>
+        <h1 className="text-3xl font-bold text-primary">Servidores</h1>
+        {isAdmin && (
+          <Button asChild className="h-12 px-6 font-bold shadow-md">
+            <Link href="/servidores/novo">
+              <UserPlus className="w-5 h-5 mr-2" />
+              Novo Servidor
+            </Link>
+          </Button>
+        )}
       </div>
 
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      <div className="relative group">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
         <Input
           placeholder="Pesquisar por nome ou matrícula..."
-          className="pl-10 h-12"
+          className="pl-12 h-14 border-2 rounded-2xl shadow-sm focus-visible:ring-primary"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-lg border-2 border-slate-100 overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-muted-foreground">Carregando servidores...</div>
+          <div className="p-12 text-center text-muted-foreground animate-pulse">Carregando lista...</div>
         ) : filtered.length === 0 ? (
-          <div className="p-12 text-center">
-            <UserCircle className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
-            <p className="text-lg font-medium text-muted-foreground">Nenhum servidor encontrado.</p>
+          <div className="p-16 text-center">
+            <UserCircle className="w-16 h-16 text-muted-foreground/20 mx-auto mb-4" />
+            <p className="text-xl font-medium text-muted-foreground">Nenhum servidor encontrado.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-slate-50">
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Cargo</TableHead>
-                  <TableHead className="hidden md:table-cell">Setor</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
+              <TableHeader className="bg-slate-50/50">
+                <TableRow className="h-14 border-b-2">
+                  <TableHead className="font-bold text-primary pl-6">Nome / Matrícula</TableHead>
+                  <TableHead className="font-bold text-primary">Cargo</TableHead>
+                  <TableHead className="hidden md:table-cell font-bold text-primary">Setor</TableHead>
+                  <TableHead className="text-right pr-6 font-bold text-primary">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filtered.map((servidor) => (
-                  <TableRow key={servidor.id} className="hover:bg-slate-50/50">
-                    <TableCell className="font-medium">
+                  <TableRow key={servidor.id} className="h-16 hover:bg-slate-50 transition-colors">
+                    <TableCell className="pl-6">
                       <div className="flex flex-col">
-                        <span>{servidor.nome}</span>
-                        <span className="text-xs text-muted-foreground md:hidden">{servidor.setor}</span>
+                        <span className="font-bold text-slate-800">{servidor.nome}</span>
+                        <span className="text-xs text-muted-foreground font-mono">MAT: {servidor.matricula}</span>
                       </div>
                     </TableCell>
                     <TableCell>{servidor.cargo}</TableCell>
-                    <TableCell className="hidden md:table-cell">{servidor.setor}</TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="icon" asChild title="Ver Perfil">
+                    <TableCell className="hidden md:table-cell text-muted-foreground">{servidor.setor}</TableCell>
+                    <TableCell className="text-right pr-6">
+                      <div className="flex justify-end gap-1">
+                        <Button variant="ghost" size="icon" asChild className="rounded-full hover:bg-blue-50 text-blue-600">
                           <Link href={`/servidores/${servidor.id}`}>
-                            <Eye className="w-4 h-4 text-blue-600" />
-                          </Link>
-                        </Button>
-                        <Button variant="ghost" size="icon" asChild title="Editar">
-                          <Link href={`/servidores/${servidor.id}/editar`}>
-                            <Edit className="w-4 h-4 text-slate-600" />
+                            <Eye className="w-5 h-5" />
                           </Link>
                         </Button>
                         
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="icon" title="Excluir">
-                              <Trash2 className="w-4 h-4 text-destructive" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Excluir Servidor?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Esta ação não pode ser desfeita. Isso removerá permanentemente os dados do servidor <strong>{servidor.nome}</strong>.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDelete(servidor.id)} className="bg-destructive hover:bg-destructive/90">
-                                Excluir
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                        {isAdmin && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon" className="rounded-full">
+                                <MoreVertical className="w-5 h-5 text-slate-400" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-40 rounded-xl">
+                              <DropdownMenuItem asChild>
+                                <Link href={`/servidores/${servidor.id}/editar`} className="flex items-center gap-2 cursor-pointer">
+                                  <Edit className="w-4 h-4 text-slate-600" />
+                                  Editar
+                                </Link>
+                              </DropdownMenuItem>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="flex items-center gap-2 text-destructive cursor-pointer">
+                                    <Trash2 className="w-4 h-4" />
+                                    Excluir
+                                  </DropdownMenuItem>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent className="rounded-2xl">
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Excluir Servidor?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      Remover permanentemente os dados de <strong>{servidor.nome}</strong> e seu histórico de ocorrências?
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel className="rounded-xl">Cancelar</AlertDialogCancel>
+                                    <AlertDialogAction 
+                                      onClick={() => handleDelete(servidor.id)} 
+                                      className="bg-destructive hover:bg-destructive/90 rounded-xl"
+                                    >
+                                      Excluir Definitivamente
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
