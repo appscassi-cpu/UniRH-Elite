@@ -29,10 +29,10 @@ export default function DashboardLayout({
 
   const getBackConfig = () => {
     if (pathname.startsWith('/servidores/') && pathname !== '/servidores') {
-      return { href: '/servidores', label: 'Voltar para Servidores' };
+      return { href: '/servidores', label: 'Voltar aos Servidores' };
     }
     if (pathname.startsWith('/ocorrencias/') && pathname !== '/ocorrencias') {
-      return { href: '/ocorrencias', label: 'Voltar para Ocorrências' };
+      return { href: '/ocorrencias', label: 'Voltar às Ocorrências' };
     }
     return { href: '/', label: 'Voltar ao Início' };
   };
