@@ -68,9 +68,9 @@ function OcorrenciasListContent() {
     <div className="space-y-10">
       <div className="flex flex-col items-center text-center gap-6 mb-12">
         <div className="space-y-2">
-          <h1 className="text-5xl font-black text-slate-900 tracking-tighter flex flex-col sm:flex-row items-center justify-center gap-4">
-            <FileText className="w-12 h-12 text-primary" />
-            <span>Gestão de <span className="text-primary italic">Ocorrências</span></span>
+          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tighter flex flex-col sm:flex-row items-center justify-center gap-4">
+            <FileText className="w-10 h-10 sm:w-12 sm:h-12 text-primary" />
+            <span className="whitespace-nowrap">Gestão de <span className="text-primary italic">Ocorrências</span></span>
           </h1>
           <p className="text-slate-500 font-medium text-lg italic">
             Monitoramento de {tipoFilter ? `registros de ${tipoFilter}` : 'todo o histórico administrativo'}

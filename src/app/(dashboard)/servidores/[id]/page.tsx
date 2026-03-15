@@ -23,6 +23,7 @@ import {
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { cn } from '@/lib/utils';
 
 export default function ServidorProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -82,10 +83,10 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
           </div>
         </div>
         <div className="space-y-2">
-          <h1 className="text-5xl font-black text-slate-900 tracking-tighter">
+          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
             Perfil do <span className="text-primary italic">Servidor</span>
           </h1>
-          <p className="text-3xl font-black text-primary tracking-tight mt-2">{servidor.nome}</p>
+          <p className="text-2xl sm:text-3xl font-black text-primary tracking-tight mt-2">{servidor.nome}</p>
           <div className="flex items-center justify-center gap-2 text-slate-500 font-bold uppercase tracking-widest text-xs">
             <Briefcase className="w-4 h-4" />
             {servidor.cargo} • {servidor.setor}
