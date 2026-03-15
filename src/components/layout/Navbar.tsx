@@ -17,6 +17,9 @@ import { cn } from '@/lib/utils';
 export function Navbar() {
   const pathname = usePathname();
 
+  // Não exibe a Navbar na tela de login
+  if (pathname === '/login') return null;
+
   const navItems = [
     { label: 'Painel', href: '/', icon: LayoutDashboard },
     { label: 'Servidores', href: '/servidores', icon: Users },

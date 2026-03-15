@@ -3,6 +3,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { AuthProvider } from '@/components/auth-provider';
 import { Toaster } from '@/components/ui/toaster';
+import { Navbar } from '@/components/layout/Navbar';
 
 export const metadata: Metadata = {
   title: 'UniRH - Gestão de Servidores',
@@ -27,6 +28,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-background">
         <AuthProvider>
+          <Navbar />
           {children}
           <Toaster />
         </AuthProvider>
