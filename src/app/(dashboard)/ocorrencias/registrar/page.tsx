@@ -128,7 +128,6 @@ function RegistrarOcorrenciaContent() {
       const servidorSnap = await getDoc(doc(db, 'servidores', servidorId));
       const servidorNome = servidorSnap.exists() ? servidorSnap.data().nome : 'Servidor';
 
-      // Criamos um documento para cada período (especialmente útil para férias parceladas)
       const promises = validPeriodos.map(p => 
         addDoc(collection(db, 'ocorrencias'), {
           servidorId,
@@ -184,7 +183,7 @@ function RegistrarOcorrenciaContent() {
                 value={servidorId} 
                 onValueChange={setServidorId}
               >
-                <SelectTrigger className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900">
+                <SelectTrigger className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 [&>span]:opacity-100">
                   <SelectValue placeholder="Selecione um servidor" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -204,7 +203,7 @@ function RegistrarOcorrenciaContent() {
                   if (val === 'Férias' && periodos.length === 0) setPeriodos([{dataInicio: '', dataFim: '', dias: 0}]);
                 }}
               >
-                <SelectTrigger className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900">
+                <SelectTrigger className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 [&>span]:opacity-100">
                   <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -235,7 +234,7 @@ function RegistrarOcorrenciaContent() {
                       <Input
                         type="date"
                         required
-                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-black text-slate-900"
+                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-black text-slate-900 opacity-100"
                         value={p.dataInicio}
                         onChange={(e) => handlePeriodoChange(index, 'dataInicio', e.target.value)}
                       />
@@ -245,7 +244,7 @@ function RegistrarOcorrenciaContent() {
                       <Input
                         type="date"
                         required
-                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-black text-slate-900"
+                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-black text-slate-900 opacity-100"
                         value={p.dataFim}
                         onChange={(e) => handlePeriodoChange(index, 'dataFim', e.target.value)}
                       />
@@ -297,7 +296,7 @@ function RegistrarOcorrenciaContent() {
               <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Memória de Observações</Label>
               <Textarea
                 placeholder="Descreva detalhes importantes para o histórico..."
-                className="min-h-[120px] border-none bg-slate-100/50 rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-400"
+                className="min-h-[120px] border-none bg-slate-100/50 rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-900 placeholder:opacity-100"
                 value={observacao}
                 onChange={(e) => setObservacao(e.target.value)}
               />
