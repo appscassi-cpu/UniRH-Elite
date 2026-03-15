@@ -194,7 +194,7 @@ export default function NewServidorPage() {
           </CardContent>
           <CardFooter className="p-4 sm:p-8">
             <Button type="submit" className="w-full h-16 sm:h-20 text-xl sm:text-2xl font-black rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95" disabled={loading}>
-              {loading ? "Processando Cadastro..." : "Efetivar Novo Servidor"}
+              {loading ? "Processando Cadastro..." : "Registrar Servidor"}
             </Button>
           </CardFooter>
         </form>
