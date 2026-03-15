@@ -10,16 +10,12 @@ import {
   LayoutDashboard, 
   Users, 
   CalendarPlus, 
-  LogOut, 
-  Menu,
-  X
+  LogOut
 } from 'lucide-react';
-import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
 export function Navbar() {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
     { label: 'Painel', href: '/', icon: LayoutDashboard },
@@ -28,69 +24,53 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="bg-white border-b sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
+    <>
+      {/* Top Header - Fixo no topo para Logo e Sair */}
+      <header className="bg-white/80 backdrop-blur-md border-b sticky top-0 z-50 h-16 flex items-center shadow-sm">
+        <div className="container mx-auto px-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-primary">UniRH</span>
+            <span className="text-2xl font-bold text-primary tracking-tight">UniRH</span>
           </Link>
-
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <Button
-                key={item.href}
-                variant={pathname === item.href ? "secondary" : "ghost"}
-                asChild
-              >
-                <Link href={item.href} className="flex items-center gap-2">
-                  <item.icon className="w-4 h-4" />
-                  {item.label}
-                </Link>
-              </Button>
-            ))}
-            <div className="ml-4 pl-4 border-l">
-              <Button variant="ghost" onClick={() => signOut(auth)} className="text-destructive hover:text-destructive hover:bg-destructive/10">
-                <LogOut className="w-4 h-4 mr-2" />
-                Sair
-              </Button>
-            </div>
-          </div>
-
-          {/* Mobile toggle */}
-          <div className="md:hidden flex items-center">
-            <Button variant="ghost" size="icon" onClick={() => setIsOpen(!isOpen)}>
-              {isOpen ? <X /> : <Menu />}
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Nav */}
-      {isOpen && (
-        <div className="md:hidden border-t bg-white px-4 py-4 space-y-2 animate-in slide-in-from-top duration-200">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setIsOpen(false)}
-              className={cn(
-                "flex items-center gap-3 p-3 rounded-md font-medium transition-colors",
-                pathname === item.href 
-                  ? "bg-primary/10 text-primary" 
-                  : "hover:bg-accent"
-              )}
-            >
-              <item.icon className="w-5 h-5" />
-              {item.label}
-            </Link>
-          ))}
-          <Button variant="ghost" onClick={() => signOut(auth)} className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10 mt-4 h-12">
-            <LogOut className="w-5 h-5 mr-3" />
-            Sair do Sistema
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => signOut(auth)} 
+            className="text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full font-semibold"
+          >
+            <LogOut className="w-5 h-5 mr-1" />
+            Sair
           </Button>
         </div>
-      )}
-    </nav>
+      </header>
+
+      {/* Bottom Navigation - Menu Fixo e Suspenso no rodapé */}
+      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-md">
+        <div className="bg-white/90 backdrop-blur-lg border border-slate-200 shadow-2xl rounded-3xl p-2 flex justify-around items-center">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex flex-col items-center justify-center gap-1 py-2 px-4 rounded-2xl transition-all duration-300 relative",
+                  isActive 
+                    ? "text-primary scale-110" 
+                    : "text-muted-foreground hover:text-primary hover:bg-slate-50"
+                )}
+              >
+                <item.icon className={cn("w-6 h-6", isActive && "stroke-[2.5px]")} />
+                <span className={cn("text-[10px] font-bold uppercase tracking-wider", !isActive && "opacity-70")}>
+                  {item.label}
+                </span>
+                {isActive && (
+                  <span className="absolute -bottom-1 w-1 h-1 bg-primary rounded-full animate-in fade-in zoom-in" />
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+    </>
   );
 }

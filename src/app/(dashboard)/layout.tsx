@@ -33,7 +33,7 @@ export default function DashboardLayout({
     );
   }
 
-  // Verificação de Ativação de Usuário (Requisito: se não existir registro em usuarios, bloquear)
+  // Verificação de Ativação de Usuário
   if (user && !profile) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-background">
@@ -64,7 +64,7 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="container mx-auto px-4 py-8 pb-24">
+      <main className="container mx-auto px-4 py-8 pb-32">
         {children}
       </main>
     </div>
