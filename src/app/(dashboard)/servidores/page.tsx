@@ -76,14 +76,19 @@ export default function ServidoresListPage() {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <h1 className="text-3xl font-bold text-primary">Servidores</h1>
+    <div className="space-y-8">
+      {/* Header Centralizado com Subtítulo e Botão Full Width Elite */}
+      <div className="flex flex-col items-center text-center gap-6 mb-10">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-black text-slate-900 tracking-tighter">Servidores</h1>
+          <p className="text-slate-500 font-medium">Controle e consulta do quadro de pessoal UniRH</p>
+        </div>
+        
         {isAdmin && (
-          <Button asChild className="h-12 px-6 font-bold shadow-md">
+          <Button asChild className="w-full h-16 text-lg font-black rounded-2xl shadow-2xl shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99]">
             <Link href="/servidores/novo">
-              <UserPlus className="w-5 h-5 mr-2" />
-              Novo Servidor
+              <UserPlus className="w-6 h-6 mr-3" />
+              Cadastrar Novo Servidor
             </Link>
           </Button>
         )}
@@ -99,7 +104,7 @@ export default function ServidoresListPage() {
         />
       </div>
 
-      <div className="bg-white rounded-2xl shadow-lg border-2 border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-[2rem] shadow-xl border-2 border-slate-100 overflow-hidden">
         {loading ? (
           <div className="p-12 text-center text-muted-foreground animate-pulse">Carregando lista...</div>
         ) : filtered.length === 0 ? (
@@ -158,18 +163,18 @@ export default function ServidoresListPage() {
                                     Excluir
                                   </DropdownMenuItem>
                                 </AlertDialogTrigger>
-                                <AlertDialogContent className="rounded-2xl">
+                                <AlertDialogContent className="rounded-[2rem] p-8 border-2">
                                   <AlertDialogHeader>
-                                    <AlertDialogTitle>Excluir Servidor?</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                      Remover permanentemente os dados de <strong>{servidor.nome}</strong> e seu histórico de ocorrências?
+                                    <AlertDialogTitle className="text-2xl font-black tracking-tight">Excluir Servidor?</AlertDialogTitle>
+                                    <AlertDialogDescription className="text-base font-medium">
+                                      Remover permanentemente os dados de <strong>{servidor.nome}</strong> e seu histórico de ocorrências? Esta ação não pode ser desfeita.
                                     </AlertDialogDescription>
                                   </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                    <AlertDialogCancel className="rounded-xl">Cancelar</AlertDialogCancel>
+                                  <AlertDialogFooter className="mt-6">
+                                    <AlertDialogCancel className="rounded-xl h-12">Cancelar</AlertDialogCancel>
                                     <AlertDialogAction 
                                       onClick={() => handleDelete(servidor.id)} 
-                                      className="bg-destructive hover:bg-destructive/90 rounded-xl"
+                                      className="bg-destructive hover:bg-destructive/90 rounded-xl h-12"
                                     >
                                       Excluir Definitivamente
                                     </AlertDialogAction>
