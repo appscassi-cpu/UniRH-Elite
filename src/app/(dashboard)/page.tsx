@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -34,7 +35,10 @@ export default function DashboardPage() {
       const now = new Date();
       const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
       
+      // Busca total de servidores
       const servidoresSnap = await getDocs(collection(db, 'servidores'));
+      
+      // Busca ocorrências do mês para estatísticas rápidas
       const ocorrenciasSnap = await getDocs(
         query(
           collection(db, 'ocorrencias'),
@@ -47,10 +51,17 @@ export default function DashboardPage() {
       
       ocorrenciasSnap.forEach(doc => {
         const data = doc.data();
-        if (data.tipo === 'Falta' || data.tipo === 'Falta Justificada') faltas++;
-        if (data.tipo === 'Atestado Médico') atestados++;
+        // Contabiliza faltas (Justificadas e Não Justificadas)
+        if (data.tipo === 'Falta justificada' || data.tipo === 'Falta não justificada') {
+          faltas++;
+        }
+        // Contabiliza Atestados como Licença Médica
+        if (data.tipo === 'Licença médica') {
+          atestados++;
+        }
       });
 
+      // Busca férias para verificar quem está em gozo hoje
       const feriasSnap = await getDocs(
         query(collection(db, 'ocorrencias'), where('tipo', '==', 'Férias'))
       );
@@ -91,7 +102,7 @@ export default function DashboardPage() {
       icon: CalendarDays, 
       color: 'text-rose-600', 
       bg: 'bg-rose-500/10', 
-      href: '/ocorrencias?tipo=Falta',
+      href: '/ocorrencias', // Redireciona para a lista geral para filtro manual ou pode ser personalizado
       borderColor: 'border-rose-500/20'
     },
     { 
@@ -100,7 +111,7 @@ export default function DashboardPage() {
       icon: FileText, 
       color: 'text-amber-600', 
       bg: 'bg-amber-500/10', 
-      href: '/ocorrencias?tipo=Atestado Médico',
+      href: '/ocorrencias',
       borderColor: 'border-amber-500/20'
     },
     { 
