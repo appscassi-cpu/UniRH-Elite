@@ -84,7 +84,7 @@ export default function LoginPage() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Assinatura Digital</Label>
+              <Label htmlFor="email" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Assinatura Digital</Label>
               <Input
                 id="email"
                 type="email"
@@ -97,7 +97,7 @@ export default function LoginPage() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Chave de Segurança</Label>
+              <Label htmlFor="password" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Chave de Segurança</Label>
               <div className="relative">
                 <Input
                   id="password"

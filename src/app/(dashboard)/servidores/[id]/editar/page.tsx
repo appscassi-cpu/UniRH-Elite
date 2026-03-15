@@ -134,7 +134,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
           </CardHeader>
           <CardContent className="grid gap-8 p-4 sm:p-8">
             <div className="grid gap-2">
-              <Label htmlFor="nome" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Nome Completo</Label>
+              <Label htmlFor="nome" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Nome Completo</Label>
               <Input
                 id="nome"
                 required
@@ -146,7 +146,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="matricula" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Matrícula</Label>
+                <Label htmlFor="matricula" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Matrícula</Label>
                 <Input
                   id="matricula"
                   required
@@ -156,7 +156,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="cargo" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Cargo</Label>
+                <Label htmlFor="cargo" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Cargo</Label>
                 <Input
                   id="cargo"
                   required
@@ -169,7 +169,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="setor" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Setor / Lotação</Label>
+                <Label htmlFor="setor" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Setor / Lotação</Label>
                 <Input
                   id="setor"
                   required
@@ -179,7 +179,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="telefone" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Telefone de Contato</Label>
+                <Label htmlFor="telefone" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Telefone de Contato</Label>
                 <Input
                   id="telefone"
                   value={formData.telefone}
@@ -192,7 +192,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="dataNascimento" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Data de Nascimento</Label>
+                <Label htmlFor="dataNascimento" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Data de Nascimento</Label>
                 <Input
                   id="dataNascimento"
                   type="date"
@@ -203,7 +203,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
                 />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="dataAdmissao" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Data de Admissão</Label>
+                <Label htmlFor="dataAdmissao" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Data de Admissão</Label>
                 <Input
                   id="dataAdmissao"
                   type="date"
@@ -216,7 +216,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="observacao" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Histórico / Observações</Label>
+              <Label htmlFor="observacao" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Histórico / Observações</Label>
               <Textarea
                 id="observacao"
                 value={formData.observacao}

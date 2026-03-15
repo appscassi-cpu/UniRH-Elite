@@ -190,7 +190,7 @@ function RegistrarOcorrenciaContent() {
           </CardHeader>
           <CardContent className="grid gap-6 p-4 sm:p-8">
             <div className="grid gap-2">
-              <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Servidor Alvo</Label>
+              <Label className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Servidor Alvo</Label>
               <Select 
                 value={servidorId} 
                 onValueChange={setServidorId}
@@ -207,7 +207,7 @@ function RegistrarOcorrenciaContent() {
             </div>
 
             <div className="grid gap-2">
-              <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Natureza da Ocorrência</Label>
+              <Label className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Natureza da Ocorrência</Label>
               <Select 
                 value={tipo} 
                 onValueChange={(val) => {
@@ -228,7 +228,7 @@ function RegistrarOcorrenciaContent() {
 
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
+                <Label className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">
                   {tipo === 'Férias' ? 'Cronograma de Períodos' : 'Vigência do Evento'}
                 </Label>
                 {tipo === 'Férias' && (
@@ -242,7 +242,7 @@ function RegistrarOcorrenciaContent() {
                 <div key={index} className="relative p-4 sm:p-6 bg-slate-100 rounded-[2rem] border-2 border-slate-200 group animate-in slide-in-from-right-4 duration-300">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="grid gap-1.5 min-w-0">
-                      <Label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter ml-1">Início</Label>
+                      <Label className="text-xs font-black text-slate-600 uppercase tracking-tighter ml-1">Início</Label>
                       <Input
                         type="date"
                         required
@@ -252,7 +252,7 @@ function RegistrarOcorrenciaContent() {
                       />
                     </div>
                     <div className="grid gap-1.5 min-w-0">
-                      <Label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter ml-1">Término</Label>
+                      <Label className="text-xs font-black text-slate-600 uppercase tracking-tighter ml-1">Término</Label>
                       <Input
                         type="date"
                         required
@@ -305,7 +305,7 @@ function RegistrarOcorrenciaContent() {
             </div>
 
             <div className="grid gap-2 mt-4">
-              <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Memória de Observações</Label>
+              <Label className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Memória de Observações</Label>
               <Textarea
                 placeholder="Descreva detalhes importantes para o histórico..."
                 className="min-h-[120px] border-2 border-slate-200 bg-white rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-400"
@@ -315,7 +315,7 @@ function RegistrarOcorrenciaContent() {
             </div>
 
             <div className="grid gap-2">
-              <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Anexo Comprobatório (Opcional)</Label>
+              <Label className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Anexo Comprobatório (Opcional)</Label>
               <div className="flex flex-col gap-4">
                 <div className="relative border-4 border-dashed rounded-[2rem] p-6 sm:p-8 hover:bg-primary/5 transition-all text-center border-primary/20 group">
                   <Input 
