@@ -1,0 +1,17 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "app-logo",
+      "description": "App logo placeholder",
+      "imageUrl": "https://picsum.photos/seed/unirh-logo/200/200",
+      "imageHint": "management logo"
+    },
+    {
+      "id": "hero-bg",
+      "description": "Dashboard background pattern",
+      "imageUrl": "https://picsum.photos/seed/dashboard/1200/400",
+      "imageHint": "administrative background"
+    }
+  ]
+}
