@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -24,9 +24,19 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (signInError: any) {
+        // Se o usuário não existir (primeiro acesso), tenta criar a conta automaticamente
+        if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/invalid-credential') {
+          await createUserWithEmailAndPassword(auth, email, password);
+        } else {
+          throw signInError;
+        }
+      }
       router.push('/');
     } catch (error: any) {
+      console.error(error);
       toast({
         variant: "destructive",
         title: "Erro ao entrar",
@@ -56,7 +66,7 @@ export default function LoginPage() {
             <div className="p-3 bg-blue-50 border border-blue-100 rounded-lg flex items-start gap-3 mb-2">
               <Lock className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
               <p className="text-xs text-blue-700">
-                Este sistema utiliza um <strong>cadastro único</strong>. As credenciais já foram preenchidas para sua conveniência.
+                Este sistema utiliza um <strong>cadastro único</strong>. As credenciais já estão configuradas.
               </p>
             </div>
             <div className="space-y-2">
@@ -87,7 +97,6 @@ export default function LoginPage() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors focus:outline-none"
-                  aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>

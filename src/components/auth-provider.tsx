@@ -3,7 +3,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { useRouter, usePathname } from 'next/navigation';
 
@@ -40,14 +40,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (firebaseUser) {
         try {
-          const profileDoc = await getDoc(doc(db, 'usuarios', firebaseUser.uid));
+          const profileRef = doc(db, 'usuarios', firebaseUser.uid);
+          const profileDoc = await getDoc(profileRef);
+          
           if (profileDoc.exists()) {
             setProfile(profileDoc.data() as UserProfile);
           } else {
-            setProfile(null);
-            // Se o usuário está logado mas não tem registro no Firestore, desconecta ou bloqueia
-            if (pathname !== '/login') {
-              console.warn("Usuário sem registro na coleção 'usuarios'.");
+            // Lógica de Inicialização Automática para o Administrador Mestre
+            if (firebaseUser.email === 'litencarv@uems.br') {
+              const newProfile: UserProfile = {
+                nome: "Administrador Mestre",
+                email: firebaseUser.email,
+                perfil: 'admin'
+              };
+              await setDoc(profileRef, {
+                ...newProfile,
+                dataCriacao: serverTimestamp()
+              });
+              setProfile(newProfile);
+            } else {
+              setProfile(null);
             }
           }
         } catch (error) {
