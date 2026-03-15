@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, Upload, X, Plus, Calendar, Trash2, Info } from 'lucide-react';
+import { FileText, Upload, X, Plus, Calendar, Trash2, Info, Umbrella } from 'lucide-react';
 import { differenceInDays, parseISO } from 'date-fns';
 import { useAuth } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
@@ -54,13 +54,15 @@ function RegistrarOcorrenciaContent() {
 
   // Pre-seleciona o tipo se vier via URL
   const initialTipo = searchParams.get('tipo') || '';
+  const isFeriasMode = initialTipo === 'Férias';
+  
   const [tipo, setTipo] = useState(initialTipo);
   const [servidorId, setServidorId] = useState(searchParams.get('servidorId') || '');
   const [observacao, setObservacao] = useState('');
   const [periodos, setPeriodos] = useState<Periodo[]>([{ dataInicio: '', dataFim: '', dias: 0 }]);
 
   // Filtra as opções de tipos baseado na origem do acesso
-  const tiposDisponiveis = initialTipo === 'Férias' ? ['Férias'] : OCORRENCIA_TIPOS;
+  const tiposDisponiveis = isFeriasMode ? ['Férias'] : OCORRENCIA_TIPOS;
 
   useEffect(() => {
     async function fetchServidores() {
@@ -158,7 +160,7 @@ function RegistrarOcorrenciaContent() {
       await Promise.all(promises);
 
       toast({ title: "Registrado!", description: `${validPeriodos.length} período(s) consolidado(s) com sucesso.` });
-      router.push(`/servidores/${servidorId}`);
+      router.push(isFeriasMode ? '/ferias' : `/servidores/${servidorId}`);
     } catch (error) {
       console.error(error);
       toast({ variant: "destructive", title: "Erro de Protocolo", description: "Falha ao registrar ocorrências." });
@@ -173,19 +175,33 @@ function RegistrarOcorrenciaContent() {
     <div className="max-w-3xl mx-auto space-y-10">
       <div className="text-center space-y-2 w-full">
         <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
-          Novo <span className="text-primary italic">Registro</span>
+          {isFeriasMode ? (
+            <>Novo <span className="text-amber-500 italic">Registro de Férias</span></>
+          ) : (
+            <>Novo <span className="text-primary italic">Registro</span></>
+          )}
         </h1>
-        <p className="text-slate-500 font-medium italic">Protocolo de lançamento de ocorrência administrativa</p>
+        <p className="text-slate-500 font-medium italic">Protocolo de lançamento {isFeriasMode ? 'estratégico de descanso' : 'de ocorrência administrativa'}</p>
       </div>
 
-      <Card className="shadow-2xl border-t-8 border-t-primary rounded-[3rem] overflow-hidden bg-white/80 backdrop-blur-sm">
+      <Card className={cn(
+        "shadow-2xl border-t-8 rounded-[3rem] overflow-hidden bg-white/80 backdrop-blur-sm",
+        isFeriasMode ? "border-t-amber-500" : "border-t-primary"
+      )}>
         <form onSubmit={handleSubmit}>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-3 text-2xl font-black text-slate-800">
-              <div className="p-2 bg-primary/10 rounded-xl">
-                <FileText className="w-6 h-6 text-primary" />
+              <div className={cn(
+                "p-2 rounded-xl",
+                isFeriasMode ? "bg-amber-100" : "bg-primary/10"
+              )}>
+                {isFeriasMode ? (
+                  <Umbrella className="w-6 h-6 text-amber-500" />
+                ) : (
+                  <FileText className="w-6 h-6 text-primary" />
+                )}
               </div>
-              Detalhes da Ocorrência
+              {isFeriasMode ? 'Cronograma de Férias' : 'Detalhes da Ocorrência'}
             </CardTitle>
           </CardHeader>
           <CardContent className="grid gap-6 p-4 sm:p-8">
@@ -195,7 +211,10 @@ function RegistrarOcorrenciaContent() {
                 value={servidorId} 
                 onValueChange={setServidorId}
               >
-                <SelectTrigger className="h-14 border-2 border-slate-200 bg-white rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 [&>span]:opacity-100">
+                <SelectTrigger className={cn(
+                  "h-14 border-2 border-slate-200 bg-white rounded-2xl px-6 font-black text-lg text-slate-900 [&>span]:opacity-100",
+                  isFeriasMode ? "focus:ring-amber-500" : "focus:ring-primary"
+                )}>
                   <SelectValue placeholder="Selecione um servidor" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -215,7 +234,10 @@ function RegistrarOcorrenciaContent() {
                   if (val === 'Férias' && periodos.length === 0) setPeriodos([{dataInicio: '', dataFim: '', dias: 0}]);
                 }}
               >
-                <SelectTrigger className="h-14 border-2 border-slate-200 bg-white rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 [&>span]:opacity-100">
+                <SelectTrigger className={cn(
+                  "h-14 border-2 border-slate-200 bg-white rounded-2xl px-6 font-black text-lg text-slate-900 [&>span]:opacity-100",
+                  isFeriasMode ? "focus:ring-amber-500" : "focus:ring-primary"
+                )}>
                   <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
@@ -232,7 +254,7 @@ function RegistrarOcorrenciaContent() {
                   {tipo === 'Férias' ? 'Cronograma de Períodos' : 'Vigência do Evento'}
                 </Label>
                 {tipo === 'Férias' && (
-                   <Badge variant="outline" className="text-primary border-primary/20 bg-primary/5 font-black px-3 py-1">
+                   <Badge variant="outline" className="text-amber-600 border-amber-200 bg-amber-50 font-black px-3 py-1">
                      Total: {totalDias} dias
                    </Badge>
                 )}
@@ -246,7 +268,10 @@ function RegistrarOcorrenciaContent() {
                       <Input
                         type="date"
                         required
-                        className="h-12 border-2 border-slate-300 bg-white rounded-xl px-3 sm:px-4 focus:ring-2 focus:ring-primary font-black text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full shadow-sm"
+                        className={cn(
+                          "h-12 border-2 border-slate-300 bg-white rounded-xl px-3 sm:px-4 font-black text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full shadow-sm",
+                          isFeriasMode ? "focus:ring-amber-500" : "focus:ring-primary"
+                        )}
                         value={p.dataInicio}
                         onChange={(e) => handlePeriodoChange(index, 'dataInicio', e.target.value)}
                       />
@@ -256,7 +281,10 @@ function RegistrarOcorrenciaContent() {
                       <Input
                         type="date"
                         required
-                        className="h-12 border-2 border-slate-300 bg-white rounded-xl px-3 sm:px-4 focus:ring-2 focus:ring-primary font-black text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full shadow-sm"
+                        className={cn(
+                          "h-12 border-2 border-slate-300 bg-white rounded-xl px-3 sm:px-4 font-black text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full shadow-sm",
+                          isFeriasMode ? "focus:ring-amber-500" : "focus:ring-primary"
+                        )}
                         value={p.dataFim}
                         onChange={(e) => handlePeriodoChange(index, 'dataFim', e.target.value)}
                       />
@@ -264,7 +292,12 @@ function RegistrarOcorrenciaContent() {
                   </div>
                   
                   <div className="mt-4 flex items-center justify-between gap-2">
-                    <div className="text-xs font-black text-primary italic bg-primary/5 px-3 py-1.5 rounded-full border border-primary/10 whitespace-nowrap">
+                    <div className={cn(
+                      "text-xs font-black px-3 py-1.5 rounded-full border whitespace-nowrap italic",
+                      isFeriasMode 
+                        ? "text-amber-600 bg-amber-50 border-amber-100" 
+                        : "text-primary bg-primary/5 border-primary/10"
+                    )}>
                       {p.dias} {p.dias === 1 ? 'dia corrido' : 'dias corridos'}
                     </div>
                     {tipo === 'Férias' && periodos.length > 1 && (
@@ -287,7 +320,12 @@ function RegistrarOcorrenciaContent() {
                   <Button 
                     type="button" 
                     variant="outline" 
-                    className="w-full h-14 border-2 border-dashed border-primary/30 text-primary hover:bg-primary/5 rounded-2xl font-black text-lg shadow-sm"
+                    className={cn(
+                      "w-full h-14 border-2 border-dashed rounded-2xl font-black text-lg shadow-sm transition-all",
+                      isFeriasMode 
+                        ? "border-amber-300 text-amber-600 hover:bg-amber-50" 
+                        : "border-primary/30 text-primary hover:bg-primary/5"
+                    )}
                     onClick={addPeriodo}
                   >
                     <Plus className="w-5 h-5 mr-2" />
@@ -308,7 +346,10 @@ function RegistrarOcorrenciaContent() {
               <Label className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Memória de Observações</Label>
               <Textarea
                 placeholder="Descreva detalhes importantes para o histórico..."
-                className="min-h-[120px] border-2 border-slate-200 bg-white rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 placeholder:text-slate-400"
+                className={cn(
+                  "min-h-[120px] border-2 border-slate-200 bg-white rounded-3xl px-6 py-4 font-black text-lg text-slate-900 placeholder:text-slate-400",
+                  isFeriasMode ? "focus:ring-amber-500" : "focus:ring-primary"
+                )}
                 value={observacao}
                 onChange={(e) => setObservacao(e.target.value)}
               />
@@ -317,7 +358,12 @@ function RegistrarOcorrenciaContent() {
             <div className="grid gap-2">
               <Label className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Anexo Comprobatório (Opcional)</Label>
               <div className="flex flex-col gap-4">
-                <div className="relative border-4 border-dashed rounded-[2rem] p-6 sm:p-8 hover:bg-primary/5 transition-all text-center border-primary/20 group">
+                <div className={cn(
+                  "relative border-4 border-dashed rounded-[2rem] p-6 sm:p-8 transition-all text-center group",
+                  isFeriasMode 
+                    ? "border-amber-200 hover:bg-amber-50" 
+                    : "border-primary/20 hover:bg-primary/5"
+                )}>
                   <Input 
                     type="file" 
                     className="absolute inset-0 opacity-0 cursor-pointer" 
@@ -325,8 +371,11 @@ function RegistrarOcorrenciaContent() {
                     onChange={handleFileChange}
                   />
                   <div className="flex flex-col items-center gap-2 pointer-events-none">
-                    <div className="p-3 bg-primary/10 rounded-full">
-                      <Upload className="w-8 h-8 text-primary" />
+                    <div className={cn(
+                      "p-3 rounded-full",
+                      isFeriasMode ? "bg-amber-100" : "bg-primary/10"
+                    )}>
+                      <Upload className={cn("w-8 h-8", isFeriasMode ? "text-amber-500" : "text-primary")} />
                     </div>
                     <span className="text-sm sm:text-base font-black text-slate-900 break-all px-2">
                       {file ? file.name : "Anexar Documento"}
@@ -336,7 +385,10 @@ function RegistrarOcorrenciaContent() {
                 </div>
 
                 {preview && (
-                  <div className="relative w-full aspect-video rounded-[2rem] overflow-hidden border-4 border-primary/10 shadow-2xl">
+                  <div className={cn(
+                    "relative w-full aspect-video rounded-[2rem] overflow-hidden border-4 shadow-2xl",
+                    isFeriasMode ? "border-amber-100" : "border-primary/10"
+                  )}>
                     <img src={preview} alt="Preview" className="w-full h-full object-cover" />
                     <Button 
                       type="button" 
@@ -353,8 +405,17 @@ function RegistrarOcorrenciaContent() {
             </div>
           </CardContent>
           <CardFooter className="p-4 sm:p-8">
-            <Button type="submit" className="w-full h-16 sm:h-20 text-xl sm:text-2xl font-black rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95" disabled={loading}>
-              {loading ? "Validando Protocolos..." : "Finalizar Lançamento Elite"}
+            <Button 
+              type="submit" 
+              className={cn(
+                "w-full h-16 sm:h-20 text-xl sm:text-2xl font-black rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl transition-all hover:scale-[1.02] active:scale-95",
+                isFeriasMode 
+                  ? "bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/40" 
+                  : "bg-primary hover:bg-primary/90 text-white shadow-primary/40"
+              )} 
+              disabled={loading}
+            >
+              {loading ? "Validando Protocolos..." : isFeriasMode ? "Finalizar Cronograma Elite" : "Finalizar Lançamento Elite"}
             </Button>
           </CardFooter>
         </form>
