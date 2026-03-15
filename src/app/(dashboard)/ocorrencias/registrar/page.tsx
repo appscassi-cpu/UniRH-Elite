@@ -242,7 +242,7 @@ function RegistrarOcorrenciaContent() {
                 <div key={index} className="relative p-4 sm:p-6 bg-slate-100 rounded-[2rem] border-2 border-slate-200 group animate-in slide-in-from-right-4 duration-300">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="grid gap-1.5 min-w-0">
-                      <Label className="text-xs font-black text-slate-600 uppercase tracking-tighter ml-1">Início</Label>
+                      <Label className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Início</Label>
                       <Input
                         type="date"
                         required
@@ -252,7 +252,7 @@ function RegistrarOcorrenciaContent() {
                       />
                     </div>
                     <div className="grid gap-1.5 min-w-0">
-                      <Label className="text-xs font-black text-slate-600 uppercase tracking-tighter ml-1">Término</Label>
+                      <Label className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Término</Label>
                       <Input
                         type="date"
                         required
