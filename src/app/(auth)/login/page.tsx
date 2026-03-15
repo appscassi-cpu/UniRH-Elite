@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -26,6 +27,7 @@ export default function LoginPage() {
       try {
         await signInWithEmailAndPassword(auth, email, password);
       } catch (signInError: any) {
+        // Tenta criar o usuário caso ele ainda não exista no Firebase Auth
         if (signInError.code === 'auth/user-not-found' || signInError.code === 'auth/invalid-credential') {
           await createUserWithEmailAndPassword(auth, email, password);
         } else {
@@ -33,12 +35,20 @@ export default function LoginPage() {
         }
       }
       router.push('/');
+      toast({
+        title: "Acesso Autorizado",
+        description: "Bem-vinda ao UniRH Elite, Lilian.",
+      });
     } catch (error: any) {
       console.error(error);
+      let message = "Falha ao validar credenciais elite.";
+      if (error.code === 'auth/wrong-password') message = "Senha incorreta.";
+      if (error.code === 'auth/too-many-requests') message = "Muitas tentativas. Tente mais tarde.";
+      
       toast({
         variant: "destructive",
         title: "Erro de Autenticação",
-        description: "Falha ao validar credenciais elite. Tente novamente.",
+        description: message,
       });
     } finally {
       setLoading(false);

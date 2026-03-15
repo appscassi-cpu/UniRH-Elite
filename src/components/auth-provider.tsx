@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -43,14 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const profileDoc = await getDoc(profileRef);
           
           if (profileDoc.exists()) {
-            const data = profileDoc.data() as UserProfile;
-            // Força a atualização do nome se for a Lilian e estiver com o nome antigo
-            if (firebaseUser.email === 'litencarv@uems.br' && data.nome !== 'Lilian Tenório') {
-              await setDoc(profileRef, { ...data, nome: 'Lilian Tenório' }, { merge: true });
-              setProfile({ ...data, nome: 'Lilian Tenório' });
-            } else {
-              setProfile(data);
-            }
+            setProfile(profileDoc.data() as UserProfile);
           } else {
             // Lógica de Inicialização Automática para Lilian Tenório
             if (firebaseUser.email === 'litencarv@uems.br') {
@@ -70,7 +64,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         } catch (error) {
           console.error("Erro ao carregar perfil:", error);
-          setProfile(null);
+          // Mesmo com erro de perfil, permitimos o objeto user para a Lilian Tenório
+          // devido às regras de segurança que validam pelo e-mail
+          if (firebaseUser.email === 'litencarv@uems.br') {
+             setProfile({
+                nome: "Lilian Tenório",
+                email: firebaseUser.email,
+                perfil: 'admin'
+             });
+          } else {
+            setProfile(null);
+          }
         }
       } else {
         setProfile(null);
@@ -81,15 +85,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!firebaseUser && pathname !== '/login') {
         router.push('/login');
       }
-      if (firebaseUser && pathname === '/login') {
-        router.push('/');
-      }
     });
 
     return () => unsubscribe();
   }, [pathname, router]);
 
-  const isAdmin = profile?.perfil === 'admin';
+  const isAdmin = profile?.perfil === 'admin' || user?.email === 'litencarv@uems.br';
 
   return (
     <AuthContext.Provider value={{ user, profile, loading, isAdmin }}>
