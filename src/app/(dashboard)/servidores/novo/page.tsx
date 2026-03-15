@@ -77,8 +77,8 @@ export default function NewServidorPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-10">
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
+      <div className="text-center space-y-2 w-full">
+        <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
           Novo <span className="text-primary italic">Servidor</span>
         </h1>
         <p className="text-slate-500 font-medium italic">Inserção de ativo no quadro de pessoal</p>

@@ -75,14 +75,14 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
   return (
     <div className="space-y-12">
-      <div className="flex flex-col items-center text-center gap-6">
+      <div className="flex flex-col items-center text-center gap-6 w-full">
         <div className="p-1 border-4 border-primary/20 rounded-full">
           <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center">
             <UserCircle className="w-20 h-20 text-primary" />
           </div>
         </div>
-        <div className="space-y-2">
-          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
+        <div className="space-y-2 w-full">
+          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
             Dossiê <span className="text-primary italic">Pessoal</span>
           </h1>
           <p className="text-2xl sm:text-3xl font-black text-primary tracking-tight mt-2">{servidor.nome}</p>

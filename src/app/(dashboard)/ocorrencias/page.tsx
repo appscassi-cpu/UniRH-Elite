@@ -67,15 +67,15 @@ function OcorrenciasListContent() {
   return (
     <div className="space-y-10">
       <div className="flex flex-col items-center text-center gap-6 mb-12">
-        <div className="space-y-2">
-          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
+        <div className="space-y-2 w-full">
+          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
             Lista de <span className="text-primary italic">Eventos</span>
           </h1>
           <p className="text-slate-500 font-medium text-lg italic">
             Monitoramento de {tipoFilter ? `registros de ${tipoFilter}` : 'histórico administrativo'}
           </p>
         </div>
-        <Button asChild className="w-full h-16 text-xl font-black rounded-2xl shadow-2xl shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99]">
+        <Button asChild className="w-full h-16 text-xl font-black rounded-2xl shadow-2xl shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99] mt-4">
           <Link href="/ocorrencias/registrar">
             <CalendarPlus className="w-6 h-6 mr-3" />
             Registrar Nova Ocorrência

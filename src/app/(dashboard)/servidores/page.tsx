@@ -42,7 +42,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/Dropdown-menu";
 
 export default function ServidoresListPage() {
   const { isAdmin } = useAuth();
@@ -79,7 +79,7 @@ export default function ServidoresListPage() {
     <div className="space-y-10">
       <div className="flex flex-col items-center text-center gap-6 mb-12">
         <div className="space-y-2 w-full">
-          <h1 className="text-4xl sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
+          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
             Lista de <span className="text-primary italic">Servidores</span>
           </h1>
           <p className="text-slate-500 font-medium text-lg italic">Controle estratégico do quadro universitário</p>
