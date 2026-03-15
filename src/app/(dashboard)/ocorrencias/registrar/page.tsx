@@ -315,7 +315,7 @@ function RegistrarOcorrenciaContent() {
             </div>
 
             <div className="grid gap-2">
-              <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Anexo Comprobatório</Label>
+              <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Anexo Comprobatório (Opcional)</Label>
               <div className="flex flex-col gap-4">
                 <div className="relative border-4 border-dashed rounded-[2rem] p-6 sm:p-8 hover:bg-primary/5 transition-all text-center border-primary/20 group">
                   <Input 
