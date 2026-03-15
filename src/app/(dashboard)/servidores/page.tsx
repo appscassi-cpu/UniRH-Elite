@@ -112,8 +112,8 @@ export default function ServidoresListPage() {
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-8">
                     {/* Identificação Principal */}
                     <div className="flex items-center gap-4 lg:gap-6 flex-1 min-w-0">
-                      <div className="p-3 bg-primary/10 rounded-2xl shrink-0 group-hover:bg-primary group-hover:rotate-6 transition-all duration-500 hidden sm:flex">
-                        <UserCircle className="w-8 h-8 text-primary group-hover:text-white" />
+                      <div className="p-2 sm:p-3 bg-primary/10 rounded-2xl shrink-0 group-hover:bg-primary group-hover:rotate-6 transition-all duration-500 flex">
+                        <UserCircle className="w-6 h-6 sm:w-8 sm:h-8 text-primary group-hover:text-white" />
                       </div>
                       <div className="space-y-1 flex-1 min-w-0">
                         <h3 className="font-black text-slate-900 text-lg md:text-2xl tracking-tight leading-none uppercase truncate whitespace-nowrap">
