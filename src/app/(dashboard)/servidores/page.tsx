@@ -21,7 +21,10 @@ import {
   Edit, 
   Trash2,
   UserCircle,
-  MoreVertical
+  MoreVertical,
+  Briefcase,
+  MapPin,
+  IdCard
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -43,6 +46,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function ServidoresListPage() {
   const { isAdmin } = useAuth();
@@ -105,93 +109,175 @@ export default function ServidoresListPage() {
         />
       </div>
 
-      <div className="bg-white rounded-[2rem] shadow-xl border-2 border-slate-100 overflow-hidden">
+      <div className="space-y-6">
         {loading ? (
-          <div className="p-12 text-center text-muted-foreground animate-pulse font-medium text-xl">Carregando lista elite...</div>
+          <div className="p-12 text-center text-muted-foreground animate-pulse font-medium text-xl bg-white rounded-[2rem] shadow-xl">
+            Carregando lista elite...
+          </div>
         ) : filtered.length === 0 ? (
-          <div className="p-16 text-center">
+          <div className="p-16 text-center bg-white rounded-[2rem] shadow-xl border-2 border-slate-100">
             <UserCircle className="w-16 h-16 text-muted-foreground/20 mx-auto mb-4" />
             <p className="text-xl font-medium text-muted-foreground">Nenhum servidor encontrado na base de dados.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader className="bg-slate-50/50">
-                <TableRow className="h-14 border-b-2">
-                  <TableHead className="font-bold text-primary pl-6">Nome / Matrícula</TableHead>
-                  <TableHead className="font-bold text-primary">Cargo</TableHead>
-                  <TableHead className="hidden md:table-cell font-bold text-primary">Setor</TableHead>
-                  <TableHead className="text-right pr-6 font-bold text-primary">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((servidor) => (
-                  <TableRow key={servidor.id} className="h-20 hover:bg-slate-50 transition-colors">
-                    <TableCell className="pl-6">
-                      <div className="flex flex-col">
-                        <span className="font-bold text-slate-800 text-lg">{servidor.nome}</span>
-                        <span className="text-xs text-muted-foreground font-mono">MAT: {servidor.matricula}</span>
+          <>
+            {/* Mobile Card Layout */}
+            <div className="grid grid-cols-1 gap-4 md:hidden">
+              {filtered.map((servidor) => (
+                <Card key={servidor.id} className="rounded-[2rem] border-2 border-slate-100 shadow-lg overflow-hidden group hover:border-primary/30 transition-all">
+                  <CardContent className="p-6 space-y-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="space-y-1">
+                        <h3 className="font-black text-slate-900 text-xl leading-tight">{servidor.nome}</h3>
+                        <div className="flex items-center gap-2 text-slate-500 font-mono text-xs">
+                          <IdCard className="w-3 h-3" />
+                          MAT: {servidor.matricula}
+                        </div>
                       </div>
-                    </TableCell>
-                    <TableCell className="font-medium text-slate-600">{servidor.cargo}</TableCell>
-                    <TableCell className="hidden md:table-cell text-muted-foreground font-medium">{servidor.setor}</TableCell>
-                    <TableCell className="text-right pr-6">
-                      <div className="flex justify-end gap-1">
-                        <Button variant="ghost" size="icon" asChild className="rounded-full h-12 w-12 hover:bg-blue-50 text-blue-600">
-                          <Link href={`/servidores/${servidor.id}`}>
-                            <Eye className="w-6 h-6" />
-                          </Link>
-                        </Button>
-                        
-                        {isAdmin && (
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="rounded-full h-12 w-12">
-                                <MoreVertical className="w-6 h-6 text-slate-400" />
+                      <div className="p-3 bg-primary/10 rounded-2xl">
+                        <UserCircle className="w-6 h-6 text-primary" />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="flex items-center gap-2 text-slate-600">
+                        <Briefcase className="w-4 h-4 text-primary" />
+                        <span className="font-bold text-sm">{servidor.cargo}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-slate-500 italic">
+                        <MapPin className="w-4 h-4 text-slate-400" />
+                        <span className="text-sm font-medium">{servidor.setor}</span>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-dashed flex items-center justify-between gap-2">
+                      <Button variant="outline" size="sm" asChild className="flex-1 h-12 rounded-xl font-bold border-2 hover:bg-primary/5 hover:text-primary transition-all">
+                        <Link href={`/servidores/${servidor.id}`}>
+                          <Eye className="w-5 h-5 mr-2" />
+                          Ver Perfil
+                        </Link>
+                      </Button>
+                      
+                      {isAdmin && (
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="icon" asChild className="w-12 h-12 rounded-xl border-2 hover:bg-indigo-50 hover:text-indigo-600 transition-all">
+                            <Link href={`/servidores/${servidor.id}/editar`}>
+                              <Edit className="w-5 h-5" />
+                            </Link>
+                          </Button>
+                          
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="outline" size="icon" className="w-12 h-12 rounded-xl border-2 text-destructive hover:bg-rose-50 transition-all">
+                                <Trash2 className="w-5 h-5" />
                               </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48 rounded-xl p-2 shadow-2xl">
-                              <DropdownMenuItem asChild>
-                                <Link href={`/servidores/${servidor.id}/editar`} className="flex items-center gap-3 cursor-pointer py-3">
-                                  <Edit className="w-5 h-5 text-slate-600" />
-                                  <span className="font-semibold">Editar Dados</span>
-                                </Link>
-                              </DropdownMenuItem>
-                              <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                  <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="flex items-center gap-3 text-destructive cursor-pointer py-3">
-                                    <Trash2 className="w-5 h-5" />
-                                    <span className="font-semibold">Excluir Registro</span>
-                                  </DropdownMenuItem>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent className="rounded-[2.5rem] p-10 border-2 shadow-3xl">
-                                  <AlertDialogHeader>
-                                    <AlertDialogTitle className="text-3xl font-black tracking-tight text-slate-900">Protocolo de Exclusão</AlertDialogTitle>
-                                    <AlertDialogDescription className="text-lg font-medium leading-relaxed">
-                                      Confirmar a remoção definitiva de <strong>{servidor.nome}</strong>? Todos os dados históricos e ocorrências serão perdidos permanentemente.
-                                    </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter className="mt-8 gap-4">
-                                    <AlertDialogCancel className="rounded-2xl h-14 text-lg font-bold border-2">Cancelar Operação</AlertDialogCancel>
-                                    <AlertDialogAction 
-                                      onClick={() => handleDelete(servidor.id)} 
-                                      className="bg-destructive hover:bg-destructive/90 rounded-2xl h-14 text-lg font-bold shadow-lg shadow-destructive/20"
-                                    >
-                                      Confirmar Exclusão
-                                    </AlertDialogAction>
-                                  </AlertDialogFooter>
-                                </AlertDialogContent>
-                              </AlertDialog>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        )}
-                      </div>
-                    </TableCell>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent className="rounded-[2.5rem] p-10 border-2 shadow-3xl">
+                              <AlertDialogHeader>
+                                <AlertDialogTitle className="text-3xl font-black tracking-tight text-slate-900">Protocolo de Exclusão</AlertDialogTitle>
+                                <AlertDialogDescription className="text-lg font-medium leading-relaxed">
+                                  Confirmar a remoção definitiva de <strong>{servidor.nome}</strong>? Todos os dados históricos e ocorrências serão perdidos permanentemente.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter className="mt-8 gap-4">
+                                <AlertDialogCancel className="rounded-2xl h-14 text-lg font-bold border-2">Cancelar Operação</AlertDialogCancel>
+                                <AlertDialogAction 
+                                  onClick={() => handleDelete(servidor.id)} 
+                                  className="bg-destructive hover:bg-destructive/90 rounded-2xl h-14 text-lg font-bold shadow-lg shadow-destructive/20"
+                                >
+                                  Confirmar Exclusão
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Desktop Table Layout */}
+            <div className="hidden md:block bg-white rounded-[2rem] shadow-xl border-2 border-slate-100 overflow-hidden">
+              <Table>
+                <TableHeader className="bg-slate-50/50">
+                  <TableRow className="h-14 border-b-2">
+                    <TableHead className="font-bold text-primary pl-6">Nome / Matrícula</TableHead>
+                    <TableHead className="font-bold text-primary">Cargo</TableHead>
+                    <TableHead className="font-bold text-primary">Setor</TableHead>
+                    <TableHead className="text-right pr-6 font-bold text-primary">Ações</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map((servidor) => (
+                    <TableRow key={servidor.id} className="h-20 hover:bg-slate-50 transition-colors">
+                      <TableCell className="pl-6">
+                        <div className="flex flex-col">
+                          <span className="font-bold text-slate-800 text-lg">{servidor.nome}</span>
+                          <span className="text-xs text-muted-foreground font-mono">MAT: {servidor.matricula}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium text-slate-600">{servidor.cargo}</TableCell>
+                      <TableCell className="text-muted-foreground font-medium">{servidor.setor}</TableCell>
+                      <TableCell className="text-right pr-6">
+                        <div className="flex justify-end gap-1">
+                          <Button variant="ghost" size="icon" asChild className="rounded-full h-12 w-12 hover:bg-blue-50 text-blue-600">
+                            <Link href={`/servidores/${servidor.id}`}>
+                              <Eye className="w-6 h-6" />
+                            </Link>
+                          </Button>
+                          
+                          {isAdmin && (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="rounded-full h-12 w-12">
+                                  <MoreVertical className="w-6 h-6 text-slate-400" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-48 rounded-xl p-2 shadow-2xl">
+                                <DropdownMenuItem asChild>
+                                  <Link href={`/servidores/${servidor.id}/editar`} className="flex items-center gap-3 cursor-pointer py-3">
+                                    <Edit className="w-5 h-5 text-slate-600" />
+                                    <span className="font-semibold">Editar Dados</span>
+                                  </Link>
+                                </DropdownMenuItem>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="flex items-center gap-3 text-destructive cursor-pointer py-3">
+                                      <Trash2 className="w-5 h-5" />
+                                      <span className="font-semibold">Excluir Registro</span>
+                                    </DropdownMenuItem>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent className="rounded-[2.5rem] p-10 border-2 shadow-3xl">
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle className="text-3xl font-black tracking-tight text-slate-900">Protocolo de Exclusão</AlertDialogTitle>
+                                      <AlertDialogDescription className="text-lg font-medium leading-relaxed">
+                                        Confirmar a remoção definitiva de <strong>{servidor.nome}</strong>? Todos os dados históricos e ocorrências serão perdidos permanentemente.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter className="mt-8 gap-4">
+                                      <AlertDialogCancel className="rounded-2xl h-14 text-lg font-bold border-2">Cancelar Operação</AlertDialogCancel>
+                                      <AlertDialogAction 
+                                        onClick={() => handleDelete(servidor.id)} 
+                                        className="bg-destructive hover:bg-destructive/90 rounded-2xl h-14 text-lg font-bold shadow-lg shadow-destructive/20"
+                                      >
+                                        Confirmar Exclusão
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
       </div>
     </div>
