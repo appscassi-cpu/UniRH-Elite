@@ -13,10 +13,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Upload, FileText, X, AlertCircle } from 'lucide-react';
-import Link from 'next/link';
+import { FileText, Upload, X, Plus, Calendar, Trash2, Info } from 'lucide-react';
 import { differenceInDays, parseISO } from 'date-fns';
 import { useAuth } from '@/components/auth-provider';
+import { cn } from '@/lib/utils';
 
 const OCORRENCIA_TIPOS = [
   "Falta",
@@ -29,24 +29,26 @@ const OCORRENCIA_TIPOS = [
   "Outro"
 ];
 
+interface Periodo {
+  dataInicio: string;
+  dataFim: string;
+  dias: number;
+}
+
 function RegistrarOcorrenciaContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { toast } = useToast();
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [servidores, setServidores] = useState<any[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState({
-    servidorId: searchParams.get('servidorId') || '',
-    tipo: '',
-    dataInicio: '',
-    dataFim: '',
-    dias: 0,
-    observacao: ''
-  });
+  const [tipo, setTipo] = useState('');
+  const [servidorId, setServidorId] = useState(searchParams.get('servidorId') || '');
+  const [observacao, setObservacao] = useState('');
+  const [periodos, setPeriodos] = useState<Periodo[]>([{ dataInicio: '', dataFim: '', dias: 0 }]);
 
   useEffect(() => {
     async function fetchServidores() {
@@ -57,14 +59,34 @@ function RegistrarOcorrenciaContent() {
     fetchServidores();
   }, []);
 
-  useEffect(() => {
-    if (formData.dataInicio && formData.dataFim) {
-      const start = parseISO(formData.dataInicio);
-      const end = parseISO(formData.dataFim);
-      const diff = differenceInDays(end, start) + 1;
-      setFormData(prev => ({ ...prev, dias: diff > 0 ? diff : 0 }));
+  const calculateDays = (start: string, end: string) => {
+    if (!start || !end) return 0;
+    const s = parseISO(start);
+    const e = parseISO(end);
+    const diff = differenceInDays(e, s) + 1;
+    return diff > 0 ? diff : 0;
+  };
+
+  const handlePeriodoChange = (index: number, field: keyof Periodo, value: string) => {
+    const newPeriodos = [...periodos];
+    newPeriodos[index] = { ...newPeriodos[index], [field]: value };
+    
+    if (field === 'dataInicio' || field === 'dataFim') {
+      newPeriodos[index].dias = calculateDays(newPeriodos[index].dataInicio, newPeriodos[index].dataFim);
     }
-  }, [formData.dataInicio, formData.dataFim]);
+    
+    setPeriodos(newPeriodos);
+  };
+
+  const addPeriodo = () => {
+    setPeriodos([...periodos, { dataInicio: '', dataFim: '', dias: 0 }]);
+  };
+
+  const removePeriodo = (index: number) => {
+    if (periodos.length > 1) {
+      setPeriodos(periodos.filter((_, i) => i !== index));
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
@@ -86,8 +108,11 @@ function RegistrarOcorrenciaContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.servidorId || !formData.tipo || !formData.dataInicio || !formData.dataFim) {
-      toast({ variant: "destructive", title: "Erro", description: "Preencha todos os campos obrigatórios." });
+    
+    const validPeriodos = periodos.filter(p => p.dataInicio && p.dataFim);
+    
+    if (!servidorId || !tipo || validPeriodos.length === 0) {
+      toast({ variant: "destructive", title: "Erro de Validação", description: "Preencha o servidor, o tipo e ao menos um período válido." });
       return;
     }
 
@@ -100,29 +125,41 @@ function RegistrarOcorrenciaContent() {
         anexoUrl = await getDownloadURL(snapshot.ref);
       }
 
-      const servidorSnap = await getDoc(doc(db, 'servidores', formData.servidorId));
+      const servidorSnap = await getDoc(doc(db, 'servidores', servidorId));
       const servidorNome = servidorSnap.exists() ? servidorSnap.data().nome : 'Servidor';
 
-      await addDoc(collection(db, 'ocorrencias'), {
-        ...formData,
-        servidorNome,
-        anexo: anexoUrl,
-        dataRegistro: serverTimestamp(),
-        usuarioRegistro: user?.uid || 'desconhecido'
-      });
+      // Criamos um documento para cada período (especialmente útil para férias parceladas)
+      const promises = validPeriodos.map(p => 
+        addDoc(collection(db, 'ocorrencias'), {
+          servidorId,
+          servidorNome,
+          tipo,
+          dataInicio: p.dataInicio,
+          dataFim: p.dataFim,
+          dias: p.dias,
+          observacao,
+          anexo: anexoUrl,
+          dataRegistro: serverTimestamp(),
+          usuarioRegistro: user?.uid || 'desconhecido'
+        })
+      );
 
-      toast({ title: "Registrado!", description: "Ocorrência salva com sucesso." });
-      router.push(`/servidores/${formData.servidorId}`);
+      await Promise.all(promises);
+
+      toast({ title: "Registrado!", description: `${validPeriodos.length} período(s) consolidado(s) com sucesso.` });
+      router.push(`/servidores/${servidorId}`);
     } catch (error) {
       console.error(error);
-      toast({ variant: "destructive", title: "Erro", description: "Falha ao registrar ocorrência." });
+      toast({ variant: "destructive", title: "Erro de Protocolo", description: "Falha ao registrar ocorrências." });
     } finally {
       setLoading(false);
     }
   };
 
+  const totalDias = periodos.reduce((acc, p) => acc + p.dias, 0);
+
   return (
-    <div className="max-w-2xl mx-auto space-y-10">
+    <div className="max-w-3xl mx-auto space-y-10">
       <div className="text-center space-y-2 w-full">
         <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
           Novo <span className="text-primary italic">Registro</span>
@@ -140,12 +177,12 @@ function RegistrarOcorrenciaContent() {
               Detalhes da Ocorrência
             </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-6 p-8">
+          <CardContent className="grid gap-6 p-6 sm:p-8">
             <div className="grid gap-2">
               <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Servidor Alvo</Label>
               <Select 
-                value={formData.servidorId} 
-                onValueChange={(val) => setFormData({ ...formData, servidorId: val })}
+                value={servidorId} 
+                onValueChange={setServidorId}
               >
                 <SelectTrigger className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg">
                   <SelectValue placeholder="Selecione um servidor" />
@@ -161,8 +198,12 @@ function RegistrarOcorrenciaContent() {
             <div className="grid gap-2">
               <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Natureza da Ocorrência</Label>
               <Select 
-                value={formData.tipo} 
-                onValueChange={(val) => setFormData({ ...formData, tipo: val })}
+                value={tipo} 
+                onValueChange={(val) => {
+                  setTipo(val);
+                  // Se mudar para férias, inicializa com 1 mas permite adicionar mais
+                  if (val === 'Férias' && periodos.length === 0) setPeriodos([{dataInicio: '', dataFim: '', dias: 0}]);
+                }}
               >
                 <SelectTrigger className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg">
                   <SelectValue placeholder="Selecione o tipo" />
@@ -175,64 +216,112 @@ function RegistrarOcorrenciaContent() {
               </Select>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <div className="grid gap-2">
-                <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Início do Período</Label>
-                <Input
-                  type="date"
-                  required
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg"
-                  value={formData.dataInicio}
-                  onChange={(e) => setFormData({ ...formData, dataInicio: e.target.value })}
-                />
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">
+                  {tipo === 'Férias' ? 'Cronograma de Períodos' : 'Vigência do Evento'}
+                </Label>
+                {tipo === 'Férias' && (
+                   <Badge variant="outline" className="text-primary border-primary/20 bg-primary/5 font-black px-3 py-1">
+                     Total: {totalDias} dias
+                   </Badge>
+                )}
               </div>
-              <div className="grid gap-2">
-                <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Término do Período</Label>
-                <Input
-                  type="date"
-                  required
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-semibold text-lg"
-                  value={formData.dataFim}
-                  onChange={(e) => setFormData({ ...formData, dataFim: e.target.value })}
-                />
-              </div>
+
+              {periodos.map((p, index) => (
+                <div key={index} className="relative p-6 bg-slate-50 rounded-[2rem] border-2 border-slate-100 group animate-in slide-in-from-right-4 duration-300">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid gap-1.5">
+                      <Label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter ml-1">Início</Label>
+                      <Input
+                        type="date"
+                        required
+                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-bold"
+                        value={p.dataInicio}
+                        onChange={(e) => handlePeriodoChange(index, 'dataInicio', e.target.value)}
+                      />
+                    </div>
+                    <div className="grid gap-1.5">
+                      <Label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter ml-1">Término</Label>
+                      <Input
+                        type="date"
+                        required
+                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-bold"
+                        value={p.dataFim}
+                        onChange={(e) => handlePeriodoChange(index, 'dataFim', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 flex items-center justify-between">
+                    <div className="text-xs font-black text-primary italic bg-primary/5 px-4 py-1.5 rounded-full border border-primary/10">
+                      {p.dias} {p.dias === 1 ? 'dia corrido' : 'dias corridos'}
+                    </div>
+                    {tipo === 'Férias' && periodos.length > 1 && (
+                      <Button 
+                        type="button" 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-full h-10 w-10 p-0"
+                        onClick={() => removePeriodo(index)}
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              {tipo === 'Férias' && (
+                <div className="flex flex-col gap-4">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="w-full h-14 border-2 border-dashed border-primary/30 text-primary hover:bg-primary/5 rounded-2xl font-black text-lg shadow-sm"
+                    onClick={addPeriodo}
+                  >
+                    <Plus className="w-5 h-5 mr-2" />
+                    Adicionar Novo Período
+                  </Button>
+                  
+                  <div className="bg-amber-50 p-4 rounded-2xl border border-amber-200 flex items-start gap-3">
+                    <Info className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                    <p className="text-xs text-amber-700 font-medium leading-relaxed">
+                      <strong>Dica Elite:</strong> O servidor pode dividir as férias em até 3 períodos (Ex: 30 dias, 15+15, 20+10 ou 10+10+10).
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
-            <div className="grid gap-2">
-              <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Cálculo de Vigência</Label>
-              <div className="h-14 flex items-center px-6 bg-primary/5 rounded-2xl font-black text-primary border-2 border-dashed border-primary/20 text-xl italic">
-                {formData.dias} {formData.dias === 1 ? 'dia corrido' : 'dias corridos'}
-              </div>
-            </div>
-
-            <div className="grid gap-2">
+            <div className="grid gap-2 mt-4">
               <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Memória de Observações</Label>
               <Textarea
                 placeholder="Descreva detalhes importantes para o histórico..."
                 className="min-h-[120px] border-none bg-slate-100/50 rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-medium text-lg"
-                value={formData.observacao}
-                onChange={(e) => setFormData({ ...formData, observacao: e.target.value })}
+                value={observacao}
+                onChange={(e) => setObservacao(e.target.value)}
               />
             </div>
 
             <div className="grid gap-2">
               <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Anexo Comprobatório</Label>
               <div className="flex flex-col gap-4">
-                <div className="relative border-4 border-dashed rounded-[2rem] p-10 hover:bg-primary/5 transition-all text-center border-primary/20 group">
+                <div className="relative border-4 border-dashed rounded-[2rem] p-8 hover:bg-primary/5 transition-all text-center border-primary/20 group">
                   <Input 
                     type="file" 
                     className="absolute inset-0 opacity-0 cursor-pointer" 
                     accept="image/*,application/pdf"
                     onChange={handleFileChange}
                   />
-                  <div className="flex flex-col items-center gap-3 pointer-events-none group-hover:scale-105 transition-transform">
-                    <div className="p-4 bg-primary/10 rounded-full">
-                      <Upload className="w-10 h-10 text-primary" />
+                  <div className="flex flex-col items-center gap-2 pointer-events-none">
+                    <div className="p-3 bg-primary/10 rounded-full">
+                      <Upload className="w-8 h-8 text-primary" />
                     </div>
-                    <span className="text-lg font-black text-slate-700">
-                      {file ? file.name : "Clique ou arraste o documento"}
+                    <span className="text-base font-black text-slate-700">
+                      {file ? file.name : "Anexar Documento"}
                     </span>
-                    <span className="text-sm font-medium text-slate-400 italic">Formatos aceitos: Imagens ou PDF (Máx 5MB)</span>
+                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Imagens ou PDF • Máx 5MB</span>
                   </div>
                 </div>
 
@@ -243,10 +332,10 @@ function RegistrarOcorrenciaContent() {
                       type="button" 
                       variant="destructive" 
                       size="icon" 
-                      className="absolute top-4 right-4 rounded-full h-12 w-12 shadow-xl hover:scale-110 transition-transform"
+                      className="absolute top-4 right-4 rounded-full h-10 w-10"
                       onClick={() => { setFile(null); setPreview(null); }}
                     >
-                      <X className="w-6 h-6" />
+                      <X className="w-5 h-5" />
                     </Button>
                   </div>
                 )}
@@ -255,7 +344,7 @@ function RegistrarOcorrenciaContent() {
           </CardContent>
           <CardFooter className="p-8">
             <Button type="submit" className="w-full h-20 text-2xl font-black rounded-[2rem] shadow-2xl shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95" disabled={loading}>
-              {loading ? "Validando Dados..." : "Finalizar Registro Elite"}
+              {loading ? "Validando Protocolos..." : "Finalizar Lançamento Elite"}
             </Button>
           </CardFooter>
         </form>
@@ -271,3 +360,4 @@ export default function RegistrarOcorrenciaPage() {
     </Suspense>
   );
 }
+    
