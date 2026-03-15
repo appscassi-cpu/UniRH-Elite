@@ -7,7 +7,7 @@ import { auth } from '@/lib/firebase';
 import { 
   LayoutDashboard, 
   Users, 
-  CalendarPlus, 
+  Umbrella, 
   LogOut
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -20,7 +20,7 @@ export function Navbar() {
   const navItems = [
     { label: 'Painel', href: '/', icon: LayoutDashboard, color: 'text-blue-500' },
     { label: 'Servidores', href: '/servidores', icon: Users, color: 'text-indigo-600' },
-    { label: 'Ocorrências', href: '/ocorrencias/registrar', icon: CalendarPlus, color: 'text-amber-500' },
+    { label: 'Férias', href: '/ferias', icon: Umbrella, color: 'text-amber-500' },
   ];
 
   return (
