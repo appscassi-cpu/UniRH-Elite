@@ -132,7 +132,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
               Modificar Ativo
             </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-8 p-8">
+          <CardContent className="grid gap-8 p-4 sm:p-8">
             <div className="grid gap-2">
               <Label htmlFor="nome" className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Nome Completo</Label>
               <Input
@@ -199,7 +199,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
                   required
                   value={formData.dataNascimento}
                   onChange={(e) => setFormData({ ...formData, dataNascimento: e.target.value })}
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-4 sm:px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full"
                 />
               </div>
               <div className="grid gap-2">
@@ -210,7 +210,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
                   required
                   value={formData.dataAdmissao}
                   onChange={(e) => setFormData({ ...formData, dataAdmissao: e.target.value })}
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-4 sm:px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full"
                 />
               </div>
             </div>
@@ -225,8 +225,8 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
               />
             </div>
           </CardContent>
-          <CardFooter className="p-8">
-            <Button type="submit" className="w-full h-20 text-2xl font-black rounded-[2rem] shadow-2xl shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95" disabled={loading}>
+          <CardFooter className="p-4 sm:p-8">
+            <Button type="submit" className="w-full h-16 sm:h-20 text-xl sm:text-2xl font-black rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95" disabled={loading}>
               <Save className="w-6 h-6 mr-3" />
               {loading ? "Consolidando..." : "Salvar Alterações Elite"}
             </Button>

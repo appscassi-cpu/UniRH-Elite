@@ -176,7 +176,7 @@ function RegistrarOcorrenciaContent() {
               Detalhes da Ocorrência
             </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-6 p-6 sm:p-8">
+          <CardContent className="grid gap-6 p-4 sm:p-8">
             <div className="grid gap-2">
               <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Servidor Alvo</Label>
               <Select 
@@ -227,32 +227,32 @@ function RegistrarOcorrenciaContent() {
               </div>
 
               {periodos.map((p, index) => (
-                <div key={index} className="relative p-6 bg-slate-50 rounded-[2rem] border-2 border-slate-100 group animate-in slide-in-from-right-4 duration-300">
+                <div key={index} className="relative p-4 sm:p-6 bg-slate-50 rounded-[2rem] border-2 border-slate-100 group animate-in slide-in-from-right-4 duration-300">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="grid gap-1.5">
+                    <div className="grid gap-1.5 min-w-0">
                       <Label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter ml-1">Início</Label>
                       <Input
                         type="date"
                         required
-                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-black text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100"
+                        className="h-12 border-none bg-white rounded-xl px-3 sm:px-4 focus:ring-2 focus:ring-primary font-black text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full"
                         value={p.dataInicio}
                         onChange={(e) => handlePeriodoChange(index, 'dataInicio', e.target.value)}
                       />
                     </div>
-                    <div className="grid gap-1.5">
+                    <div className="grid gap-1.5 min-w-0">
                       <Label className="text-[10px] font-black text-slate-400 uppercase tracking-tighter ml-1">Término</Label>
                       <Input
                         type="date"
                         required
-                        className="h-12 border-none bg-white rounded-xl px-4 focus:ring-2 focus:ring-primary font-black text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100"
+                        className="h-12 border-none bg-white rounded-xl px-3 sm:px-4 focus:ring-2 focus:ring-primary font-black text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full"
                         value={p.dataFim}
                         onChange={(e) => handlePeriodoChange(index, 'dataFim', e.target.value)}
                       />
                     </div>
                   </div>
                   
-                  <div className="mt-4 flex items-center justify-between">
-                    <div className="text-xs font-black text-primary italic bg-primary/5 px-4 py-1.5 rounded-full border border-primary/10">
+                  <div className="mt-4 flex items-center justify-between gap-2">
+                    <div className="text-xs font-black text-primary italic bg-primary/5 px-3 py-1.5 rounded-full border border-primary/10 whitespace-nowrap">
                       {p.dias} {p.dias === 1 ? 'dia corrido' : 'dias corridos'}
                     </div>
                     {tipo === 'Férias' && periodos.length > 1 && (
@@ -260,7 +260,7 @@ function RegistrarOcorrenciaContent() {
                         type="button" 
                         variant="ghost" 
                         size="sm" 
-                        className="text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-full h-10 w-10 p-0"
+                        className="text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-full h-10 w-10 p-0 shrink-0"
                         onClick={() => removePeriodo(index)}
                       >
                         <Trash2 className="w-5 h-5" />
@@ -305,7 +305,7 @@ function RegistrarOcorrenciaContent() {
             <div className="grid gap-2">
               <Label className="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Anexo Comprobatório</Label>
               <div className="flex flex-col gap-4">
-                <div className="relative border-4 border-dashed rounded-[2rem] p-8 hover:bg-primary/5 transition-all text-center border-primary/20 group">
+                <div className="relative border-4 border-dashed rounded-[2rem] p-6 sm:p-8 hover:bg-primary/5 transition-all text-center border-primary/20 group">
                   <Input 
                     type="file" 
                     className="absolute inset-0 opacity-0 cursor-pointer" 
@@ -316,7 +316,7 @@ function RegistrarOcorrenciaContent() {
                     <div className="p-3 bg-primary/10 rounded-full">
                       <Upload className="w-8 h-8 text-primary" />
                     </div>
-                    <span className="text-base font-black text-slate-900">
+                    <span className="text-sm sm:text-base font-black text-slate-900 break-all px-2">
                       {file ? file.name : "Anexar Documento"}
                     </span>
                     <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Imagens ou PDF • Máx 5MB</span>
@@ -340,8 +340,8 @@ function RegistrarOcorrenciaContent() {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="p-8">
-            <Button type="submit" className="w-full h-20 text-2xl font-black rounded-[2rem] shadow-2xl shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95" disabled={loading}>
+          <CardFooter className="p-4 sm:p-8">
+            <Button type="submit" className="w-full h-16 sm:h-20 text-xl sm:text-2xl font-black rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95" disabled={loading}>
               {loading ? "Validando Protocolos..." : "Finalizar Lançamento Elite"}
             </Button>
           </CardFooter>
