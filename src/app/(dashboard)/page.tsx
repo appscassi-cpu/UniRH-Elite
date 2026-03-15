@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { collection, query, getDocs, where, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { 
   Users, 
   CalendarDays, 
@@ -83,17 +82,17 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-12 pb-24 animate-in fade-in slide-in-from-bottom-4 duration-700 perspective-container">
-      <header className="space-y-2">
-        <div className="flex items-center gap-2 text-primary font-bold tracking-widest text-[10px] uppercase">
+    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 perspective-container">
+      <header className="space-y-2 text-center sm:text-left">
+        <div className="flex items-center justify-center sm:justify-start gap-2 text-primary font-bold tracking-widest text-[10px] uppercase">
           <TrendingUp className="w-3 h-3" />
           Analytics em tempo real
         </div>
-        <h1 className="text-4xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+        <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center justify-center sm:justify-start gap-3">
           Olá, {profile?.nome?.split(' ')[0]}
-          {isAdmin && <ShieldCheck className="w-8 h-8 text-primary animate-pulse" />}
+          {isAdmin && <ShieldCheck className="w-6 h-6 text-primary animate-pulse" />}
         </h1>
-        <p className="text-slate-500 font-medium">Bem-vindo ao centro de comando da UniRH.</p>
+        <p className="text-slate-500 font-medium">Bem-vindo ao centro de comando.</p>
       </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
