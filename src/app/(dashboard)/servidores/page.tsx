@@ -42,7 +42,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/Dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 export default function ServidoresListPage() {
   const { isAdmin } = useAuth();
