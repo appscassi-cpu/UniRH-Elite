@@ -124,7 +124,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
   const handleDeleteOccurrence = async (occurrenceId: string) => {
     try {
       await deleteDoc(doc(db, 'ocorrencias', occurrenceId));
-      toast({ title: "Registro Removido", description: "A ocorrência foi excluída do dossiê." });
+      toast({ title: "Registro Removido", description: "A ocorrência foi excluída do cadastro." });
     } catch (error) {
       toast({ variant: "destructive", title: "Erro de Protocolo", description: "Não foi possível remover o registro." });
     }
@@ -150,7 +150,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
   const handleShareWhatsApp = () => {
     if (!servidor) return;
 
-    let message = `*🛡️ UniRH ELITE - DOSSIÊ ESTRATÉGICO*\n\n`;
+    let message = `*🛡️ UniRH ELITE - CADASTRO ESTRATÉGICO*\n\n`;
     message += `*NOME:* ${servidor?.nome?.toUpperCase()}\n`;
     message += `*MATRÍCULA:* ${servidor?.matricula}\n`;
     message += `*CARGO:* ${servidor?.cargo}\n`;
@@ -225,7 +225,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
       styles: { fontSize: 8 },
     });
 
-    doc.save(`Dossie_Elite_${servidor?.nome?.replace(/\s+/g, '_')}.pdf`);
+    doc.save(`Cadastro_Elite_${servidor?.nome?.replace(/\s+/g, '_')}.pdf`);
   };
 
   const getOccurrenceBadge = (tipo: string) => {
@@ -266,7 +266,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
         </div>
         <div className="space-y-2 w-full">
           <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter">
-            Dossiê <span className="text-primary italic">Pessoal</span>
+            Cadastro <span className="text-primary italic">Pessoal</span>
           </h1>
           <p className="text-2xl sm:text-3xl font-black text-primary tracking-tight mt-2">{servidor?.nome}</p>
         </div>
@@ -277,7 +277,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
           <CardHeader className="bg-slate-900 text-white p-8">
             <CardTitle className="text-xl font-black flex items-center gap-3">
               <IdCard className="w-6 h-6 text-primary" />
-              Dossier Cadastral
+              Cadastro Cadastral
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-8">
