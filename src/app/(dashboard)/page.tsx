@@ -121,14 +121,6 @@ export default function DashboardPage() {
         <h1 className="text-5xl font-black text-slate-900 tracking-tighter text-center">
           UniRH <span className="text-primary italic">Elite</span>
         </h1>
-        
-        <div className="mt-8 text-center space-y-2">
-          <h2 className="text-3xl font-black text-slate-800 tracking-tight flex items-center justify-center gap-3">
-            Olá, {profile?.nome || 'Administrador!'}
-            <ShieldCheck className="w-8 h-8 text-primary animate-pulse" />
-          </h2>
-          <p className="text-slate-500 font-medium italic">Gestão estratégica UniRH ativa</p>
-        </div>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
