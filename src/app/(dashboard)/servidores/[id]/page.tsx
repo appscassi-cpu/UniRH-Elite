@@ -63,11 +63,34 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
     
     const unsubscribe = onSnapshot(oQuery, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const today = new Date().toISOString().split('T')[0];
+
+      // Ordenação Estratégica: 
+      // 1. Períodos em gozo ou futuros vêm primeiro, ordenados pelo início mais próximo (ASC)
+      // 2. Períodos passados vêm depois, ordenados pelo início mais recente (DESC)
       const sortedData = data.sort((a: any, b: any) => {
-        const dateA = a.dataRegistro?.seconds || 0;
-        const dateB = b.dataRegistro?.seconds || 0;
-        return dateB - dateA;
+        const startA = a.dataInicio || '';
+        const startB = b.dataInicio || '';
+        const endA = a.dataFim || '';
+        const endB = b.dataFim || '';
+
+        const isPastA = endA < today;
+        const isPastB = endB < today;
+
+        // Prioriza quem não é passado (andamento ou futuro)
+        if (isPastA !== isPastB) {
+          return isPastA ? 1 : -1;
+        }
+
+        if (!isPastA) {
+          // Futuros/Atuais: Ordena pela data de início ascendente (o mais próximo hoje no topo)
+          return startA.localeCompare(startB);
+        } else {
+          // Passados: Ordena pela data de início descendente (o mais recente primeiro)
+          return startB.localeCompare(startA);
+        }
       });
+
       setOcorrencias(sortedData);
       setLoading(false);
     }, (error) => {
