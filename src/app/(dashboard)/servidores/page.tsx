@@ -18,7 +18,8 @@ import {
   IdCard,
   Users,
   Umbrella,
-  ShieldCheck
+  ShieldCheck,
+  Filter
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -43,6 +44,7 @@ export default function ServidoresListPage() {
   const [servidores, setServidores] = useState<any[]>([]);
   const [activeVacations, setActiveVacations] = useState<Set<string>>(new Set());
   const [searchTerm, setSearchTerm] = useState('');
+  const [vinculoFilter, setVinculoFilter] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -100,10 +102,11 @@ export default function ServidoresListPage() {
     }
   };
 
-  const filtered = servidores.filter(s => 
-    s.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.matricula.includes(searchTerm)
-  );
+  const filtered = servidores.filter(s => {
+    const matchesSearch = s.nome.toLowerCase().includes(searchTerm.toLowerCase()) || s.matricula.includes(searchTerm);
+    const matchesVinculo = vinculoFilter ? s.vinculo === vinculoFilter : true;
+    return matchesSearch && matchesVinculo;
+  });
 
   return (
     <div className="space-y-10 pt-12">
@@ -118,14 +121,52 @@ export default function ServidoresListPage() {
           <p className="text-slate-500 font-medium text-lg italic">Controle estratégico do quadro universitário</p>
         </div>
         
-        {isAdmin && (
-          <Button asChild className="w-full h-16 text-xl font-black rounded-2xl shadow-2xl shadow-indigo-600/20 transition-all hover:scale-[1.01] active:scale-[0.99] mt-4 bg-indigo-600 hover:bg-indigo-700">
-            <Link href="/servidores/novo">
-              <UserPlus className="w-6 h-6 mr-3" />
-              Cadastrar Novo Servidor
-            </Link>
-          </Button>
-        )}
+        <div className="flex flex-col gap-4 w-full">
+          {isAdmin && (
+            <Button asChild className="w-full h-16 text-xl font-black rounded-2xl shadow-2xl shadow-indigo-600/20 transition-all hover:scale-[1.01] active:scale-[0.99] bg-indigo-600 hover:bg-indigo-700">
+              <Link href="/servidores/novo">
+                <UserPlus className="w-6 h-6 mr-3" />
+                Cadastrar Novo Servidor
+              </Link>
+            </Button>
+          )}
+
+          <div className="grid grid-cols-3 gap-3 w-full">
+            <Button 
+              variant={vinculoFilter === null ? "default" : "outline"}
+              onClick={() => setVinculoFilter(null)}
+              className={cn(
+                "h-14 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-md border-2",
+                vinculoFilter === null ? "bg-slate-900 text-white" : "border-slate-200 text-slate-500 hover:bg-slate-50"
+              )}
+            >
+              <Users className="w-4 h-4 mr-2 hidden sm:block" />
+              Todos
+            </Button>
+            <Button 
+              variant={vinculoFilter === 'Efetivo' ? "default" : "outline"}
+              onClick={() => setVinculoFilter('Efetivo')}
+              className={cn(
+                "h-14 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-md border-2",
+                vinculoFilter === 'Efetivo' ? "bg-indigo-600 text-white border-indigo-600" : "border-indigo-100 text-indigo-600 hover:bg-indigo-50"
+              )}
+            >
+              <ShieldCheck className="w-4 h-4 mr-2 hidden sm:block" />
+              Efetivos
+            </Button>
+            <Button 
+              variant={vinculoFilter === 'Terceirizado' ? "default" : "outline"}
+              onClick={() => setVinculoFilter('Terceirizado')}
+              className={cn(
+                "h-14 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-md border-2",
+                vinculoFilter === 'Terceirizado' ? "bg-slate-700 text-white border-slate-700" : "border-slate-100 text-slate-600 hover:bg-slate-50"
+              )}
+            >
+              <Briefcase className="w-4 h-4 mr-2 hidden sm:block" />
+              Terceirizados
+            </Button>
+          </div>
+        </div>
       </div>
 
       <div className="relative group">
@@ -146,7 +187,7 @@ export default function ServidoresListPage() {
         ) : filtered.length === 0 ? (
           <div className="p-16 text-center bg-white rounded-[2rem] shadow-xl border-2 border-slate-100">
             <UserCircle className="w-16 h-16 text-muted-foreground/20 mx-auto mb-4" />
-            <p className="text-xl font-medium text-muted-foreground">Nenhum servidor encontrado na base de dados.</p>
+            <p className="text-xl font-medium text-muted-foreground">Nenhum servidor encontrado com este filtro.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 w-full">
