@@ -35,7 +35,7 @@ function DashboardContent({
     }
 
     if (pathname.startsWith('/ocorrencias/') && servidorIdParam) {
-      return { href: `/servidores/${servidorIdParam}`, label: 'Voltar ao Dossiê' };
+      return { href: `/servidores/${servidorIdParam}`, label: 'Voltar ao Cadastro' };
     }
 
     if (pathname.startsWith('/servidores/') && pathname !== '/servidores') {
@@ -57,7 +57,10 @@ function DashboardContent({
         </div>
         <div className="flex flex-col items-center gap-2">
           <h2 className="text-2xl font-black text-slate-900 tracking-tighter">UniRH Elite</h2>
-          <Loader2 className="w-6 h-6 text-primary animate-spin opacity-20" />
+          <div className="flex items-center gap-2">
+            <Loader2 className="w-4 h-4 text-primary animate-spin" />
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sincronizando Protocolos...</span>
+          </div>
         </div>
       </div>
     );
@@ -86,9 +89,9 @@ function DashboardContent({
   if (!user) return null;
 
   return (
-    <main className="container mx-auto px-4 pt-32 sm:pt-48 pb-32 animate-in fade-in duration-500">
+    <main className="container mx-auto px-4 pt-28 sm:pt-40 pb-32 animate-in fade-in duration-500">
       {!isHome && (
-        <div className="mb-24 flex justify-start">
+        <div className="mb-16 flex justify-start">
           <Button 
             variant="outline" 
             asChild 
