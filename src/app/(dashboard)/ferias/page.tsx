@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -56,11 +57,11 @@ export default function FeriasRankingPage() {
 
   return (
     <div className="space-y-6 sm:space-y-10">
-      <div className="flex flex-col items-center text-center gap-4 sm:gap-6 mb-8 sm:mb-12">
-        <div className="p-3 sm:p-4 bg-amber-500 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl shadow-amber-500/40 rotate-3">
-          <Umbrella className="w-8 h-8 sm:w-12 sm:h-12 text-white" />
+      <div className="flex flex-col items-center text-center gap-6 mb-12">
+        <div className="p-4 bg-amber-500 rounded-[2.5rem] shadow-2xl shadow-amber-500/40 rotate-3">
+          <Umbrella className="w-12 h-12 text-white" />
         </div>
-        <div className="space-y-1 sm:space-y-2 w-full">
+        <div className="space-y-2 w-full">
           <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter">
             Ranking de <span className="text-amber-500 italic">Férias</span>
           </h1>
