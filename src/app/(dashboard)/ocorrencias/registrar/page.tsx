@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, Upload, X, Plus, Calendar, Trash2, Info, Umbrella, ClipboardPen, Search, Users, ShieldCheck, Briefcase } from 'lucide-react';
+import { FileText, Upload, X, Plus, Trash2, Info, Umbrella, ClipboardPen, Search } from 'lucide-react';
 import { differenceInDays, parseISO } from 'date-fns';
 import { useAuth } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
@@ -54,7 +54,6 @@ function RegistrarOcorrenciaContent() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
-  // Estados para Busca e Filtro de Servidores
   const [serverSearch, setServerSearch] = useState('');
   const [serverVinculoFilter, setServerVinculoFilter] = useState<string | null>(null);
 
@@ -180,7 +179,6 @@ function RegistrarOcorrenciaContent() {
 
   const totalDias = periodos.reduce((acc, p) => acc + p.dias, 0);
 
-  // Lógica de Filtragem de Servidores
   const filteredServidores = servidores.filter(s => {
     const matchesSearch = s.nome.toLowerCase().includes(serverSearch.toLowerCase()) || s.matricula.includes(serverSearch);
     const matchesVinculo = serverVinculoFilter ? s.vinculo === serverVinculoFilter : true;
@@ -234,77 +232,73 @@ function RegistrarOcorrenciaContent() {
           </CardHeader>
           <CardContent className="grid gap-6 p-4 sm:p-8">
             
-            {/* Seletor de Servidor com Busca e Filtro */}
-            <div className="grid gap-4 p-4 bg-slate-50 rounded-[2rem] border-2 border-slate-100">
-              <div className="flex flex-col gap-4">
-                <Label className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Servidor Alvo</Label>
-                
-                {/* Controles de Busca e Vínculo */}
-                <div className="space-y-3">
-                  <div className="relative group">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-primary transition-colors" />
-                    <Input 
-                      placeholder="Pesquisar servidor por nome ou matrícula..."
-                      value={serverSearch}
-                      onChange={(e) => setServerSearch(e.target.value)}
-                      className="pl-11 h-12 border-2 rounded-xl focus:ring-primary font-medium"
-                    />
+            <div className="grid gap-2">
+              <Label className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Servidor Alvo</Label>
+              <Select 
+                value={servidorId} 
+                onValueChange={setServidorId}
+              >
+                <SelectTrigger className={cn(
+                  "h-14 border-2 border-slate-200 bg-white rounded-2xl px-6 font-black text-lg text-slate-900 [&>span]:opacity-100",
+                  isFeriasMode ? "focus:ring-amber-500" : "focus:ring-emerald-600"
+                )}>
+                  <SelectValue placeholder="Selecione um servidor" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl max-h-[400px]">
+                  {/* Container de Busca e Filtro interno ao Dropdown */}
+                  <div className="p-3 border-b sticky top-0 bg-white z-10 space-y-3" onPointerDown={(e) => e.stopPropagation()}>
+                    <div className="relative group">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-primary transition-colors" />
+                      <Input 
+                        placeholder="Pesquisar..."
+                        value={serverSearch}
+                        onChange={(e) => setServerSearch(e.target.value)}
+                        className="pl-9 h-10 border-2 rounded-lg font-medium text-sm"
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-3 gap-1.5">
+                      <Button 
+                        type="button" 
+                        variant={serverVinculoFilter === null ? "default" : "outline"}
+                        onClick={() => setServerVinculoFilter(null)}
+                        className={cn("h-8 rounded-lg font-black text-[9px] uppercase tracking-widest", serverVinculoFilter === null ? "bg-slate-900 text-white" : "text-slate-500")}
+                      >
+                        TODOS
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant={serverVinculoFilter === 'Efetivo' ? "default" : "outline"}
+                        onClick={() => setServerVinculoFilter('Efetivo')}
+                        className={cn("h-8 rounded-lg font-black text-[9px] uppercase tracking-widest", serverVinculoFilter === 'Efetivo' ? "bg-indigo-600 text-white" : "text-indigo-600")}
+                      >
+                        EFETIVOS
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant={serverVinculoFilter === 'Terceirizado' ? "default" : "outline"}
+                        onClick={() => setServerVinculoFilter('Terceirizado')}
+                        className={cn("h-8 rounded-lg font-black text-[9px] uppercase tracking-widest", serverVinculoFilter === 'Terceirizado' ? "bg-slate-700 text-white" : "text-slate-600")}
+                      >
+                        TERCEIRIZADOS
+                      </Button>
+                    </div>
                   </div>
-                  
-                  <div className="grid grid-cols-3 gap-2">
-                    <Button 
-                      type="button" 
-                      variant={serverVinculoFilter === null ? "default" : "outline"}
-                      onClick={() => setServerVinculoFilter(null)}
-                      className={cn("h-10 rounded-xl font-bold text-[10px] uppercase tracking-wider", serverVinculoFilter === null ? "bg-slate-900" : "text-slate-500")}
-                    >
-                      <Users className="w-3 h-3 mr-2" /> Todos
-                    </Button>
-                    <Button 
-                      type="button" 
-                      variant={serverVinculoFilter === 'Efetivo' ? "default" : "outline"}
-                      onClick={() => setServerVinculoFilter('Efetivo')}
-                      className={cn("h-10 rounded-xl font-bold text-[10px] uppercase tracking-wider", serverVinculoFilter === 'Efetivo' ? "bg-indigo-600" : "text-indigo-600")}
-                    >
-                      <ShieldCheck className="w-3 h-3 mr-2" /> Efetivos
-                    </Button>
-                    <Button 
-                      type="button" 
-                      variant={serverVinculoFilter === 'Terceirizado' ? "default" : "outline"}
-                      onClick={() => setServerVinculoFilter('Terceirizado')}
-                      className={cn("h-10 rounded-xl font-bold text-[10px] uppercase tracking-wider", serverVinculoFilter === 'Terceirizado' ? "bg-slate-700" : "text-slate-600")}
-                    >
-                      <Briefcase className="w-3 h-3 mr-2" /> Terceirizados
-                    </Button>
-                  </div>
-                </div>
 
-                <Select 
-                  value={servidorId} 
-                  onValueChange={setServidorId}
-                >
-                  <SelectTrigger className={cn(
-                    "h-14 border-2 border-slate-200 bg-white rounded-2xl px-6 font-black text-lg text-slate-900 [&>span]:opacity-100",
-                    isFeriasMode ? "focus:ring-amber-500" : "focus:ring-emerald-600"
-                  )}>
-                    <SelectValue placeholder="Selecione um servidor" />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-xl max-h-[300px]">
-                    {filteredServidores.length === 0 ? (
-                      <div className="p-4 text-center text-sm font-bold text-slate-400">Nenhum servidor encontrado</div>
-                    ) : (
-                      filteredServidores.map((s) => (
-                        <SelectItem key={s.id} value={s.id} className="font-bold py-3">
-                          <div className="flex flex-col">
-                            <span className="uppercase tracking-tight">{s.nome}</span>
-                            <span className="text-[9px] text-slate-400 font-black tracking-widest uppercase">Matrícula: {s.matricula} • {s.vinculo}</span>
-                          </div>
-                        </SelectItem>
-                      ))
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
+                  {filteredServidores.length === 0 ? (
+                    <div className="p-4 text-center text-xs font-bold text-slate-400">Nenhum servidor encontrado</div>
+                  ) : (
+                    filteredServidores.map((s) => (
+                      <SelectItem key={s.id} value={s.id} className="font-bold py-3">
+                        <div className="flex flex-col text-left">
+                          <span className="uppercase tracking-tight text-sm">{s.nome}</span>
+                          <span className="text-[9px] text-slate-400 font-black tracking-widest uppercase">Matrícula: {s.matricula} • {s.vinculo}</span>
+                        </div>
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="grid gap-2">
