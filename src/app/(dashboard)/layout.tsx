@@ -2,8 +2,8 @@
 "use client";
 
 import { useAuth } from '@/components/auth-provider';
-import { useRouter, usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useEffect, Suspense } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { ShieldAlert, LogOut, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,7 @@ import { signOut } from 'firebase/auth';
 import { auth as firebaseAuth } from '@/lib/firebase';
 import Link from 'next/link';
 
-export default function DashboardLayout({
+function DashboardContent({
   children,
 }: {
   children: React.ReactNode;
@@ -19,6 +19,7 @@ export default function DashboardLayout({
   const { user, profile, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const isHome = pathname === '/';
 
   useEffect(() => {
@@ -28,6 +29,11 @@ export default function DashboardLayout({
   }, [user, loading, router]);
 
   const getBackConfig = () => {
+    // Lógica específica para o formulário temático de Férias
+    if (pathname === '/ocorrencias/registrar' && searchParams.get('tipo') === 'Férias') {
+      return { href: '/ferias', label: 'Voltar para Férias' };
+    }
+
     if (pathname.startsWith('/servidores/') && pathname !== '/servidores') {
       return { href: '/servidores', label: 'Voltar aos Servidores' };
     }
@@ -96,5 +102,17 @@ export default function DashboardLayout({
       )}
       {children}
     </main>
+  );
+}
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary"></div></div>}>
+      <DashboardContent>{children}</DashboardContent>
+    </Suspense>
   );
 }

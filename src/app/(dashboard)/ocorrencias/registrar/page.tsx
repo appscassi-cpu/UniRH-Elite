@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, Suspense } from 'react';
@@ -163,7 +164,6 @@ function RegistrarOcorrenciaContent() {
       console.error(error);
       toast({ variant: "destructive", title: "Erro de Protocolo", description: "Falha ao registrar ocorrências." });
     } finally {
-      // Use non-blocking principle: navigation can happen before loading is set to false if we don't care about the final state
       setLoading(false);
     }
   };
@@ -184,7 +184,7 @@ function RegistrarOcorrenciaContent() {
           )}
         </div>
         <div className="space-y-2 w-full overflow-hidden">
-          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter">
+          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
             {isFeriasMode ? (
               <>Nova <span className="text-amber-500 italic">Férias</span></>
             ) : (
