@@ -52,7 +52,7 @@ function DashboardContent({
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 space-y-6 animate-in fade-in duration-700">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 space-y-6">
         <div className="p-5 bg-primary rounded-[2.5rem] shadow-2xl shadow-primary/40 animate-pulse">
           <ScrollText className="w-16 h-16 text-white" />
         </div>
@@ -88,9 +88,9 @@ function DashboardContent({
   if (!user) return null;
 
   return (
-    <main className="container mx-auto px-4 pt-20 sm:pt-28 pb-32 animate-in fade-in duration-500">
+    <main className="container mx-auto px-4 pt-24 sm:pt-40 pb-32 animate-in fade-in duration-500">
       {!isHome && (
-        <div className="mb-14 flex justify-start">
+        <div className="mb-16 flex justify-start">
           <Button 
             variant="outline" 
             asChild 

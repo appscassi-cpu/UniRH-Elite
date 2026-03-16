@@ -68,18 +68,16 @@ export default function EditOcorrenciaPage({ params }: { params: Promise<{ id: s
             observacao: data.observacao || ''
           });
         } else {
-          toast({ variant: "destructive", title: "Erro", description: "Registro não localizado." });
           router.push('/ocorrencias');
         }
       } catch (error) {
         console.error(error);
-        toast({ variant: "destructive", title: "Erro", description: "Falha ao sincronizar dados elite." });
       } finally {
         setFetching(false);
       }
     }
     fetchOcorrencia();
-  }, [id, router, toast]);
+  }, [id, router]);
 
   const calculateDays = (start: string, end: string) => {
     if (!start || !end) return 0;
@@ -239,7 +237,7 @@ export default function EditOcorrenciaPage({ params }: { params: Promise<{ id: s
                   isFerias ? "focus:ring-amber-500" : "focus:ring-emerald-600"
                 )}
                 value={formData.observacao}
-                onChange={(e) => setFormData({ ...formData, observacao: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, someAttr: e.target.value })}
               />
             </div>
           </CardContent>

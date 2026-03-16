@@ -59,6 +59,15 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
   const [isBirthdayToday, setIsBirthdayToday] = useState(false);
 
   useEffect(() => {
+    let servidorLoaded = false;
+    let ocorrenciasLoaded = false;
+
+    const checkLoadingState = () => {
+      if (servidorLoaded && ocorrenciasLoaded) {
+        setLoading(false);
+      }
+    };
+
     async function fetchServidor() {
       try {
         const docRef = doc(db, 'servidores', id);
@@ -77,6 +86,9 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
         }
       } catch (error) {
         console.error("Erro ao buscar servidor:", error);
+      } finally {
+        servidorLoaded = true;
+        checkLoadingState();
       }
     }
 
@@ -103,10 +115,12 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
       });
 
       setOcorrencias(sortedData);
-      setLoading(false);
+      ocorrenciasLoaded = true;
+      checkLoadingState();
     }, (error) => {
       console.error("Erro ao carregar linha do tempo:", error);
-      setLoading(false);
+      ocorrenciasLoaded = true;
+      checkLoadingState();
     });
 
     fetchServidor();
@@ -240,12 +254,8 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
   if (!servidor) {
     return (
-      <div className="max-w-md mx-auto p-12 text-center space-y-4">
-        <ShieldAlert className="w-16 h-16 text-rose-500 mx-auto" />
-        <h2 className="text-2xl font-black text-slate-900 uppercase">Dossiê Inacessível</h2>
-        <Button asChild className="w-full h-14 rounded-xl">
-          <Link href="/servidores">Retornar à Listagem</Link>
-        </Button>
+      <div className="flex justify-center items-center p-20">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div>
       </div>
     );
   }
@@ -337,12 +347,12 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
             )}
 
             <div className="grid gap-3 pt-4">
-              <Button onClick={handleShareWhatsApp} className="w-full h-14 bg-slate-900 hover:bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl">
+              <Button onClick={handleShareWhatsApp} className="w-full h-14 bg-slate-900 hover:bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95">
                 <Share2 className="w-4 h-4 mr-2" />
                 Compartilhar no WhatsApp
               </Button>
 
-              <Button onClick={handleGeneratePDF} className="w-full h-14 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl">
+              <Button onClick={handleGeneratePDF} className="w-full h-14 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95">
                 <FileDown className="w-4 h-4 mr-2" />
                 Gerar PDF Estratégico
               </Button>
@@ -350,7 +360,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               {isAdmin && (
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="outline" className="w-full h-14 rounded-2xl font-black text-xs uppercase tracking-widest border-2 border-rose-100 text-rose-500 hover:bg-rose-50">
+                    <Button variant="outline" className="w-full h-14 rounded-2xl font-black text-xs uppercase tracking-widest border-2 border-rose-100 text-rose-500 hover:bg-rose-50 transition-all hover:scale-[1.02] active:scale-95">
                       <Trash2 className="w-4 h-4 mr-2" />
                       Remover Servidor
                     </Button>
