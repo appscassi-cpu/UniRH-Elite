@@ -163,7 +163,7 @@ export default function DashboardPage() {
               <div className="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center shadow-lg shrink-0 group-hover:rotate-6 transition-transform">
                 <Umbrella className="w-8 h-8 text-white" />
               </div>
-              <span className="font-black text-slate-800 tracking-tight text-xl leading-tight flex-1">Ordem da<br/>Férias</span>
+              <span className="font-black text-slate-800 tracking-tight text-xl leading-tight flex-1">Ordem das<br/>Férias</span>
               <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center group-hover:bg-amber-200"><ChevronRight className="w-6 h-6 text-amber-600" /></div>
             </div>
           </Link>
