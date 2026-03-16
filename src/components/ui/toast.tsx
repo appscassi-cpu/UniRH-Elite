@@ -7,7 +7,12 @@ import { X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-const ToastProvider = ToastPrimitives.Provider
+const ToastProvider = ({
+  duration = 3000,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof ToastPrimitives.Provider>) => (
+  <ToastPrimitives.Provider duration={duration} {...props} />
+)
 
 const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,
