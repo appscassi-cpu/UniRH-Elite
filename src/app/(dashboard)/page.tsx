@@ -212,32 +212,32 @@ export default function DashboardPage() {
           </Link>
           
           <Link href="/servidores" className="group">
-            <div className="relative overflow-hidden h-28 glass-card rounded-[2rem] flex items-center p-6 gap-6 hover-3d ring-1 ring-slate-200 hover:ring-primary/50 transition-all border-l-8 border-slate-900 shadow-xl">
-              <div className="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center shadow-lg shrink-0 group-hover:rotate-6 transition-transform">
+            <div className="relative overflow-hidden h-28 glass-card rounded-[2rem] flex items-center p-6 gap-6 hover-3d ring-1 ring-indigo-500/20 hover:ring-indigo-500/50 transition-all border-l-8 border-indigo-600 shadow-xl bg-indigo-50/10">
+              <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-600/20 shrink-0 group-hover:rotate-6 transition-transform">
                 <List className="w-8 h-8 text-white" />
               </div>
               <div className="flex-1 flex items-center justify-between">
                 <span className="font-black text-slate-800 tracking-tight text-xl leading-tight">
                   Listagem<br/>Geral
                 </span>
-                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                  <ChevronRight className="w-6 h-6 text-primary group-hover:translate-x-1 transition-transform" />
+                <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center group-hover:bg-indigo-200 transition-colors">
+                  <ChevronRight className="w-6 h-6 text-indigo-600 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </div>
           </Link>
 
           <Link href="/ocorrencias" className="group">
-            <div className="relative overflow-hidden h-28 glass-card rounded-[2rem] flex items-center p-6 gap-6 hover-3d ring-1 ring-slate-200 hover:ring-primary/50 transition-all border-l-8 border-primary shadow-xl">
-              <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center shadow-lg shrink-0 group-hover:rotate-6 transition-transform">
+            <div className="relative overflow-hidden h-28 glass-card rounded-[2rem] flex items-center p-6 gap-6 hover-3d ring-1 ring-emerald-500/20 hover:ring-emerald-500/50 transition-all border-l-8 border-emerald-600 shadow-xl bg-emerald-50/10">
+              <div className="w-14 h-14 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-600/20 shrink-0 group-hover:rotate-6 transition-transform">
                 <ClipboardPen className="w-8 h-8 text-white" />
               </div>
               <div className="flex-1 flex items-center justify-between">
                 <span className="font-black text-slate-800 tracking-tight text-xl leading-tight">
                   Gestão de<br/>Ocorrências
                 </span>
-                <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                  <ChevronRight className="w-6 h-6 text-primary group-hover:translate-x-1 transition-transform" />
+                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
+                  <ChevronRight className="w-6 h-6 text-emerald-600 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
             </div>
