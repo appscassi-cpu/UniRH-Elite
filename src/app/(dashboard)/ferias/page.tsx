@@ -8,7 +8,6 @@ import {
   CalendarDays, 
   UserCircle, 
   ChevronRight,
-  Trophy,
   Timer,
   Plus
 } from 'lucide-react';
@@ -65,7 +64,7 @@ export default function FeriasRankingPage() {
           <Umbrella className="w-12 h-12 text-white" />
         </div>
         <div className="space-y-2 w-full">
-          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
+          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter">
             Ranking de <span className="text-amber-500 italic">Férias</span>
           </h1>
           <p className="text-slate-500 font-medium text-lg italic mb-6">
@@ -111,7 +110,7 @@ export default function FeriasRankingPage() {
                         "w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-transform group-hover:rotate-12",
                         isFirst ? "bg-amber-500 text-white" : "bg-slate-900 text-white"
                       )}>
-                        {isFirst ? <Trophy className="w-8 h-8" /> : <span className="text-2xl font-black">{index + 1}º</span>}
+                        <span className="text-2xl font-black">{index + 1}º</span>
                       </div>
 
                       {/* Identificação do Servidor */}
