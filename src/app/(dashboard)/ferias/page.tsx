@@ -143,16 +143,16 @@ export default function FeriasRankingPage() {
                           </div>
                           <div className="h-6 w-px bg-slate-200 hidden sm:block" />
                           <div className="text-center">
-                            <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Término</p>
-                            <p className="text-base sm:text-2xl font-black text-slate-900">
-                              {f.dataFim ? format(parseISO(f.dataFim), "dd/MM/yy") : '-'}
+                            <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Duração</p>
+                            <p className="text-base sm:text-2xl font-black text-amber-500 italic">
+                              {f.dias} d
                             </p>
                           </div>
                           <div className="h-6 w-px bg-slate-200 hidden sm:block" />
                           <div className="text-center">
-                            <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Duração</p>
-                            <p className="text-base sm:text-2xl font-black text-amber-500 italic">
-                              {f.dias} d
+                            <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Término</p>
+                            <p className="text-base sm:text-2xl font-black text-slate-900">
+                              {f.dataFim ? format(parseISO(f.dataFim), "dd/MM/yy") : '-'}
                             </p>
                           </div>
                         </div>
