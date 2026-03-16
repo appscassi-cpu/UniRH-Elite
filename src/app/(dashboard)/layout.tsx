@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
 import { auth as firebaseAuth } from '@/lib/firebase';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 function DashboardContent({
   children,
@@ -29,22 +30,66 @@ function DashboardContent({
 
   const getBackConfig = () => {
     const servidorIdParam = searchParams.get('servidorId');
+    const tipoParam = searchParams.get('tipo');
 
-    if (pathname === '/ocorrencias/registrar' && searchParams.get('tipo') === 'Férias') {
-      return { href: '/ferias', label: 'Voltar para Férias' };
+    // Default configuration (Dashboard/Home)
+    const config = {
+      href: '/',
+      label: 'Voltar ao Início',
+      border: 'border-primary/30',
+      hoverBorder: 'hover:border-primary',
+      hoverBg: 'hover:bg-primary/5',
+      text: 'group-hover:text-primary',
+      iconBg: 'bg-primary'
+    };
+
+    // Férias Context
+    if (pathname.startsWith('/ferias') || (pathname.startsWith('/ocorrencias') && tipoParam === 'Férias')) {
+      const isOcorrenciaEdit = pathname.includes('/ocorrencias/') && pathname.includes('/editar');
+      const targetHref = isOcorrenciaEdit || servidorIdParam ? `/servidores/${servidorIdParam}` : (pathname === '/ferias' ? '/' : '/ferias');
+      const targetLabel = isOcorrenciaEdit || servidorIdParam ? 'Voltar ao Cadastro' : (pathname === '/ferias' ? 'Voltar ao Início' : 'Voltar para Férias');
+
+      return { 
+        ...config, 
+        href: targetHref, 
+        label: targetLabel, 
+        border: 'border-amber-500/30', 
+        hoverBorder: 'hover:border-amber-500', 
+        hoverBg: 'hover:bg-amber-500/5', 
+        text: 'group-hover:text-amber-600',
+        iconBg: 'bg-amber-500'
+      };
     }
 
-    if (pathname.startsWith('/ocorrencias/') && servidorIdParam) {
-      return { href: `/servidores/${servidorIdParam}`, label: 'Voltar ao Cadastro' };
+    // Ocorrências Context
+    if (pathname.startsWith('/ocorrencias')) {
+      return { 
+        ...config, 
+        href: servidorIdParam ? `/servidores/${servidorIdParam}` : (pathname === '/ocorrencias' ? '/' : '/ocorrencias'), 
+        label: servidorIdParam ? 'Voltar ao Cadastro' : (pathname === '/ocorrencias' ? 'Voltar ao Início' : 'Voltar às Ocorrências'), 
+        border: 'border-emerald-600/30', 
+        hoverBorder: 'hover:border-emerald-600', 
+        hoverBg: 'hover:bg-emerald-600/5', 
+        text: 'group-hover:text-emerald-700',
+        iconBg: 'bg-emerald-600'
+      };
     }
 
-    if (pathname.startsWith('/servidores/') && pathname !== '/servidores') {
-      return { href: '/servidores', label: 'Voltar aos Servidores' };
+    // Servidores Context
+    if (pathname.startsWith('/servidores')) {
+       return { 
+         ...config, 
+         href: pathname === '/servidores' ? '/' : '/servidores', 
+         label: pathname === '/servidores' ? 'Voltar ao Início' : 'Voltar aos Servidores', 
+         border: 'border-indigo-600/30', 
+         hoverBorder: 'hover:border-indigo-600', 
+         hoverBg: 'hover:bg-indigo-600/5', 
+         text: 'group-hover:text-indigo-700',
+         iconBg: 'bg-indigo-600'
+       };
     }
-    if (pathname.startsWith('/ocorrencias/') && pathname !== '/ocorrencias') {
-      return { href: '/ocorrencias', label: 'Voltar às Ocorrências' };
-    }
-    return { href: '/', label: 'Voltar ao Início' };
+
+    return config;
   };
 
   const backConfig = getBackConfig();
@@ -97,13 +142,25 @@ function DashboardContent({
           <Button 
             variant="outline" 
             asChild 
-            className="group hover:bg-primary/5 rounded-full pl-2 pr-6 h-12 transition-all duration-300 shadow-lg hover:shadow-xl border-2 border-primary/30 hover:border-primary hover-3d bg-white/50 backdrop-blur-sm"
+            className={cn(
+              "group rounded-full pl-2 pr-6 h-12 transition-all duration-300 shadow-lg hover:shadow-xl border-2 bg-white/50 backdrop-blur-sm hover-3d",
+              backConfig.border,
+              backConfig.hoverBorder,
+              backConfig.hoverBg
+            )}
           >
             <Link href={backConfig.href}>
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center mr-3 shadow-md shadow-primary/20 group-hover:scale-110 transition-transform">
+              <div className={cn(
+                "w-8 h-8 rounded-full flex items-center justify-center mr-3 shadow-md group-hover:scale-110 transition-transform",
+                backConfig.iconBg,
+                backConfig.iconBg === 'bg-primary' ? 'shadow-primary/20' : ''
+              )}>
                 <ArrowLeft className="w-4 h-4 text-white" />
               </div>
-              <span className="font-black text-slate-800 group-hover:text-primary transition-colors uppercase text-xs tracking-wider">
+              <span className={cn(
+                "font-black text-slate-800 transition-colors uppercase text-xs tracking-wider",
+                backConfig.text
+              )}>
                 {backConfig.label}
               </span>
             </Link>
@@ -123,14 +180,14 @@ export default function DashboardLayout({
   return (
     <Suspense fallback={
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 space-y-8">
-        <div className="p-6 bg-slate-200 rounded-[2.5rem] animate-pulse">
-          <ScrollText className="w-16 h-16 text-slate-400" />
+        <div className="p-6 bg-primary rounded-[2.5rem] shadow-2xl shadow-primary/40 animate-pulse">
+          <ScrollText className="w-16 h-16 text-white" />
         </div>
         <div className="flex flex-col items-center gap-4">
-          <h2 className="text-4xl font-black text-slate-300 tracking-tighter">
-            UniRH <span className="italic">Elite</span>
+          <h2 className="text-4xl font-black text-slate-900 tracking-tighter">
+            UniRH <span className="text-primary italic">Elite</span>
           </h2>
-          <Loader2 className="w-8 h-8 text-primary animate-spin opacity-20" />
+          <Loader2 className="w-8 h-8 text-primary animate-spin" />
         </div>
       </div>
     }>
