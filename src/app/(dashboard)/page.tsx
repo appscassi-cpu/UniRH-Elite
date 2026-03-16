@@ -47,7 +47,6 @@ export default function DashboardPage() {
   });
 
   useEffect(() => {
-    // Sincronização em tempo real para estatísticas precisas
     const unsubscribeServidores = onSnapshot(collection(db, 'servidores'), (snap) => {
       setStats(prev => ({ ...prev, totalServidores: snap.size }));
     });
