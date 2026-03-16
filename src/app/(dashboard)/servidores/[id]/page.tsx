@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, use } from 'react';
@@ -9,6 +8,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/components/auth-provider';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { 
   Phone, 
   MapPin, 
@@ -25,7 +26,8 @@ import {
   MessageCircle,
   Cake,
   PartyPopper,
-  Share2
+  Share2,
+  FileDown
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -151,6 +153,133 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+  };
+
+  const handleGeneratePDF = () => {
+    if (!servidor) return;
+
+    const doc = new jsPDF();
+    const primaryColor = [59, 130, 246]; // Blue-500
+    const secondaryColor = [30, 41, 59]; // Slate-800
+
+    // Background Header
+    doc.setFillColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+    doc.rect(0, 0, 210, 40, 'F');
+    
+    // Title Header
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "bold");
+    doc.text("UniRH ELITE", 105, 20, { align: "center" });
+    
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("SISTEMA DE GESTÃO ESTRATÉGICA DE PESSOAL", 105, 30, { align: "center" });
+
+    // Server Info Section
+    doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.text(servidor.nome.toUpperCase(), 15, 55);
+    
+    // Divider
+    doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.setLineWidth(0.5);
+    doc.line(15, 58, 195, 58);
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    
+    const startY = 68;
+    const lineHeight = 8;
+    
+    // Column 1
+    doc.setFont("helvetica", "bold");
+    doc.text("MATRÍCULA:", 15, startY);
+    doc.setFont("helvetica", "normal");
+    doc.text(servidor.matricula, 45, startY);
+
+    doc.setFont("helvetica", "bold");
+    doc.text("CARGO:", 15, startY + lineHeight);
+    doc.setFont("helvetica", "normal");
+    doc.text(servidor.cargo, 45, startY + lineHeight);
+
+    doc.setFont("helvetica", "bold");
+    doc.text("SETOR:", 15, startY + lineHeight * 2);
+    doc.setFont("helvetica", "normal");
+    doc.text(servidor.setor, 45, startY + lineHeight * 2);
+
+    doc.setFont("helvetica", "bold");
+    doc.text("CONTATO:", 15, startY + lineHeight * 3);
+    doc.setFont("helvetica", "normal");
+    doc.text(servidor.telefone || 'Não informado', 45, startY + lineHeight * 3);
+
+    // Column 2
+    doc.setFont("helvetica", "bold");
+    doc.text("ADMISSÃO:", 110, startY);
+    doc.setFont("helvetica", "normal");
+    doc.text(servidor.dataAdmissao ? format(new Date(servidor.dataAdmissao + 'T00:00:00'), 'dd/MM/yyyy') : '-', 140, startY);
+
+    doc.setFont("helvetica", "bold");
+    doc.text("NASCIMENTO:", 110, startY + lineHeight);
+    doc.setFont("helvetica", "normal");
+    doc.text(servidor.dataNascimento ? format(new Date(servidor.dataNascimento + 'T00:00:00'), 'dd/MM/yyyy') : '-', 140, startY + lineHeight);
+
+    // Notes
+    if (servidor.observacao) {
+      doc.setFont("helvetica", "bold");
+      doc.text("NOTAS DA GESTÃO:", 15, startY + lineHeight * 5);
+      doc.setFont("helvetica", "italic");
+      doc.text(servidor.observacao, 15, startY + lineHeight * 6, { maxWidth: 180 });
+    }
+
+    // Table of Occurrences
+    const tableData = ocorrencias.map((o, index) => [
+      index + 1,
+      o.tipo,
+      o.dias + 'd',
+      o.dataInicio ? format(new Date(o.dataInicio + 'T00:00:00'), 'dd/MM/yy') : '-',
+      o.dataFim ? format(new Date(o.dataFim + 'T00:00:00'), 'dd/MM/yy') : '-',
+      o.observacao || '-'
+    ]);
+
+    autoTable(doc, {
+      startY: startY + lineHeight * 8,
+      head: [['#', 'Natureza', 'Dias', 'Início', 'Término', 'Observações']],
+      body: tableData,
+      headStyles: { fillColor: primaryColor, textColor: [255, 255, 255], fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [245, 247, 250] },
+      margin: { top: 10 },
+      styles: { fontSize: 8, cellPadding: 3, font: "helvetica" },
+      columnStyles: {
+        0: { cellWidth: 10 },
+        2: { cellWidth: 15 },
+        3: { cellWidth: 20 },
+        4: { cellWidth: 20 },
+      }
+    });
+
+    // Page Footer
+    const pageCount = (doc as any).internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text(
+        `Documento de uso interno - Gerado em ${format(new Date(), 'dd/MM/yyyy HH:mm')} - UniRH Elite v1.0`,
+        105,
+        285,
+        { align: "center" }
+      );
+      doc.text(`Página ${i} de ${pageCount}`, 195, 285, { align: "right" });
+    }
+
+    doc.save(`Dossie_Elite_${servidor.nome.replace(/\s+/g, '_')}.pdf`);
+    
+    toast({
+      title: "PDF Gerado",
+      description: "O dossiê completo foi consolidado e baixado.",
+    });
   };
 
   if (loading) {
@@ -286,13 +415,23 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               </div>
             </div>
 
-            <Button 
-              onClick={handleShareWhatsApp}
-              className="w-full h-14 bg-slate-900 hover:bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95"
-            >
-              <Share2 className="w-4 h-4 mr-2" />
-              Compartilhar no WhatsApp
-            </Button>
+            <div className="grid gap-3 pt-4">
+              <Button 
+                onClick={handleShareWhatsApp}
+                className="w-full h-14 bg-slate-900 hover:bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95"
+              >
+                <Share2 className="w-4 h-4 mr-2" />
+                Compartilhar no WhatsApp
+              </Button>
+
+              <Button 
+                onClick={handleGeneratePDF}
+                className="w-full h-14 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95"
+              >
+                <FileDown className="w-4 h-4 mr-2" />
+                Gerar PDF Estratégico
+              </Button>
+            </div>
 
             {servidor.observacao && (
               <div className="pt-6 border-t-2 border-dashed">
