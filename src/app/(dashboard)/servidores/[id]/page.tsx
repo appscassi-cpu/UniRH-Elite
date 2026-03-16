@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, use } from 'react';
@@ -18,7 +19,7 @@ import {
   Calendar, 
   History, 
   Plus,
-  Image as ImageIcon,
+  Image as LucideImage,
   ExternalLink,
   UserCircle,
   Edit,
@@ -65,8 +66,8 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
         // Verificação de Aniversário Elite
         if (data.dataNascimento) {
           const today = new Date();
-          const [year, month, day] = data.dataNascimento.split('-').map(Number);
-          if (today.getDate() === day && (today.getMonth() + 1) === month) {
+          const birthDate = new Date(data.dataNascimento + 'T00:00:00');
+          if (today.getDate() === birthDate.getDate() && today.getMonth() === birthDate.getMonth()) {
             setIsBirthdayToday(true);
           }
         }
@@ -82,6 +83,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const today = new Date().toISOString().split('T')[0];
 
+      // Ordenação Estratégica: Férias mais próximas/ativas no topo
       const sortedData = data.sort((a: any, b: any) => {
         const startA = a.dataInicio || '';
         const startB = b.dataInicio || '';
@@ -142,7 +144,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
     if (ocorrencias.length > 0) {
       message += `*📊 HISTÓRICO DE OCORRÊNCIAS / FÉRIAS:*\n`;
-      ocorrencias.forEach((o, i) => {
+      ocorrencias.forEach((o) => {
         const start = o.dataInicio ? format(new Date(o.dataInicio + 'T00:00:00'), 'dd/MM/yy') : '-';
         const end = o.dataFim ? format(new Date(o.dataFim + 'T00:00:00'), 'dd/MM/yy') : '-';
         message += `• ${o.tipo} (${o.dias}d): ${start} a ${end}\n`;
@@ -193,7 +195,6 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
     const startY = 68;
     const lineHeight = 8;
     
-    // Column 1
     doc.setFont("helvetica", "bold");
     doc.text("MATRÍCULA:", 15, startY);
     doc.setFont("helvetica", "normal");
@@ -210,12 +211,6 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
     doc.text(servidor.setor, 45, startY + lineHeight * 2);
 
     doc.setFont("helvetica", "bold");
-    doc.text("CONTATO:", 15, startY + lineHeight * 3);
-    doc.setFont("helvetica", "normal");
-    doc.text(servidor.telefone || 'Não informado', 45, startY + lineHeight * 3);
-
-    // Column 2
-    doc.setFont("helvetica", "bold");
     doc.text("ADMISSÃO:", 110, startY);
     doc.setFont("helvetica", "normal");
     doc.text(servidor.dataAdmissao ? format(new Date(servidor.dataAdmissao + 'T00:00:00'), 'dd/MM/yyyy') : '-', 140, startY);
@@ -225,15 +220,6 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
     doc.setFont("helvetica", "normal");
     doc.text(servidor.dataNascimento ? format(new Date(servidor.dataNascimento + 'T00:00:00'), 'dd/MM/yyyy') : '-', 140, startY + lineHeight);
 
-    // Notes
-    if (servidor.observacao) {
-      doc.setFont("helvetica", "bold");
-      doc.text("NOTAS DA GESTÃO:", 15, startY + lineHeight * 5);
-      doc.setFont("helvetica", "italic");
-      doc.text(servidor.observacao, 15, startY + lineHeight * 6, { maxWidth: 180 });
-    }
-
-    // Table of Occurrences
     const tableData = ocorrencias.map((o, index) => [
       index + 1,
       o.tipo,
@@ -248,47 +234,11 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
       head: [['#', 'Natureza', 'Dias', 'Início', 'Término', 'Observações']],
       body: tableData,
       headStyles: { fillColor: primaryColor, textColor: [255, 255, 255], fontStyle: 'bold' },
-      alternateRowStyles: { fillColor: [245, 247, 250] },
-      margin: { top: 10 },
-      styles: { fontSize: 8, cellPadding: 3, font: "helvetica" },
-      columnStyles: {
-        0: { cellWidth: 10 },
-        2: { cellWidth: 15 },
-        3: { cellWidth: 20 },
-        4: { cellWidth: 20 },
-      }
+      styles: { fontSize: 8, font: "helvetica" },
     });
-
-    // Page Footer
-    const pageCount = (doc as any).internal.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.setTextColor(150, 150, 150);
-      doc.text(
-        `Documento de uso interno - Gerado em ${format(new Date(), 'dd/MM/yyyy HH:mm')} - UniRH Elite v1.0`,
-        105,
-        285,
-        { align: "center" }
-      );
-      doc.text(`Página ${i} de ${pageCount}`, 195, 285, { align: "right" });
-    }
 
     doc.save(`Dossie_Elite_${servidor.nome.replace(/\s+/g, '_')}.pdf`);
-    
-    toast({
-      title: "PDF Gerado",
-      description: "O dossiê completo foi consolidado e baixado.",
-    });
   };
-
-  if (loading) {
-    return <div className="flex justify-center p-20"><div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div></div>;
-  }
-
-  if (!servidor) {
-    return <div className="text-center p-20 text-xl font-bold">Servidor não localizado no banco de dados elite.</div>;
-  }
 
   const getOccurrenceBadge = (tipo: string) => {
     switch (tipo) {
@@ -304,7 +254,6 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
   return (
     <div className="space-y-12 pb-20">
-      {/* Banner de Aniversário Elite */}
       {isBirthdayToday && (
         <div className="w-full bg-gradient-to-r from-amber-400 via-primary to-rose-400 p-6 rounded-[2.5rem] shadow-2xl text-white flex items-center gap-6 animate-in zoom-in-95 duration-700 mb-8 border-4 border-white/20">
           <div className="bg-white/20 p-4 rounded-2xl shadow-inner">
@@ -312,7 +261,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
           </div>
           <div className="space-y-1">
             <h2 className="text-3xl font-black italic tracking-tighter">Parabéns Elite! 🥳</h2>
-            <p className="font-bold text-white/90">Hoje celebramos a vida de <span className="underline decoration-white/50">{servidor.nome}</span>. Que sua excelência continue inspirando nossa gestão!</p>
+            <p className="font-bold text-white/90">Hoje celebramos a vida de <span className="underline decoration-white/50">{servidor.nome}</span>.</p>
           </div>
         </div>
       )}
@@ -324,14 +273,10 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
           </div>
         </div>
         <div className="space-y-2 w-full">
-          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
+          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter">
             Dossiê <span className="text-primary italic">Pessoal</span>
           </h1>
           <p className="text-2xl sm:text-3xl font-black text-primary tracking-tight mt-2">{servidor.nome}</p>
-          <div className="flex items-center justify-center gap-2 text-slate-500 font-bold uppercase tracking-widest text-xs">
-            <Briefcase className="w-4 h-4" />
-            {servidor.cargo} • {servidor.setor}
-          </div>
         </div>
       </div>
 
@@ -344,9 +289,9 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-8">
-            <div className="flex items-center gap-4 group">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                <IdCard className="w-5 h-5 text-slate-500 group-hover:text-primary" />
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                <IdCard className="w-5 h-5 text-slate-500" />
               </div>
               <div>
                 <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Matrícula</p>
@@ -354,19 +299,19 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               </div>
             </div>
 
-            <div className="flex items-center gap-4 group">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                <MapPin className="w-5 h-5 text-slate-500 group-hover:text-primary" />
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                <MapPin className="w-5 h-5 text-slate-500" />
               </div>
               <div>
-                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Lotação Atual</p>
+                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Lotação</p>
                 <p className="font-bold text-slate-800 text-lg">{servidor.setor}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-4 group">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                <Cake className="w-5 h-5 text-slate-500 group-hover:text-primary" />
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                <Cake className="w-5 h-5 text-slate-500" />
               </div>
               <div>
                 <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Nascimento</p>
@@ -376,69 +321,34 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               </div>
             </div>
 
-            {servidor.telefone ? (
+            {servidor.telefone && (
               <a 
                 href={`https://wa.me/55${cleanPhone(servidor.telefone)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 group bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200 transition-all duration-300 hover:scale-[1.02] shadow-sm"
+                className="flex items-center gap-4 bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200 transition-all hover:scale-[1.02]"
               >
-                <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center">
                   <MessageCircle className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-emerald-600 uppercase font-black tracking-widest leading-none mb-1">WhatsApp / Contato</p>
+                  <p className="text-[10px] text-emerald-600 uppercase font-black tracking-widest leading-none mb-1">WhatsApp</p>
                   <p className="font-black text-emerald-700 text-xl tracking-tight leading-none">{servidor.telefone}</p>
                 </div>
               </a>
-            ) : (
-              <div className="flex items-center gap-4 group opacity-50">
-                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
-                  <Phone className="w-5 h-5 text-slate-500" />
-                </div>
-                <div>
-                  <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Contato</p>
-                  <p className="font-bold text-slate-800 text-lg">Não disponível</p>
-                </div>
-              </div>
             )}
 
-            <div className="flex items-center gap-4 group">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                <Calendar className="w-5 h-5 text-slate-500 group-hover:text-primary" />
-              </div>
-              <div>
-                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Admissão</p>
-                <p className="font-bold text-slate-800 text-lg">
-                  {servidor.dataAdmissao ? format(new Date(servidor.dataAdmissao + 'T00:00:00'), 'dd/MM/yyyy') : '-'}
-                </p>
-              </div>
-            </div>
-
             <div className="grid gap-3 pt-4">
-              <Button 
-                onClick={handleShareWhatsApp}
-                className="w-full h-14 bg-slate-900 hover:bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95"
-              >
+              <Button onClick={handleShareWhatsApp} className="w-full h-14 bg-slate-900 hover:bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest">
                 <Share2 className="w-4 h-4 mr-2" />
-                Compartilhar no WhatsApp
+                Compartilhar WhatsApp
               </Button>
 
-              <Button 
-                onClick={handleGeneratePDF}
-                className="w-full h-14 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95"
-              >
+              <Button onClick={handleGeneratePDF} className="w-full h-14 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black text-xs uppercase tracking-widest">
                 <FileDown className="w-4 h-4 mr-2" />
                 Gerar PDF Estratégico
               </Button>
             </div>
-
-            {servidor.observacao && (
-              <div className="pt-6 border-t-2 border-dashed">
-                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest mb-2">Notas da Gestão</p>
-                <p className="text-slate-600 italic font-medium leading-relaxed">{servidor.observacao}</p>
-              </div>
-            )}
           </CardContent>
         </Card>
 
@@ -450,7 +360,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               </div>
               Linha do Tempo
             </h2>
-            <Button asChild className="h-12 px-8 font-black rounded-xl shadow-lg hover:scale-105 transition-all">
+            <Button asChild className="h-12 px-8 font-black rounded-xl shadow-lg">
               <Link href={`/ocorrencias/registrar?servidorId=${servidor.id}`}>
                 <Plus className="w-5 h-5 mr-2" />
                 Novo Registro
@@ -462,7 +372,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
             {ocorrencias.length === 0 ? (
               <div className="bg-slate-50 border-4 border-dashed border-slate-200 rounded-[3rem] p-20 text-center">
                 <History className="w-20 h-20 text-slate-200 mx-auto mb-4" />
-                <p className="text-xl font-bold text-slate-400">Nenhum registro histórico até o momento.</p>
+                <p className="text-xl font-bold text-slate-400">Nenhum registro histórico.</p>
               </div>
             ) : (
               ocorrencias.map((o) => (
@@ -485,18 +395,13 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
                             {o.dataFim ? format(new Date(o.dataFim + 'T00:00:00'), "dd 'de' MMM 'de' yyyy", { locale: ptBR }) : '-'}
                           </p>
                         </div>
-                        {o.observacao && (
-                          <p className="text-slate-500 font-medium leading-relaxed italic bg-slate-50 p-4 rounded-2xl border-l-4 border-primary/20">
-                            {o.observacao}
-                          </p>
-                        )}
                       </div>
                       
                       <div className="flex flex-row sm:flex-col items-center sm:items-end justify-end gap-3 shrink-0">
                         {o.anexo && (
                           <Button variant="outline" size="sm" className="h-10 px-4 rounded-xl font-bold border-2 border-primary/10 text-primary hover:bg-primary/5 transition-all shadow-sm" asChild>
                             <a href={o.anexo} target="_blank" rel="noopener noreferrer">
-                              <ImageIcon className="w-4 h-4 mr-2" />
+                              <LucideImage className="w-4 h-4 mr-2" />
                               Dossier
                               <ExternalLink className="w-3 h-3 ml-2 opacity-50" />
                             </a>
@@ -505,7 +410,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
                         
                         {isAdmin && (
                           <div className="flex gap-2">
-                            <Button variant="outline" size="icon" asChild className="w-10 h-10 rounded-xl border-2 border-slate-200 hover:bg-slate-100 hover:text-slate-900 transition-all">
+                            <Button variant="outline" size="icon" asChild className="w-10 h-10 rounded-xl border-2 border-slate-200">
                               <Link href={`/ocorrencias/${o.id}/editar?servidorId=${servidor.id}`}>
                                 <Edit className="w-4 h-4" />
                               </Link>
@@ -513,22 +418,22 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
-                                <Button variant="outline" size="icon" className="w-10 h-10 rounded-xl border-2 border-rose-100 text-rose-500 hover:bg-rose-50 hover:text-rose-600 transition-all">
+                                <Button variant="outline" size="icon" className="w-10 h-10 rounded-xl border-2 border-rose-100 text-rose-500">
                                   <Trash2 className="w-4 h-4" />
                                 </Button>
                               </AlertDialogTrigger>
                               <AlertDialogContent className="rounded-[2rem] p-8 border-2 shadow-2xl">
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle className="text-2xl font-black text-slate-900 tracking-tight">Confirmar Exclusão de Registro</AlertDialogTitle>
-                                  <AlertDialogDescription className="text-slate-500 font-medium leading-relaxed italic mt-4">
-                                    Esta ação removerá permanentemente o registro de <strong>{o.tipo}</strong> do histórico deste servidor. Esta operação não pode ser desfeita.
+                                  <AlertDialogTitle className="text-2xl font-black text-slate-900">Confirmar Exclusão</AlertDialogTitle>
+                                  <AlertDialogDescription className="text-slate-500 font-medium italic mt-4">
+                                    Esta ação removerá permanentemente o registro de <strong>{o.tipo}</strong>.
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter className="mt-8 gap-3">
                                   <AlertDialogCancel className="rounded-xl h-12 font-black border-2">Cancelar</AlertDialogCancel>
                                   <AlertDialogAction 
                                     onClick={() => handleDeleteOccurrence(o.id)}
-                                    className="bg-rose-500 hover:bg-rose-600 rounded-xl h-12 font-black shadow-lg shadow-rose-500/20"
+                                    className="bg-rose-500 hover:bg-rose-600 rounded-xl h-12 font-black"
                                   >
                                     Confirmar Remoção
                                   </AlertDialogAction>
