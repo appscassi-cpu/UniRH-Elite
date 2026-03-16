@@ -18,8 +18,7 @@ import {
   IdCard,
   Users,
   Umbrella,
-  MessageCircle,
-  Filter
+  MessageCircle
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -136,7 +135,7 @@ export default function ServidoresListPage() {
               variant={vinculoFilter === null ? "default" : "outline"}
               onClick={() => setVinculoFilter(null)}
               className={cn(
-                "h-14 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-md border-2",
+                "h-14 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-md border-2",
                 vinculoFilter === null ? "bg-slate-900 text-white" : "border-slate-200 text-slate-500 hover:bg-slate-50"
               )}
             >
@@ -146,7 +145,7 @@ export default function ServidoresListPage() {
               variant={vinculoFilter === 'Efetivo' ? "default" : "outline"}
               onClick={() => setVinculoFilter('Efetivo')}
               className={cn(
-                "h-14 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-md border-2",
+                "h-14 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-md border-2",
                 vinculoFilter === 'Efetivo' ? "bg-indigo-600 text-white border-indigo-600" : "border-indigo-100 text-indigo-600 hover:bg-indigo-50"
               )}
             >
@@ -156,7 +155,7 @@ export default function ServidoresListPage() {
               variant={vinculoFilter === 'Terceirizado' ? "default" : "outline"}
               onClick={() => setVinculoFilter('Terceirizado')}
               className={cn(
-                "h-14 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-md border-2",
+                "h-14 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-md border-2",
                 vinculoFilter === 'Terceirizado' ? "bg-slate-700 text-white border-slate-700" : "border-slate-100 text-slate-600 hover:bg-slate-50"
               )}
             >
@@ -231,26 +230,20 @@ export default function ServidoresListPage() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 flex-1 lg:px-6">
-                        <div className="flex items-center gap-3 text-slate-700 min-w-0">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-2 gap-x-4 sm:gap-4 flex-1 lg:px-6">
+                        {/* Cargo - Coluna 1 no Mobile */}
+                        <div className="flex items-center gap-3 text-slate-700 min-w-0 order-1">
                           <div className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 hidden sm:flex">
                             <Briefcase className={cn("w-4 h-4", isOnVacation ? "text-amber-600" : "text-indigo-600/70")} />
                           </div>
                           <div className="min-w-0">
                             <p className="text-[8px] text-slate-400 uppercase font-black tracking-widest">Cargo</p>
-                            <p className="font-bold text-xs md:text-lg text-slate-800 truncate">{servidor.cargo}</p>
+                            <p className="font-bold text-[10px] sm:text-sm md:text-lg text-slate-800 truncate">{servidor.cargo}</p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-3 text-slate-600 min-w-0">
-                          <div className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 hidden sm:flex">
-                            <MapPin className="w-4 h-4 text-slate-400" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-[8px] text-slate-400 uppercase font-black tracking-widest">Setor</p>
-                            <p className="font-bold text-xs md:text-lg text-slate-800 truncate">{servidor.setor}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3 text-slate-600 min-w-0">
+
+                        {/* WhatsApp - Coluna 2 no Mobile (Canto Direito do Cargo) */}
+                        <div className="flex items-center justify-end sm:justify-start gap-3 text-slate-600 min-w-0 order-2 sm:order-3">
                           {servidor.telefone ? (
                             <a 
                               href={`https://wa.me/55${servidor.telefone.replace(/\D/g, '')}`}
@@ -258,25 +251,36 @@ export default function ServidoresListPage() {
                               rel="noopener noreferrer"
                               className="flex items-center gap-3 group/wa"
                             >
-                              <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0 transition-colors group-hover/wa:bg-emerald-500">
+                              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0 transition-colors group-hover/wa:bg-emerald-500">
                                 <MessageCircle className="w-4 h-4 text-emerald-600 transition-colors group-hover/wa:text-white" />
                               </div>
                               <div className="min-w-0">
                                 <p className="text-[8px] text-emerald-600 uppercase font-black tracking-widest">WhatsApp</p>
-                                <p className="font-bold text-xs md:text-lg text-emerald-700 truncate">{servidor.telefone}</p>
+                                <p className="font-bold text-[10px] sm:text-sm md:text-lg text-emerald-700 truncate">{servidor.telefone}</p>
                               </div>
                             </a>
                           ) : (
                             <div className="flex items-center gap-3 opacity-30">
-                              <div className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center shrink-0">
+                              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-50 flex items-center justify-center shrink-0">
                                 <MessageCircle className="w-4 h-4 text-slate-400" />
                               </div>
                               <div className="min-w-0">
                                 <p className="text-[8px] text-slate-400 uppercase font-black tracking-widest">Contato</p>
-                                <p className="font-bold text-xs md:text-lg text-slate-400">N/D</p>
+                                <p className="font-bold text-[10px] sm:text-sm md:text-lg text-slate-400">N/D</p>
                               </div>
                             </div>
                           )}
+                        </div>
+
+                        {/* Setor - Linha 2 no Mobile (Span 2 colunas) */}
+                        <div className="col-span-2 sm:col-span-1 flex items-center gap-3 text-slate-600 min-w-0 order-3 sm:order-2">
+                          <div className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 hidden sm:flex">
+                            <MapPin className="w-4 h-4 text-slate-400" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-[8px] text-slate-400 uppercase font-black tracking-widest">Setor</p>
+                            <p className="font-bold text-[10px] sm:text-sm md:text-lg text-slate-800 truncate">{servidor.setor}</p>
+                          </div>
                         </div>
                       </div>
 
