@@ -5,7 +5,7 @@ import { useAuth } from '@/components/auth-provider';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, Suspense } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ShieldAlert, LogOut, ArrowLeft } from 'lucide-react';
+import { ShieldAlert, LogOut, ArrowLeft, ScrollText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
 import { auth as firebaseAuth } from '@/lib/firebase';
@@ -54,8 +54,21 @@ function DashboardContent({
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 space-y-6 animate-in fade-in duration-700">
+        <div className="p-5 bg-primary rounded-[2.5rem] shadow-2xl shadow-primary/40 animate-pulse">
+          <ScrollText className="w-16 h-16 text-white" />
+        </div>
+        <div className="text-center space-y-2">
+          <h1 className="text-4xl font-black text-slate-900 tracking-tighter">
+            UniRH <span className="text-primary italic">Elite</span>
+          </h1>
+          <div className="flex items-center justify-center gap-2">
+            <div className="h-1.5 w-1.5 bg-primary rounded-full animate-ping" />
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em]">
+              Protocolo de Carregamento
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -118,7 +131,11 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary"></div></div>}>
+    <Suspense fallback={
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 space-y-4">
+        <ScrollText className="w-12 h-12 text-primary/20 animate-pulse" />
+      </div>
+    }>
       <DashboardContent>{children}</DashboardContent>
     </Suspense>
   );
