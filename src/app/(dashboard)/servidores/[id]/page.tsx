@@ -2,11 +2,13 @@
 "use client";
 
 import { useEffect, useState, use } from 'react';
-import { doc, getDoc, collection, query, where, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/components/auth-provider';
 import { 
   Phone, 
   MapPin, 
@@ -17,8 +19,21 @@ import {
   Plus,
   Image as ImageIcon,
   ExternalLink,
-  UserCircle
+  UserCircle,
+  Edit,
+  Trash2
 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -26,6 +41,8 @@ import { cn } from '@/lib/utils';
 
 export default function ServidorProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const { isAdmin } = useAuth();
+  const { toast } = useToast();
   const [servidor, setServidor] = useState<any>(null);
   const [ocorrencias, setOcorrencias] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +56,6 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
       }
     }
 
-    // Buscamos ocorrências apenas por servidorId e ordenamos em memória para evitar erros de índice composto
     const oQuery = query(
       collection(db, 'ocorrencias'), 
       where('servidorId', '==', id)
@@ -47,7 +63,6 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
     
     const unsubscribe = onSnapshot(oQuery, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      // Ordenação manual em memória (mais recente primeiro)
       const sortedData = data.sort((a: any, b: any) => {
         const dateA = a.dataRegistro?.seconds || 0;
         const dateB = b.dataRegistro?.seconds || 0;
@@ -64,6 +79,22 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
     return () => unsubscribe();
   }, [id]);
 
+  const handleDeleteOccurrence = async (occurrenceId: string) => {
+    try {
+      await deleteDoc(doc(db, 'ocorrencias', occurrenceId));
+      toast({
+        title: "Registro Removido",
+        description: "A ocorrência foi excluída permanentemente do dossiê.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erro de Protocolo",
+        description: "Não foi possível remover o registro.",
+      });
+    }
+  };
+
   if (loading) {
     return <div className="flex justify-center p-20"><div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div></div>;
   }
@@ -74,9 +105,9 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
   const getOccurrenceBadge = (tipo: string) => {
     switch (tipo) {
-      case 'Férias': return 'bg-green-100 text-green-700';
-      case 'Atestado Médico': return 'bg-amber-100 text-amber-700';
-      case 'Falta': return 'bg-red-100 text-red-700';
+      case 'Férias': return 'bg-amber-100 text-amber-700';
+      case 'Atestado Médico': return 'bg-emerald-100 text-emerald-700';
+      case 'Falta': return 'bg-rose-100 text-rose-700';
       case 'Licença': return 'bg-blue-100 text-blue-700';
       default: return 'bg-slate-100 text-slate-700';
     }
@@ -185,7 +216,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
                 <Card key={o.id} className="shadow-xl border-2 border-slate-50 rounded-[2.5rem] overflow-hidden hover:scale-[1.01] transition-all bg-white group">
                   <CardContent className="p-8">
                     <div className="flex flex-col sm:flex-row justify-between gap-6">
-                      <div className="space-y-4">
+                      <div className="space-y-4 flex-1">
                         <div className="flex items-center gap-3 flex-wrap">
                           <Badge className={cn("border-none px-6 py-1.5 text-xs font-black uppercase tracking-widest", getOccurrenceBadge(o.tipo))}>
                             {o.tipo}
@@ -207,15 +238,51 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
                           </p>
                         )}
                       </div>
-                      <div className="flex flex-row sm:flex-col justify-end gap-3 shrink-0">
+                      
+                      <div className="flex flex-row sm:flex-col items-center sm:items-end justify-end gap-3 shrink-0">
                         {o.anexo && (
-                          <Button variant="outline" className="h-12 px-6 rounded-xl font-bold border-2 border-primary/20 text-primary hover:bg-primary hover:text-white transition-all shadow-sm" asChild>
+                          <Button variant="outline" size="sm" className="h-10 px-4 rounded-xl font-bold border-2 border-primary/10 text-primary hover:bg-primary/5 transition-all shadow-sm" asChild>
                             <a href={o.anexo} target="_blank" rel="noopener noreferrer">
-                              <ImageIcon className="w-5 h-5 mr-2" />
-                              Dossier Anexo
-                              <ExternalLink className="w-4 h-4 ml-2 opacity-50" />
+                              <ImageIcon className="w-4 h-4 mr-2" />
+                              Dossier
+                              <ExternalLink className="w-3 h-3 ml-2 opacity-50" />
                             </a>
                           </Button>
+                        )}
+                        
+                        {isAdmin && (
+                          <div className="flex gap-2">
+                            <Button variant="outline" size="icon" asChild className="w-10 h-10 rounded-xl border-2 border-slate-200 hover:bg-slate-100 hover:text-slate-900 transition-all">
+                              <Link href={`/ocorrencias/${o.id}/editar`}>
+                                <Edit className="w-4 h-4" />
+                              </Link>
+                            </Button>
+
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button variant="outline" size="icon" className="w-10 h-10 rounded-xl border-2 border-rose-100 text-rose-500 hover:bg-rose-50 hover:text-rose-600 transition-all">
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent className="rounded-[2rem] p-8 border-2 shadow-2xl">
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle className="text-2xl font-black text-slate-900 tracking-tight">Confirmar Exclusão de Registro</AlertDialogTitle>
+                                  <AlertDialogDescription className="text-slate-500 font-medium leading-relaxed italic mt-4">
+                                    Esta ação removerá permanentemente o registro de <strong>{o.tipo}</strong> do histórico deste servidor. Esta operação não pode ser desfeita.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter className="mt-8 gap-3">
+                                  <AlertDialogCancel className="rounded-xl h-12 font-black border-2">Cancelar</AlertDialogCancel>
+                                  <AlertDialogAction 
+                                    onClick={() => handleDeleteOccurrence(o.id)}
+                                    className="bg-rose-500 hover:bg-rose-600 rounded-xl h-12 font-black shadow-lg shadow-rose-500/20"
+                                  >
+                                    Confirmar Remoção
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
                         )}
                       </div>
                     </div>
