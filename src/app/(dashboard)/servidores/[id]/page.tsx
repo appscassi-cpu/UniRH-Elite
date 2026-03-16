@@ -337,6 +337,18 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               </div>
             </div>
 
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-slate-500" />
+              </div>
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Admissão</p>
+                <p className="font-bold text-slate-800 text-lg">
+                  {servidor?.dataAdmissao ? format(new Date(servidor.dataAdmissao + 'T00:00:00'), 'dd/MM/yyyy') : '-'}
+                </p>
+              </div>
+            </div>
+
             {servidor?.telefone && (
               <a 
                 href={`https://wa.me/55${servidor.telefone.replace(/\D/g, '')}`}
