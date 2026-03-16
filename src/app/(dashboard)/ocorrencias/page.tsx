@@ -16,11 +16,16 @@ import {
   Search, 
   CalendarPlus, 
   Filter,
-  ClipboardPen
+  ClipboardPen,
+  Calendar,
+  User,
+  ChevronRight,
+  Clock
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -59,8 +64,8 @@ function OcorrenciasListContent() {
 
   const getBadgeStyle = (tipo: string) => {
     switch (tipo) {
-      case 'Férias': return 'bg-emerald-100 text-emerald-700';
-      case 'Atestado Médico': return 'bg-amber-100 text-amber-700';
+      case 'Férias': return 'bg-amber-100 text-amber-700';
+      case 'Atestado Médico': return 'bg-emerald-100 text-emerald-700';
       case 'Falta': return 'bg-rose-100 text-rose-700';
       default: return 'bg-slate-100 text-slate-700';
     }
@@ -72,7 +77,7 @@ function OcorrenciasListContent() {
         <div className="p-4 bg-emerald-600 rounded-[2.5rem] shadow-2xl shadow-emerald-600/40 -rotate-3">
           <ClipboardPen className="w-12 h-12 text-white" />
         </div>
-        <div className="space-y-2 w-full">
+        <div className="space-y-2 w-full overflow-hidden">
           <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
             Lista de <span className="text-emerald-600 italic">Eventos</span>
           </h1>
@@ -98,57 +103,101 @@ function OcorrenciasListContent() {
         />
       </div>
 
-      <div className="bg-white rounded-[2rem] shadow-xl border-2 border-slate-100 overflow-hidden">
+      <div className="space-y-6">
         {loading ? (
-          <div className="p-12 text-center animate-pulse text-muted-foreground font-medium text-xl">Sincronizando banco de dados...</div>
+          <div className="p-12 text-center animate-pulse text-muted-foreground font-medium text-xl bg-white rounded-[2rem] shadow-xl">
+            Sincronizando banco de dados...
+          </div>
         ) : filtered.length === 0 ? (
-          <div className="p-20 text-center">
+          <div className="p-20 text-center bg-white rounded-[2rem] shadow-xl border-2 border-slate-100">
             <Filter className="w-16 h-16 text-muted-foreground/20 mx-auto mb-4" />
-            <p className="text-xl font-medium text-muted-foreground">Nenhuma ocorrência encontrada para os critérios atuais.</p>
+            <p className="text-xl font-medium text-muted-foreground">Nenhuma ocorrência encontrada.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader className="bg-slate-50/50">
-                <TableRow className="h-16 border-b-2">
-                  <TableHead className="font-bold text-emerald-600 pl-6">Servidor</TableHead>
-                  <TableHead className="font-bold text-emerald-600">Tipo</TableHead>
-                  <TableHead className="font-bold text-emerald-600">Período</TableHead>
-                  <TableHead className="text-center font-bold text-emerald-600">Dias</TableHead>
-                  <TableHead className="text-right pr-6 font-bold text-emerald-600">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((o) => (
-                  <TableRow key={o.id} className="h-20 hover:bg-slate-50 transition-colors">
-                    <TableCell className="pl-6">
-                      <Link href={`/servidores/${o.servidorId}`} className="font-bold text-slate-800 hover:text-emerald-600 transition-colors text-lg">
-                        {o.servidorNome}
-                      </Link>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={cn("border-none px-4 py-1.5 text-sm", getBadgeStyle(o.tipo))}>
-                        {o.tipo}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-sm font-semibold text-slate-600">
-                      {o.dataInicio ? format(new Date(o.dataInicio), "dd/MM/yy") : '-'} a {o.dataFim ? format(new Date(o.dataFim), "dd/MM/yy") : '-'}
-                    </TableCell>
-                    <TableCell className="text-center font-black text-emerald-600 text-xl">
-                      {o.dias}
-                    </TableCell>
-                    <TableCell className="text-right pr-6">
-                      <Button variant="ghost" size="sm" asChild className="rounded-full h-10 px-6 font-bold hover:text-emerald-600 hover:bg-emerald-50">
-                        <Link href={`/servidores/${o.servidorId}`}>
-                          Ver Perfil
-                        </Link>
-                      </Button>
-                    </TableCell>
+          <>
+            {/* Desktop Table View */}
+            <div className="hidden md:block bg-white rounded-[2rem] shadow-xl border-2 border-slate-100 overflow-hidden">
+              <Table>
+                <TableHeader className="bg-slate-50/50">
+                  <TableRow className="h-16 border-b-2">
+                    <TableHead className="font-bold text-emerald-600 pl-6">Servidor</TableHead>
+                    <TableHead className="font-bold text-emerald-600">Tipo</TableHead>
+                    <TableHead className="font-bold text-emerald-600">Período</TableHead>
+                    <TableHead className="text-center font-bold text-emerald-600">Dias</TableHead>
+                    <TableHead className="text-right pr-6 font-bold text-emerald-600">Ações</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {filtered.map((o) => (
+                    <TableRow key={o.id} className="h-20 hover:bg-slate-50 transition-colors">
+                      <TableCell className="pl-6">
+                        <Link href={`/servidores/${o.servidorId}`} className="font-bold text-slate-800 hover:text-emerald-600 transition-colors text-lg">
+                          {o.servidorNome}
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={cn("border-none px-4 py-1.5 text-sm", getBadgeStyle(o.tipo))}>
+                          {o.tipo}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-sm font-semibold text-slate-600">
+                        {o.dataInicio ? format(new Date(o.dataInicio), "dd/MM/yy") : '-'} a {o.dataFim ? format(new Date(o.dataFim), "dd/MM/yy") : '-'}
+                      </TableCell>
+                      <TableCell className="text-center font-black text-emerald-600 text-xl">
+                        {o.dias}
+                      </TableCell>
+                      <TableCell className="text-right pr-6">
+                        <Button variant="ghost" size="sm" asChild className="rounded-full h-10 px-6 font-bold hover:text-emerald-600 hover:bg-emerald-50">
+                          <Link href={`/servidores/${o.servidorId}`}>
+                            Ver Perfil
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="grid grid-cols-1 gap-4 md:hidden">
+              {filtered.map((o) => (
+                <Card key={o.id} className="rounded-[1.5rem] border-2 border-slate-100 shadow-lg overflow-hidden bg-white active:scale-[0.98] transition-all">
+                  <CardContent className="p-5 space-y-4">
+                    <div className="flex justify-between items-start gap-3">
+                      <div className="space-y-1 flex-1">
+                        <div className="flex items-center gap-2">
+                          <User className="w-4 h-4 text-emerald-600" />
+                          <h3 className="font-black text-slate-900 text-lg uppercase tracking-tight leading-none">
+                            {o.servidorNome}
+                          </h3>
+                        </div>
+                        <Badge className={cn("border-none px-3 py-0.5 text-[10px] font-black uppercase tracking-widest", getBadgeStyle(o.tipo))}>
+                          {o.tipo}
+                        </Badge>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Duração</p>
+                        <p className="text-xl font-black text-emerald-600">{o.dias} d</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-50 p-3 rounded-xl flex items-center justify-between border border-slate-100">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-slate-400" />
+                        <span className="text-sm font-bold text-slate-600">
+                          {o.dataInicio ? format(new Date(o.dataInicio), "dd/MM/yy") : '-'} a {o.dataFim ? format(new Date(o.dataFim), "dd/MM/yy") : '-'}
+                        </span>
+                      </div>
+                      <Link href={`/servidores/${o.servidorId}`} className="text-emerald-600 p-1">
+                        <ChevronRight className="w-6 h-6" />
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>
