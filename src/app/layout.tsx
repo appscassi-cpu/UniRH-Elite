@@ -9,7 +9,7 @@ const APP_ICON_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/sv
 
 export const metadata: Metadata = {
   title: 'UniRH Elite - Gestão de Servidores',
-  description: 'Controle simples de faltas, férias e ocorrências de servidores escolares.',
+  description: 'Controle de faltas, férias e ocorrências de alta performance.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -43,9 +43,8 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
       <body className="font-body antialiased bg-background overflow-x-hidden">
         <AuthProvider>

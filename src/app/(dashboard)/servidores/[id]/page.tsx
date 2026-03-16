@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/components/auth-provider';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { useRouter } from 'next/navigation';
 import { 
   Phone, 
   MapPin, 
@@ -28,7 +29,8 @@ import {
   Cake,
   PartyPopper,
   Share2,
-  FileDown
+  FileDown,
+  ShieldAlert
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -50,6 +52,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
   const { id } = use(params);
   const { isAdmin } = useAuth();
   const { toast } = useToast();
+  const router = useRouter();
   const [servidor, setServidor] = useState<any>(null);
   const [ocorrencias, setOcorrencias] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,22 +60,23 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
   useEffect(() => {
     async function fetchServidor() {
-      const docRef = doc(db, 'servidores', id);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        setServidor({ id: docSnap.id, ...data });
+      try {
+        const docRef = doc(db, 'servidores', id);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setServidor({ id: docSnap.id, ...data });
 
-        // Verificação de Aniversário Elite
-        if (data.dataNascimento) {
-          const today = new Date();
-          const birthDate = new Date(data.dataNascimento + 'T00:00:00');
-          if (today.getDate() === birthDate.getDate() && today.getMonth() === birthDate.getMonth()) {
-            setIsBirthdayToday(true);
+          if (data.dataNascimento) {
+            const today = new Date();
+            const birthDate = new Date(data.dataNascimento + 'T00:00:00');
+            if (today.getDate() === birthDate.getDate() && today.getMonth() === birthDate.getMonth()) {
+              setIsBirthdayToday(true);
+            }
           }
         }
-      } else {
-        setLoading(false);
+      } catch (error) {
+        console.error("Erro ao buscar servidor:", error);
       }
     }
 
@@ -85,7 +89,6 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const today = new Date().toISOString().split('T')[0];
 
-      // Ordenação Estratégica: Férias mais próximas/ativas no topo
       const sortedData = data.sort((a: any, b: any) => {
         const startA = a.dataInicio || '';
         const startB = b.dataInicio || '';
@@ -95,15 +98,8 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
         const isPastA = endA < today;
         const isPastB = endB < today;
 
-        if (isPastA !== isPastB) {
-          return isPastA ? 1 : -1;
-        }
-
-        if (!isPastA) {
-          return startA.localeCompare(startB);
-        } else {
-          return startB.localeCompare(startA);
-        }
+        if (isPastA !== isPastB) return isPastA ? 1 : -1;
+        return !isPastA ? startA.localeCompare(startB) : startB.localeCompare(startA);
       });
 
       setOcorrencias(sortedData);
@@ -120,16 +116,30 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
   const handleDeleteOccurrence = async (occurrenceId: string) => {
     try {
       await deleteDoc(doc(db, 'ocorrencias', occurrenceId));
-      toast({
-        title: "Registro Removido",
-        description: "A ocorrência foi excluída permanentemente do dossiê.",
-      });
+      toast({ title: "Registro Removido", description: "A ocorrência foi excluída do dossiê." });
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Erro de Protocolo",
-        description: "Não foi possível remover o registro.",
-      });
+      toast({ variant: "destructive", title: "Erro de Protocolo", description: "Não foi possível remover o registro." });
+    }
+  };
+
+  const handleFullDelete = async () => {
+    try {
+      const oQuery = query(collection(db, 'ocorrencias'), where('servidorId', '==', id));
+      const snapshot = await getDoc(doc(db, 'servidores', id)); // Re-check if exists
+      
+      // Delete occurrences
+      const { getDocs } = await import('firebase/firestore');
+      const oSnap = await getDocs(oQuery);
+      const deletePromises = oSnap.docs.map(item => deleteDoc(doc(db, 'ocorrencias', item.id)));
+      await Promise.all(deletePromises);
+
+      // Delete server
+      await deleteDoc(doc(db, 'servidores', id));
+      
+      toast({ title: "Protocolo de Limpeza Concluído", description: "Servidor e registros removidos com sucesso." });
+      router.push('/servidores');
+    } catch (error) {
+      toast({ variant: "destructive", title: "Erro de Protocolo", description: "Falha na exclusão em cascata." });
     }
   };
 
@@ -137,22 +147,21 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
     if (!servidor) return;
 
     let message = `*🛡️ UniRH ELITE - DOSSIÊ ESTRATÉGICO*\n\n`;
-    message += `*NOME:* ${servidor.nome.toUpperCase()}\n`;
-    message += `*MATRÍCULA:* ${servidor.matricula}\n`;
-    message += `*CARGO:* ${servidor.cargo}\n`;
-    message += `*SETOR:* ${servidor.setor}\n`;
-    message += `*ADMISSÃO:* ${servidor.dataAdmissao ? format(new Date(servidor.dataAdmissao + 'T00:00:00'), 'dd/MM/yyyy') : '-'}\n`;
-    message += `*NASCIMENTO:* ${servidor.dataNascimento ? format(new Date(servidor.dataNascimento + 'T00:00:00'), 'dd/MM/yyyy') : '-'}\n\n`;
+    message += `*NOME:* ${servidor?.nome?.toUpperCase()}\n`;
+    message += `*MATRÍCULA:* ${servidor?.matricula}\n`;
+    message += `*CARGO:* ${servidor?.cargo}\n`;
+    message += `*SETOR:* ${servidor?.setor}\n`;
+    message += `*ADMISSÃO:* ${servidor?.dataAdmissao ? format(new Date(servidor.dataAdmissao + 'T00:00:00'), 'dd/MM/yyyy') : '-'}\n\n`;
 
     if (ocorrencias.length > 0) {
-      message += `*📊 HISTÓRICO DE OCORRÊNCIAS / FÉRIAS:*\n`;
+      message += `*📊 HISTÓRICO DE EVENTOS:*\n`;
       ocorrencias.forEach((o) => {
         const start = o.dataInicio ? format(new Date(o.dataInicio + 'T00:00:00'), 'dd/MM/yy') : '-';
         const end = o.dataFim ? format(new Date(o.dataFim + 'T00:00:00'), 'dd/MM/yy') : '-';
         message += `• ${o.tipo} (${o.dias}d): ${start} a ${end}\n`;
       });
     } else {
-      message += `_Nenhum registro histórico detectado na base de dados._`;
+      message += `_Nenhum registro histórico detectado._`;
     }
 
     const encodedMessage = encodeURIComponent(message);
@@ -163,64 +172,39 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
     if (!servidor) return;
 
     const doc = new jsPDF();
-    const primaryColor = [59, 130, 246]; // Blue-500
-    const secondaryColor = [30, 41, 59]; // Slate-800
+    const primaryColor = [45, 96, 178];
+    const secondaryColor = [15, 23, 42];
 
-    // Background Header
     doc.setFillColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
     doc.rect(0, 0, 210, 40, 'F');
-    
-    // Title Header
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(22);
     doc.setFont("helvetica", "bold");
     doc.text("UniRH ELITE", 105, 20, { align: "center" });
-    
     doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
     doc.text("SISTEMA DE GESTÃO ESTRATÉGICA DE PESSOAL", 105, 30, { align: "center" });
 
-    // Server Info Section
     doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
     doc.setFontSize(18);
-    doc.setFont("helvetica", "bold");
-    doc.text(servidor.nome.toUpperCase(), 15, 55);
-    
-    // Divider
+    doc.text(servidor?.nome?.toUpperCase() || "SERVIDOR", 15, 55);
     doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-    doc.setLineWidth(0.5);
     doc.line(15, 58, 195, 58);
 
     doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    
-    const startY = 68;
-    const lineHeight = 8;
-    
     doc.setFont("helvetica", "bold");
-    doc.text("MATRÍCULA:", 15, startY);
+    doc.text("MATRÍCULA:", 15, 70);
     doc.setFont("helvetica", "normal");
-    doc.text(servidor.matricula, 45, startY);
+    doc.text(servidor?.matricula || "-", 45, 70);
 
     doc.setFont("helvetica", "bold");
-    doc.text("CARGO:", 15, startY + lineHeight);
+    doc.text("CARGO:", 15, 78);
     doc.setFont("helvetica", "normal");
-    doc.text(servidor.cargo, 45, startY + lineHeight);
+    doc.text(servidor?.cargo || "-", 45, 78);
 
     doc.setFont("helvetica", "bold");
-    doc.text("SETOR:", 15, startY + lineHeight * 2);
+    doc.text("ADMISSÃO:", 110, 70);
     doc.setFont("helvetica", "normal");
-    doc.text(servidor.setor, 45, startY + lineHeight * 2);
-
-    doc.setFont("helvetica", "bold");
-    doc.text("ADMISSÃO:", 110, startY);
-    doc.setFont("helvetica", "normal");
-    doc.text(servidor.dataAdmissao ? format(new Date(servidor.dataAdmissao + 'T00:00:00'), 'dd/MM/yyyy') : '-', 140, startY);
-
-    doc.setFont("helvetica", "bold");
-    doc.text("NASCIMENTO:", 110, startY + lineHeight);
-    doc.setFont("helvetica", "normal");
-    doc.text(servidor.dataNascimento ? format(new Date(servidor.dataNascimento + 'T00:00:00'), 'dd/MM/yyyy') : '-', 140, startY + lineHeight);
+    doc.text(servidor?.dataAdmissao ? format(new Date(servidor.dataAdmissao + 'T00:00:00'), 'dd/MM/yyyy') : '-', 140, 70);
 
     const tableData = ocorrencias.map((o, index) => [
       index + 1,
@@ -232,32 +216,41 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
     ]);
 
     autoTable(doc, {
-      startY: startY + lineHeight * 8,
+      startY: 95,
       head: [['#', 'Natureza', 'Dias', 'Início', 'Término', 'Observações']],
       body: tableData,
-      headStyles: { fillColor: primaryColor, textColor: [255, 255, 255], fontStyle: 'bold' },
-      styles: { fontSize: 8, font: "helvetica" },
+      headStyles: { fillColor: primaryColor, textColor: [255, 255, 255] },
+      styles: { fontSize: 8 },
     });
 
-    doc.save(`Dossie_Elite_${servidor.nome.replace(/\s+/g, '_')}.pdf`);
+    doc.save(`Dossie_Elite_${servidor?.nome?.replace(/\s+/g, '_')}.pdf`);
   };
 
   const getOccurrenceBadge = (tipo: string) => {
     switch (tipo) {
       case 'Férias': return 'bg-amber-100 text-amber-700';
       case 'Licença médica': return 'bg-emerald-100 text-emerald-700';
-      case 'Falta justificada':
-      case 'Falta não justificada': return 'bg-rose-100 text-rose-700';
       default: return 'bg-slate-100 text-slate-700';
     }
   };
 
-  const cleanPhone = (phone: string) => phone.replace(/\D/g, '');
-
-  if (loading || !servidor) {
+  if (loading) {
     return (
       <div className="flex justify-center p-20">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!servidor) {
+    return (
+      <div className="max-w-md mx-auto p-12 text-center space-y-4">
+        <ShieldAlert className="w-16 h-16 text-rose-500 mx-auto" />
+        <h2 className="text-2xl font-black text-slate-900 uppercase">Dossiê Inacessível</h2>
+        <p className="text-slate-500 font-medium italic">O registro solicitado não foi localizado na base elite.</p>
+        <Button asChild className="w-full h-14 rounded-xl">
+          <Link href="/servidores">Retornar à Listagem</Link>
+        </Button>
       </div>
     );
   }
@@ -266,12 +259,12 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
     <div className="space-y-12 pb-20">
       {isBirthdayToday && (
         <div className="w-full bg-gradient-to-r from-amber-400 via-primary to-rose-400 p-6 rounded-[2.5rem] shadow-2xl text-white flex items-center gap-6 animate-in zoom-in-95 duration-700 mb-8 border-4 border-white/20">
-          <div className="bg-white/20 p-4 rounded-2xl shadow-inner">
-            <PartyPopper className="w-12 h-12 text-white animate-bounce" />
+          <div className="bg-white/20 p-4 rounded-2xl">
+            <PartyPopper className="w-12 h-12 animate-bounce" />
           </div>
           <div className="space-y-1">
             <h2 className="text-3xl font-black italic tracking-tighter">Parabéns Elite! 🥳</h2>
-            <p className="font-bold text-white/90">Hoje celebramos a vida de <span className="underline decoration-white/50">{servidor.nome}</span>.</p>
+            <p className="font-bold text-white/90">Hoje celebramos a vida de <span className="underline">{servidor?.nome}</span>.</p>
           </div>
         </div>
       )}
@@ -286,7 +279,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
           <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter">
             Dossiê <span className="text-primary italic">Pessoal</span>
           </h1>
-          <p className="text-2xl sm:text-3xl font-black text-primary tracking-tight mt-2">{servidor.nome}</p>
+          <p className="text-2xl sm:text-3xl font-black text-primary tracking-tight mt-2">{servidor?.nome}</p>
         </div>
       </div>
 
@@ -305,7 +298,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               </div>
               <div>
                 <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Matrícula</p>
-                <p className="font-bold text-slate-800 text-lg">{servidor.matricula}</p>
+                <p className="font-bold text-slate-800 text-lg">{servidor?.matricula}</p>
               </div>
             </div>
 
@@ -315,7 +308,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               </div>
               <div>
                 <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Lotação</p>
-                <p className="font-bold text-slate-800 text-lg">{servidor.setor}</p>
+                <p className="font-bold text-slate-800 text-lg">{servidor?.setor}</p>
               </div>
             </div>
 
@@ -326,56 +319,72 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               <div>
                 <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Nascimento</p>
                 <p className="font-bold text-slate-800 text-lg">
-                  {servidor.dataNascimento ? format(new Date(servidor.dataNascimento + 'T00:00:00'), 'dd/MM/yyyy') : '-'}
+                  {servidor?.dataNascimento ? format(new Date(servidor.dataNascimento + 'T00:00:00'), 'dd/MM/yyyy') : '-'}
                 </p>
               </div>
             </div>
 
-            {servidor.telefone && (
+            {servidor?.telefone && (
               <a 
-                href={`https://wa.me/55${cleanPhone(servidor.telefone)}`}
+                href={`https://wa.me/55${servidor.telefone.replace(/\D/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200 transition-all hover:scale-[1.02]"
+                className="flex items-center gap-4 bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200 transition-all hover:scale-[1.02] shadow-sm"
               >
                 <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center">
                   <MessageCircle className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-emerald-600 uppercase font-black tracking-widest leading-none mb-1">WhatsApp</p>
-                  <p className="font-black text-emerald-700 text-xl tracking-tight leading-none">{servidor.telefone}</p>
+                  <p className="text-[10px] text-emerald-600 uppercase font-black tracking-widest mb-1 leading-none">WhatsApp</p>
+                  <p className="font-black text-emerald-700 text-xl tracking-tight leading-none">{servidor?.telefone}</p>
                 </div>
               </a>
             )}
 
             <div className="grid gap-3 pt-4">
-              <Button onClick={handleShareWhatsApp} className="w-full h-14 bg-slate-900 hover:bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95">
+              <Button onClick={handleShareWhatsApp} className="w-full h-14 bg-slate-900 hover:bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl">
                 <Share2 className="w-4 h-4 mr-2" />
                 Compartilhar no WhatsApp
               </Button>
 
-              <Button onClick={handleGeneratePDF} className="w-full h-14 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95">
+              <Button onClick={handleGeneratePDF} className="w-full h-14 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl">
                 <FileDown className="w-4 h-4 mr-2" />
                 Gerar PDF Estratégico
               </Button>
+
+              {isAdmin && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline" className="w-full h-14 rounded-2xl font-black text-xs uppercase tracking-widest border-2 border-rose-100 text-rose-500 hover:bg-rose-50">
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Remover Servidor
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="rounded-[2rem]">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="text-2xl font-black">Exclusão em Cascata</AlertDialogTitle>
+                      <AlertDialogDescription className="text-slate-500 font-medium italic">
+                        Esta ação removerá permanentemente o servidor e **todos os registros históricos** (férias, licenças, etc.).
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="mt-6">
+                      <AlertDialogCancel className="h-12 rounded-xl font-black">Cancelar</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleFullDelete} className="h-12 rounded-xl bg-rose-500 font-black">Confirmar Limpeza</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
             </div>
           </CardContent>
         </Card>
 
         <div className="lg:col-span-2 space-y-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-6 bg-white p-6 rounded-[2rem] shadow-xl border-2 border-slate-50">
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-3">
-              <div className="p-2 bg-primary rounded-xl">
-                <History className="w-6 h-6 text-white" />
-              </div>
+            <h2 className="text-2xl font-black text-slate-900 flex items-center gap-3">
+              <div className="p-2 bg-primary rounded-xl"><History className="w-6 h-6 text-white" /></div>
               Linha do Tempo
             </h2>
-            <Button asChild className="h-12 px-8 font-black rounded-xl shadow-lg">
-              <Link href={`/ocorrencias/registrar?servidorId=${servidor.id}`}>
-                <Plus className="w-5 h-5 mr-2" />
-                Novo Registro
-              </Link>
-            </Button>
+            <Button asChild className="h-12 px-8 font-black rounded-xl"><Link href={`/ocorrencias/registrar?servidorId=${servidor?.id}`}><Plus className="w-5 h-5 mr-2" />Novo Registro</Link></Button>
           </div>
 
           <div className="space-y-6">
@@ -386,70 +395,31 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               </div>
             ) : (
               ocorrencias.map((o) => (
-                <Card key={o.id} className="shadow-xl border-2 border-slate-50 rounded-[2.5rem] overflow-hidden hover:scale-[1.01] transition-all bg-white group">
+                <Card key={o.id} className="shadow-xl border-2 border-slate-50 rounded-[2.5rem] overflow-hidden bg-white hover:scale-[1.01] transition-all">
                   <CardContent className="p-8">
                     <div className="flex flex-col sm:flex-row justify-between gap-6">
                       <div className="space-y-4 flex-1">
                         <div className="flex items-center gap-3 flex-wrap">
-                          <Badge className={cn("border-none px-6 py-1.5 text-xs font-black uppercase tracking-widest", getOccurrenceBadge(o.tipo))}>
-                            {o.tipo}
-                          </Badge>
-                          <span className="text-lg font-black text-primary italic">
-                            {o.dias} {o.dias > 1 ? 'dias corridos' : 'dia corrido'}
-                          </span>
+                          <Badge className={cn("px-6 py-1.5 text-xs font-black uppercase tracking-widest", getOccurrenceBadge(o.tipo))}>{o.tipo}</Badge>
+                          <span className="text-lg font-black text-primary italic">{o.dias} {o.dias > 1 ? 'dias' : 'dia'}</span>
                         </div>
-                        <div>
-                          <p className="text-xl font-black text-slate-800 tracking-tight">
-                            {o.dataInicio ? format(new Date(o.dataInicio + 'T00:00:00'), "dd 'de' MMM", { locale: ptBR }) : '-'} 
-                            {' '}—{' '} 
-                            {o.dataFim ? format(new Date(o.dataFim + 'T00:00:00'), "dd 'de' MMM 'de' yyyy", { locale: ptBR }) : '-'}
-                          </p>
-                        </div>
+                        <p className="text-xl font-black text-slate-800">
+                          {o.dataInicio ? format(new Date(o.dataInicio + 'T00:00:00'), "dd 'de' MMM", { locale: ptBR }) : '-'} 
+                          {' '}—{' '} 
+                          {o.dataFim ? format(new Date(o.dataFim + 'T00:00:00'), "dd 'de' MMM 'de' yyyy", { locale: ptBR }) : '-'}
+                        </p>
                       </div>
                       
-                      <div className="flex flex-row sm:flex-col items-center sm:items-end justify-end gap-3 shrink-0">
+                      <div className="flex gap-3 items-center">
                         {o.anexo && (
-                          <Button variant="outline" size="sm" className="h-10 px-4 rounded-xl font-bold border-2 border-primary/10 text-primary hover:bg-primary/5 transition-all shadow-sm" asChild>
-                            <a href={o.anexo} target="_blank" rel="noopener noreferrer">
-                              <LucideImage className="w-4 h-4 mr-2" />
-                              Dossier
-                              <ExternalLink className="w-3 h-3 ml-2 opacity-50" />
-                            </a>
+                          <Button variant="outline" size="sm" className="h-10 rounded-xl" asChild>
+                            <a href={o.anexo} target="_blank" rel="noopener noreferrer"><LucideImage className="w-4 h-4 mr-2" />Dossier</a>
                           </Button>
                         )}
-                        
                         {isAdmin && (
                           <div className="flex gap-2">
-                            <Button variant="outline" size="icon" asChild className="w-10 h-10 rounded-xl border-2 border-slate-200">
-                              <Link href={`/ocorrencias/${o.id}/editar?servidorId=${servidor.id}`}>
-                                <Edit className="w-4 h-4" />
-                              </Link>
-                            </Button>
-
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button variant="outline" size="icon" className="w-10 h-10 rounded-xl border-2 border-rose-100 text-rose-500">
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent className="rounded-[2rem] p-8 border-2 shadow-2xl">
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle className="text-2xl font-black text-slate-900">Confirmar Exclusão</AlertDialogTitle>
-                                  <AlertDialogDescription className="text-slate-500 font-medium italic mt-4">
-                                    Esta ação removerá permanentemente o registro de <strong>{o.tipo}</strong>.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter className="mt-8 gap-3">
-                                  <AlertDialogCancel className="rounded-xl h-12 font-black border-2">Cancelar</AlertDialogCancel>
-                                  <AlertDialogAction 
-                                    onClick={() => handleDeleteOccurrence(o.id)}
-                                    className="bg-rose-500 hover:bg-rose-600 rounded-xl h-12 font-black"
-                                  >
-                                    Confirmar Remoção
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
+                            <Button variant="outline" size="icon" asChild className="w-10 h-10 rounded-xl"><Link href={`/ocorrencias/${o.id}/editar?servidorId=${servidor?.id}`}><Edit className="w-4 h-4" /></Link></Button>
+                            <Button onClick={() => handleDeleteOccurrence(o.id)} variant="outline" size="icon" className="w-10 h-10 rounded-xl text-rose-500"><Trash2 className="w-4 h-4" /></Button>
                           </div>
                         )}
                       </div>
