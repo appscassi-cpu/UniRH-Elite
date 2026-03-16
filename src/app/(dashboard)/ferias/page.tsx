@@ -134,11 +134,18 @@ export default function FeriasRankingPage() {
 
                       {/* Período e Retorno */}
                       <div className="flex-1 space-y-3">
-                        <div className="grid grid-cols-2 sm:flex sm:flex-row items-center gap-4 sm:gap-8 bg-white/50 p-2 sm:p-3 rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm w-fit mx-auto lg:mx-0">
+                        <div className="grid grid-cols-3 sm:flex sm:flex-row items-center gap-4 sm:gap-8 bg-white/50 p-2 sm:p-3 rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm w-fit mx-auto lg:mx-0">
                           <div className="text-center">
                             <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Início</p>
                             <p className="text-base sm:text-2xl font-black text-slate-900">
                               {format(parseISO(f.dataInicio), "dd/MM/yy")}
+                            </p>
+                          </div>
+                          <div className="h-6 w-px bg-slate-200 hidden sm:block" />
+                          <div className="text-center">
+                            <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Término</p>
+                            <p className="text-base sm:text-2xl font-black text-slate-900">
+                              {f.dataFim ? format(parseISO(f.dataFim), "dd/MM/yy") : '-'}
                             </p>
                           </div>
                           <div className="h-6 w-px bg-slate-200 hidden sm:block" />
