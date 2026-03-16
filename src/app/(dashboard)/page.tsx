@@ -114,7 +114,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 perspective-container">
-      <div className="flex flex-col items-center justify-center mb-12 animate-in zoom-in-95 duration-700">
+      <div className="pt-12 flex flex-col items-center justify-center mb-12 animate-in zoom-in-95 duration-700">
         <div className="p-4 bg-primary rounded-[2.5rem] shadow-2xl shadow-primary/40 mb-4 rotate-3">
           <ScrollText className="w-12 h-12 text-white" />
         </div>
@@ -128,7 +128,7 @@ export default function DashboardPage() {
               <ShieldCheck className="w-8 h-8 text-primary" />
             </h2>
             <p className="text-slate-500 font-medium italic">
-              Protocolos de gestão estratégica ativos no <span className="text-primary font-bold">UniRH Elite</span>
+              Controle de alta performance e inteligência no <span className="text-primary font-bold">UniRH Elite</span>
             </p>
           </div>
         </div>
