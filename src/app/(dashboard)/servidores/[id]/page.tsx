@@ -21,7 +21,8 @@ import {
   ExternalLink,
   UserCircle,
   Edit,
-  Trash2
+  Trash2,
+  MessageCircle
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -136,6 +137,8 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
     }
   };
 
+  const cleanPhone = (phone: string) => phone.replace(/\D/g, '');
+
   return (
     <div className="space-y-12">
       <div className="flex flex-col items-center text-center gap-6 w-full">
@@ -183,15 +186,34 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
                 <p className="font-bold text-slate-800 text-lg">{servidor.setor}</p>
               </div>
             </div>
-            <div className="flex items-center gap-4 group">
-              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                <Phone className="w-5 h-5 text-slate-500 group-hover:text-primary" />
+
+            {servidor.telefone ? (
+              <a 
+                href={`https://wa.me/55${cleanPhone(servidor.telefone)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-4 group hover:bg-emerald-50 p-2 -m-2 rounded-2xl transition-all duration-300"
+              >
+                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-emerald-500 transition-colors">
+                  <MessageCircle className="w-5 h-5 text-slate-500 group-hover:text-white" />
+                </div>
+                <div>
+                  <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">WhatsApp / Contato</p>
+                  <p className="font-bold text-slate-800 text-lg group-hover:text-emerald-600 transition-colors">{servidor.telefone}</p>
+                </div>
+              </a>
+            ) : (
+              <div className="flex items-center gap-4 group opacity-50">
+                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                  <Phone className="w-5 h-5 text-slate-500" />
+                </div>
+                <div>
+                  <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Contato</p>
+                  <p className="font-bold text-slate-800 text-lg">Não disponível</p>
+                </div>
               </div>
-              <div>
-                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Contato</p>
-                <p className="font-bold text-slate-800 text-lg">{servidor.telefone || 'Não disponível'}</p>
-              </div>
-            </div>
+            )}
+
             <div className="flex items-center gap-4 group">
               <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                 <Calendar className="w-5 h-5 text-slate-500 group-hover:text-primary" />
