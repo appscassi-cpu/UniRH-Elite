@@ -35,6 +35,7 @@ export default function FeriasRankingPage() {
       const sorted = data.sort((a, b) => {
         const dateA = a.dataInicio || '';
         const dateB = b.dataInicio || '';
+        // Ordem cronológica: o que começa primeiro aparece primeiro
         return dateA.localeCompare(dateB);
       });
 
@@ -63,7 +64,7 @@ export default function FeriasRankingPage() {
         </div>
         <div className="space-y-2 w-full">
           <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter">
-            Ranking de <span className="text-amber-500 italic">Férias</span>
+            Ordem de <span className="text-amber-500 italic">Férias</span>
           </h1>
           <p className="text-slate-500 font-medium text-sm sm:text-lg italic mb-4 sm:mb-6">
             Cronograma estratégico de descanso do quadro elite
@@ -105,7 +106,7 @@ export default function FeriasRankingPage() {
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex flex-col lg:flex-row lg:items-center gap-4 sm:gap-6">
                       <div className="flex items-center gap-4">
-                        {/* Posição no Ranking */}
+                        {/* Posição Cronológica */}
                         <div className={cn(
                           "w-12 h-12 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-transform group-hover:rotate-12",
                           isFirst ? "bg-amber-500 text-white" : "bg-slate-900 text-white"
@@ -137,30 +138,30 @@ export default function FeriasRankingPage() {
                         <div className="grid grid-cols-3 sm:flex sm:flex-row items-center gap-4 sm:gap-8 bg-white/50 p-2 sm:p-3 rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm w-fit mx-auto lg:mx-0">
                           <div className="text-center">
                             <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Início</p>
-                            <p className="text-base sm:text-2xl font-black text-slate-900">
+                            <p className="text-lg sm:text-2xl font-black text-slate-900">
                               {format(parseISO(f.dataInicio), "dd/MM/yy")}
                             </p>
                           </div>
                           <div className="h-6 w-px bg-slate-200 hidden sm:block" />
                           <div className="text-center">
                             <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Duração</p>
-                            <p className="text-base sm:text-2xl font-black text-amber-500 italic">
+                            <p className="text-lg sm:text-2xl font-black text-amber-500 italic">
                               {f.dias} d
                             </p>
                           </div>
                           <div className="h-6 w-px bg-slate-200 hidden sm:block" />
                           <div className="text-center">
                             <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Término</p>
-                            <p className="text-base sm:text-2xl font-black text-slate-900">
+                            <p className="text-lg sm:text-2xl font-black text-slate-900">
                               {f.dataFim ? format(parseISO(f.dataFim), "dd/MM/yy") : '-'}
                             </p>
                           </div>
                         </div>
                         
                         {returnDate && (
-                          <div className="text-center lg:text-left">
+                          <div className="text-center">
                             <p className="text-[9px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-0.5">Retorno ao Trabalho</p>
-                            <p className="text-sm sm:text-xl font-black text-emerald-600 flex items-center justify-center lg:justify-start gap-1.5">
+                            <p className="text-base sm:text-xl font-black text-emerald-600 flex items-center justify-center gap-1.5">
                               <CalendarDays className="w-3 h-3 sm:w-4 sm:h-4" />
                               {format(returnDate, "dd/MM/yyyy")}
                             </p>

@@ -198,11 +198,11 @@ export default function DashboardPage() {
           <Link href="/ferias" className="group">
             <div className="relative overflow-hidden h-28 glass-card rounded-[2rem] flex items-center p-6 gap-6 hover-3d ring-1 ring-amber-500/20 hover:ring-amber-500/50 transition-all border-l-8 border-amber-500 shadow-xl bg-amber-50/10">
               <div className="w-14 h-14 bg-amber-500 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0 group-hover:rotate-6 transition-transform">
-                <Trophy className="w-8 h-8 text-white" />
+                <Umbrella className="w-8 h-8 text-white" />
               </div>
               <div className="flex-1 flex items-center justify-between">
                 <span className="font-black text-slate-800 tracking-tight text-xl leading-tight">
-                  Ranking de<br/>Férias
+                  Ordem de<br/>Férias
                 </span>
                 <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center group-hover:bg-amber-200 transition-colors">
                   <ChevronRight className="w-6 h-6 text-amber-600 group-hover:translate-x-1 transition-transform" />
