@@ -71,6 +71,8 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
             setIsBirthdayToday(true);
           }
         }
+      } else {
+        setLoading(false);
       }
     }
 
@@ -252,6 +254,14 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
   const cleanPhone = (phone: string) => phone.replace(/\D/g, '');
 
+  if (loading || !servidor) {
+    return (
+      <div className="flex justify-center p-20">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-12 pb-20">
       {isBirthdayToday && (
@@ -339,12 +349,12 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
             )}
 
             <div className="grid gap-3 pt-4">
-              <Button onClick={handleShareWhatsApp} className="w-full h-14 bg-slate-900 hover:bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest">
+              <Button onClick={handleShareWhatsApp} className="w-full h-14 bg-slate-900 hover:bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95">
                 <Share2 className="w-4 h-4 mr-2" />
-                Compartilhar WhatsApp
+                Compartilhar no WhatsApp
               </Button>
 
-              <Button onClick={handleGeneratePDF} className="w-full h-14 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black text-xs uppercase tracking-widest">
+              <Button onClick={handleGeneratePDF} className="w-full h-14 bg-primary hover:bg-primary/90 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95">
                 <FileDown className="w-4 h-4 mr-2" />
                 Gerar PDF Estratégico
               </Button>
