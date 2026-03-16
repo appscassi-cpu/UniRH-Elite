@@ -18,7 +18,7 @@ import {
   IdCard,
   Users,
   Umbrella,
-  ShieldCheck,
+  MessageCircle,
   Filter
 } from 'lucide-react';
 import Link from 'next/link';
@@ -231,7 +231,7 @@ export default function ServidoresListPage() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 flex-1 lg:px-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4 flex-1 lg:px-6">
                         <div className="flex items-center gap-3 text-slate-700 min-w-0">
                           <div className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 hidden sm:flex">
                             <Briefcase className={cn("w-4 h-4", isOnVacation ? "text-amber-600" : "text-indigo-600/70")} />
@@ -249,6 +249,34 @@ export default function ServidoresListPage() {
                             <p className="text-[8px] text-slate-400 uppercase font-black tracking-widest">Setor</p>
                             <p className="font-bold text-xs md:text-lg text-slate-800 truncate">{servidor.setor}</p>
                           </div>
+                        </div>
+                        <div className="flex items-center gap-3 text-slate-600 min-w-0">
+                          {servidor.telefone ? (
+                            <a 
+                              href={`https://wa.me/55${servidor.telefone.replace(/\D/g, '')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-3 group/wa"
+                            >
+                              <div className="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0 transition-colors group-hover/wa:bg-emerald-500">
+                                <MessageCircle className="w-4 h-4 text-emerald-600 transition-colors group-hover/wa:text-white" />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-[8px] text-emerald-600 uppercase font-black tracking-widest">WhatsApp</p>
+                                <p className="font-bold text-xs md:text-lg text-emerald-700 truncate">{servidor.telefone}</p>
+                              </div>
+                            </a>
+                          ) : (
+                            <div className="flex items-center gap-3 opacity-30">
+                              <div className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center shrink-0">
+                                <MessageCircle className="w-4 h-4 text-slate-400" />
+                              </div>
+                              <div className="min-w-0">
+                                <p className="text-[8px] text-slate-400 uppercase font-black tracking-widest">Contato</p>
+                                <p className="font-bold text-xs md:text-lg text-slate-400">N/D</p>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
 
