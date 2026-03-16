@@ -29,9 +29,16 @@ function DashboardContent({
   }, [user, loading, router]);
 
   const getBackConfig = () => {
+    const servidorIdParam = searchParams.get('servidorId');
+
     // Lógica específica para o formulário temático de Férias
     if (pathname === '/ocorrencias/registrar' && searchParams.get('tipo') === 'Férias') {
       return { href: '/ferias', label: 'Voltar para Férias' };
+    }
+
+    // Se estiver em uma página de ocorrência (registro ou edição) vindo de um servidor
+    if (pathname.startsWith('/ocorrencias/') && servidorIdParam) {
+      return { href: `/servidores/${servidorIdParam}`, label: 'Voltar ao Dossiê' };
     }
 
     if (pathname.startsWith('/servidores/') && pathname !== '/servidores') {

@@ -106,9 +106,9 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
   const getOccurrenceBadge = (tipo: string) => {
     switch (tipo) {
       case 'Férias': return 'bg-amber-100 text-amber-700';
-      case 'Atestado Médico': return 'bg-emerald-100 text-emerald-700';
-      case 'Falta': return 'bg-rose-100 text-rose-700';
-      case 'Licença': return 'bg-blue-100 text-blue-700';
+      case 'Licença médica': return 'bg-emerald-100 text-emerald-700';
+      case 'Falta justificada':
+      case 'Falta não justificada': return 'bg-rose-100 text-rose-700';
       default: return 'bg-slate-100 text-slate-700';
     }
   };
@@ -253,7 +253,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
                         {isAdmin && (
                           <div className="flex gap-2">
                             <Button variant="outline" size="icon" asChild className="w-10 h-10 rounded-xl border-2 border-slate-200 hover:bg-slate-100 hover:text-slate-900 transition-all">
-                              <Link href={`/ocorrencias/${o.id}/editar`}>
+                              <Link href={`/ocorrencias/${o.id}/editar?servidorId=${servidor.id}`}>
                                 <Edit className="w-4 h-4" />
                               </Link>
                             </Button>
