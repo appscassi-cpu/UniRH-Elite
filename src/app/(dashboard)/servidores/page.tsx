@@ -109,7 +109,7 @@ export default function ServidoresListPage() {
   });
 
   return (
-    <div className="space-y-10 pt-12">
+    <div className="space-y-10">
       <div className="flex flex-col items-center text-center gap-6 mb-12">
         <div className="p-4 bg-indigo-600 rounded-[2.5rem] shadow-2xl shadow-indigo-600/40 rotate-3">
           <Users className="w-12 h-12 text-white" />
@@ -140,7 +140,6 @@ export default function ServidoresListPage() {
                 vinculoFilter === null ? "bg-slate-900 text-white" : "border-slate-200 text-slate-500 hover:bg-slate-50"
               )}
             >
-              <Users className="w-4 h-4 mr-2 hidden sm:block" />
               Todos
             </Button>
             <Button 
@@ -151,7 +150,6 @@ export default function ServidoresListPage() {
                 vinculoFilter === 'Efetivo' ? "bg-indigo-600 text-white border-indigo-600" : "border-indigo-100 text-indigo-600 hover:bg-indigo-50"
               )}
             >
-              <ShieldCheck className="w-4 h-4 mr-2 hidden sm:block" />
               Efetivos
             </Button>
             <Button 
@@ -162,7 +160,6 @@ export default function ServidoresListPage() {
                 vinculoFilter === 'Terceirizado' ? "bg-slate-700 text-white border-slate-700" : "border-slate-100 text-slate-600 hover:bg-slate-50"
               )}
             >
-              <Briefcase className="w-4 h-4 mr-2 hidden sm:block" />
               Terceirizados
             </Button>
           </div>

@@ -244,14 +244,14 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[50vh] pt-32">
+      <div className="flex justify-center items-center min-h-[50vh]">
         <Loader2 className="w-12 h-12 text-primary animate-spin opacity-20" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-12 pb-20 animate-in fade-in duration-700 pt-12">
+    <div className="space-y-12 pb-20 animate-in fade-in duration-700">
       {isBirthdayToday && (
         <div className="w-full bg-gradient-to-r from-amber-400 via-primary to-rose-400 p-6 rounded-[2.5rem] shadow-2xl text-white flex items-center gap-6 animate-in zoom-in-95 duration-700 mb-8 border-4 border-white/20">
           <div className="bg-white/20 p-4 rounded-2xl">

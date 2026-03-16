@@ -91,7 +91,7 @@ function DashboardContent({
   return (
     <main className="container mx-auto px-4 pt-28 sm:pt-40 pb-32 animate-in fade-in duration-500">
       {!isHome && (
-        <div className="mb-16 flex justify-start">
+        <div className="mb-8 flex justify-start">
           <Button 
             variant="outline" 
             asChild 

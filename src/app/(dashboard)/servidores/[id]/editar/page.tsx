@@ -109,14 +109,14 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
 
   if (fetching) {
     return (
-      <div className="flex justify-center p-20 pt-32">
+      <div className="flex justify-center p-20">
         <Loader2 className="w-12 h-12 text-indigo-600 animate-spin opacity-20" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-10 animate-in fade-in duration-700 pt-12">
+    <div className="max-w-2xl mx-auto space-y-10 animate-in fade-in duration-700">
       <div className="flex flex-col items-center text-center gap-6 mb-12">
         <div className="p-4 bg-indigo-600 rounded-[2.5rem] shadow-2xl shadow-indigo-600/40 -rotate-6">
           <Users className="w-12 h-12 text-white" />

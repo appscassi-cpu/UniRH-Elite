@@ -12,8 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, UserPlus, Users } from 'lucide-react';
-import Link from 'next/link';
+import { UserPlus, Users } from 'lucide-react';
 
 export default function NewServidorPage() {
   const [loading, setLoading] = useState(false);
@@ -78,7 +77,7 @@ export default function NewServidorPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-10 pt-12">
+    <div className="max-w-2xl mx-auto space-y-10">
       <div className="flex flex-col items-center text-center gap-6 mb-12">
         <div className="p-4 bg-indigo-600 rounded-[2.5rem] shadow-2xl shadow-indigo-600/40 rotate-12">
           <Users className="w-12 h-12 text-white" />
