@@ -118,9 +118,20 @@ export default function DashboardPage() {
         <div className="p-4 bg-primary rounded-[2.5rem] shadow-2xl shadow-primary/40 mb-4 rotate-3">
           <ScrollText className="w-12 h-12 text-white" />
         </div>
-        <h1 className="text-5xl font-black text-slate-900 tracking-tighter text-center">
-          UniRH <span className="text-primary italic">Elite</span>
-        </h1>
+        <div className="space-y-6 text-center">
+          <h1 className="text-5xl font-black text-slate-900 tracking-tighter">
+            UniRH <span className="text-primary italic">Elite</span>
+          </h1>
+          <div className="space-y-2">
+            <h2 className="text-3xl font-black text-slate-800 tracking-tight flex items-center justify-center gap-3">
+              Olá, Administrador!
+              <ShieldCheck className="w-8 h-8 text-primary" />
+            </h2>
+            <p className="text-slate-500 font-medium italic">
+              Protocolos de gestão estratégica ativos no <span className="text-primary font-bold">UniRH Elite</span>
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8">
