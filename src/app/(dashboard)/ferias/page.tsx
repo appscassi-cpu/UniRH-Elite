@@ -15,7 +15,7 @@ import {
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { format, isAfter, isBefore, parseISO } from 'date-fns';
+import { format, isAfter, isBefore, parseISO, addDays } from 'date-fns';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
@@ -92,6 +92,7 @@ export default function FeriasRankingPage() {
             {ferias.map((f, index) => {
               const status = getStatus(f.dataInicio, f.dataFim);
               const isFirst = index === 0;
+              const returnDate = f.dataFim ? addDays(parseISO(f.dataFim), 1) : null;
 
               return (
                 <Card 
@@ -101,7 +102,7 @@ export default function FeriasRankingPage() {
                     isFirst ? "border-amber-500 shadow-amber-500/10 bg-amber-50/30" : "border-primary/20 bg-white"
                   )}
                 >
-                  <CardContent className="p-4 sm:p-8">
+                  <CardContent className="p-4 sm:p-6">
                     <div className="flex flex-col lg:flex-row lg:items-center gap-4 sm:gap-6">
                       <div className="flex items-center gap-4">
                         {/* Posição no Ranking */}
@@ -131,35 +132,40 @@ export default function FeriasRankingPage() {
                         </div>
                       </div>
 
-                      {/* Período e Destaque */}
-                      <div className="grid grid-cols-3 sm:flex sm:flex-row items-center gap-2 sm:gap-8 bg-white/50 p-3 sm:p-4 rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm">
-                        <div className="text-center">
-                          <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Início</p>
-                          <p className="text-base sm:text-3xl font-black text-slate-900">
-                            {format(parseISO(f.dataInicio), "dd/MM/yy")}
-                          </p>
+                      {/* Período e Retorno */}
+                      <div className="flex-1 space-y-3">
+                        <div className="grid grid-cols-2 sm:flex sm:flex-row items-center gap-4 sm:gap-8 bg-white/50 p-2 sm:p-3 rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm w-fit mx-auto lg:mx-0">
+                          <div className="text-center">
+                            <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Início</p>
+                            <p className="text-base sm:text-2xl font-black text-slate-900">
+                              {format(parseISO(f.dataInicio), "dd/MM/yy")}
+                            </p>
+                          </div>
+                          <div className="h-6 w-px bg-slate-200 hidden sm:block" />
+                          <div className="text-center">
+                            <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5">Duração</p>
+                            <p className="text-base sm:text-2xl font-black text-amber-500 italic">
+                              {f.dias} d
+                            </p>
+                          </div>
                         </div>
-                        <div className="h-6 w-px bg-slate-200 hidden sm:block" />
-                        <div className="text-center">
-                          <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Duração</p>
-                          <p className="text-base sm:text-3xl font-black text-amber-500 italic">
-                            {f.dias} d
-                          </p>
-                        </div>
-                        <div className="h-6 w-px bg-slate-200 hidden sm:block" />
-                        <div className="text-center">
-                          <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Retorno</p>
-                          <p className="text-base sm:text-3xl font-black text-slate-900">
-                            {format(parseISO(f.dataFim), "dd/MM/yy")}
-                          </p>
-                        </div>
+                        
+                        {returnDate && (
+                          <div className="text-center lg:text-left">
+                            <p className="text-[9px] sm:text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-0.5">Retorno ao Trabalho</p>
+                            <p className="text-sm sm:text-xl font-black text-emerald-600 flex items-center justify-center lg:justify-start gap-1.5">
+                              <CalendarDays className="w-3 h-3 sm:w-4 sm:h-4" />
+                              {format(returnDate, "dd/MM/yyyy")}
+                            </p>
+                          </div>
+                        )}
                       </div>
 
                       {/* Botão de Ação */}
-                      <Button variant="outline" size="lg" asChild className="h-12 sm:h-16 rounded-xl sm:rounded-2xl border-2 font-black hover:bg-slate-900 hover:text-white transition-all px-4 sm:px-8 group-hover:scale-105 text-sm sm:text-base">
+                      <Button variant="outline" size="lg" asChild className="h-10 sm:h-14 rounded-xl sm:rounded-2xl border-2 font-black hover:bg-slate-900 hover:text-white transition-all px-4 sm:px-8 group-hover:scale-105 text-xs sm:text-sm">
                         <Link href={`/servidores/${f.servidorId}`}>
                           Ver Perfil
-                          <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
+                          <ChevronRight className="w-4 h-4 ml-2" />
                         </Link>
                       </Button>
                     </div>
