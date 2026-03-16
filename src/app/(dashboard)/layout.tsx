@@ -4,8 +4,7 @@
 import { useAuth } from '@/components/auth-provider';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, Suspense } from 'react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { ShieldAlert, LogOut, ArrowLeft, ScrollText } from 'lucide-react';
+import { LogOut, ArrowLeft, ScrollText, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'firebase/auth';
 import { auth as firebaseAuth } from '@/lib/firebase';
@@ -56,6 +55,10 @@ function DashboardContent({
         <div className="p-5 bg-primary rounded-[2.5rem] shadow-2xl shadow-primary/40 animate-pulse">
           <ScrollText className="w-16 h-16 text-white" />
         </div>
+        <div className="flex flex-col items-center gap-2">
+          <h2 className="text-2xl font-black text-slate-900 tracking-tighter">UniRH Elite</h2>
+          <Loader2 className="w-6 h-6 text-primary animate-spin opacity-20" />
+        </div>
       </div>
     );
   }
@@ -63,21 +66,16 @@ function DashboardContent({
   if (user && !profile) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-        <div className="max-w-md w-full space-y-4">
-          <Alert variant="destructive" className="border-2">
-            <ShieldAlert className="h-5 w-5" />
-            <AlertTitle>Acesso Bloqueado</AlertTitle>
-            <AlertDescription>
-              Seu usuário não possui autorização para acessar o sistema UniRH. 
-              Por favor, entre em contato com o administrador.
-            </AlertDescription>
-          </Alert>
+        <div className="max-w-md w-full space-y-8 flex flex-col items-center">
+          <div className="p-6 bg-slate-100 rounded-[2.5rem] opacity-50">
+             <ScrollText className="w-12 h-12 text-slate-400" />
+          </div>
           <Button 
-            className="w-full h-12 text-lg" 
+            className="w-full h-16 text-lg font-black rounded-2xl border-2" 
             variant="outline"
             onClick={() => signOut(firebaseAuth)}
           >
-            <LogOut className="mr-2 h-5 w-5" />
+            <LogOut className="mr-3 h-6 w-6" />
             Voltar para Login
           </Button>
         </div>
@@ -88,9 +86,9 @@ function DashboardContent({
   if (!user) return null;
 
   return (
-    <main className="container mx-auto px-4 pt-24 sm:pt-40 pb-32 animate-in fade-in duration-500">
+    <main className="container mx-auto px-4 pt-32 sm:pt-48 pb-32 animate-in fade-in duration-500">
       {!isHome && (
-        <div className="mb-16 flex justify-start">
+        <div className="mb-24 flex justify-start">
           <Button 
             variant="outline" 
             asChild 
@@ -120,7 +118,7 @@ export default function DashboardLayout({
   return (
     <Suspense fallback={
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
-        <ScrollText className="w-12 h-12 text-primary/20 animate-pulse" />
+        <Loader2 className="w-10 h-10 text-primary animate-spin opacity-20" />
       </div>
     }>
       <DashboardContent>{children}</DashboardContent>

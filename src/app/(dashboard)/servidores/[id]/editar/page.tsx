@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, use } from 'react';
@@ -10,8 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Edit, Save, ArrowLeft, Users } from 'lucide-react';
-import Link from 'next/link';
+import { Edit, Save, Users, Loader2 } from 'lucide-react';
 
 export default function EditServidorPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -33,6 +33,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
 
   useEffect(() => {
     async function fetchServidor() {
+      if (!id) return;
       try {
         const docRef = doc(db, 'servidores', id);
         const docSnap = await getDoc(docRef);
@@ -49,18 +50,16 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
             observacao: data.observacao || ''
           });
         } else {
-          toast({ variant: "destructive", title: "Erro", description: "Servidor não localizado." });
           router.push('/servidores');
         }
       } catch (error) {
         console.error(error);
-        toast({ variant: "destructive", title: "Erro", description: "Falha ao sincronizar dados elite." });
       } finally {
         setFetching(false);
       }
     }
     fetchServidor();
-  }, [id, router, toast]);
+  }, [id, router]);
 
   const formatPhone = (value: string) => {
     if (!value) return value;
@@ -108,13 +107,13 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
   if (fetching) {
     return (
       <div className="flex justify-center p-20">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-600"></div>
+        <Loader2 className="w-12 h-12 text-indigo-600 animate-spin opacity-20" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-10">
+    <div className="max-w-2xl mx-auto space-y-10 animate-in fade-in duration-700">
       <div className="flex flex-col items-center text-center gap-6 mb-12">
         <div className="p-4 bg-indigo-600 rounded-[2.5rem] shadow-2xl shadow-indigo-600/40 -rotate-6">
           <Users className="w-12 h-12 text-white" />

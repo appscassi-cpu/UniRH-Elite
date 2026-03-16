@@ -30,7 +30,8 @@ import {
   PartyPopper,
   Share2,
   FileDown,
-  ShieldAlert
+  ShieldAlert,
+  Loader2
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -59,19 +60,15 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
   const [isBirthdayToday, setIsBirthdayToday] = useState(false);
 
   useEffect(() => {
-    let servidorLoaded = false;
-    let ocorrenciasLoaded = false;
+    if (!id) return;
 
-    const checkLoadingState = () => {
-      if (servidorLoaded && ocorrenciasLoaded) {
-        setLoading(false);
-      }
-    };
+    let unsubOcorrencias: () => void;
 
-    async function fetchServidor() {
+    async function initDossie() {
       try {
         const docRef = doc(db, 'servidores', id);
         const docSnap = await getDoc(docRef);
+        
         if (docSnap.exists()) {
           const data = docSnap.data();
           setServidor({ id: docSnap.id, ...data });
@@ -83,49 +80,46 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               setIsBirthdayToday(true);
             }
           }
+
+          // Carrega ocorrências em tempo real
+          const oQuery = query(
+            collection(db, 'ocorrencias'), 
+            where('servidorId', '==', id)
+          );
+          
+          unsubOcorrencias = onSnapshot(oQuery, (snapshot) => {
+            const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const today = new Date().toISOString().split('T')[0];
+
+            const sortedData = data.sort((a: any, b: any) => {
+              const startA = a.dataInicio || '';
+              const startB = b.dataInicio || '';
+              const endA = a.dataFim || '';
+              const endB = b.dataFim || '';
+
+              const isPastA = endA < today;
+              const isPastB = endB < today;
+
+              if (isPastA !== isPastB) return isPastA ? 1 : -1;
+              return !isPastA ? startA.localeCompare(startB) : startB.localeCompare(startA);
+            });
+
+            setOcorrencias(sortedData);
+            setLoading(false);
+          });
+        } else {
+          router.push('/servidores');
         }
       } catch (error) {
-        console.error("Erro ao buscar servidor:", error);
-      } finally {
-        servidorLoaded = true;
-        checkLoadingState();
+        setLoading(false);
       }
     }
 
-    const oQuery = query(
-      collection(db, 'ocorrencias'), 
-      where('servidorId', '==', id)
-    );
-    
-    const unsubscribe = onSnapshot(oQuery, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      const today = new Date().toISOString().split('T')[0];
-
-      const sortedData = data.sort((a: any, b: any) => {
-        const startA = a.dataInicio || '';
-        const startB = b.dataInicio || '';
-        const endA = a.dataFim || '';
-        const endB = b.dataFim || '';
-
-        const isPastA = endA < today;
-        const isPastB = endB < today;
-
-        if (isPastA !== isPastB) return isPastA ? 1 : -1;
-        return !isPastA ? startA.localeCompare(startB) : startB.localeCompare(startA);
-      });
-
-      setOcorrencias(sortedData);
-      ocorrenciasLoaded = true;
-      checkLoadingState();
-    }, (error) => {
-      console.error("Erro ao carregar linha do tempo:", error);
-      ocorrenciasLoaded = true;
-      checkLoadingState();
-    });
-
-    fetchServidor();
-    return () => unsubscribe();
-  }, [id]);
+    initDossie();
+    return () => {
+      if (unsubOcorrencias) unsubOcorrencias();
+    };
+  }, [id, router]);
 
   const handleDeleteOccurrence = async (occurrenceId: string) => {
     try {
@@ -170,8 +164,6 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
         const end = o.dataFim ? format(new Date(o.dataFim + 'T00:00:00'), 'dd/MM/yy') : '-';
         message += `• ${o.tipo} (${o.dias}d): ${start} a ${end}\n`;
       });
-    } else {
-      message += `_Nenhum registro histórico detectado._`;
     }
 
     const encodedMessage = encodeURIComponent(message);
@@ -246,22 +238,14 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center p-20">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (!servidor) {
-    return (
-      <div className="flex justify-center items-center p-20">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div>
+      <div className="flex justify-center items-center min-h-[50vh]">
+        <Loader2 className="w-12 h-12 text-primary animate-spin opacity-20" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-12 pb-20">
+    <div className="space-y-12 pb-20 animate-in fade-in duration-700">
       {isBirthdayToday && (
         <div className="w-full bg-gradient-to-r from-amber-400 via-primary to-rose-400 p-6 rounded-[2.5rem] shadow-2xl text-white flex items-center gap-6 animate-in zoom-in-95 duration-700 mb-8 border-4 border-white/20">
           <div className="bg-white/20 p-4 rounded-2xl">

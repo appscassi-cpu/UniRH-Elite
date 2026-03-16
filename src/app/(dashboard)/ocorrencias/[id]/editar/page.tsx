@@ -12,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Edit, Save, ClipboardPen, Umbrella, Info } from 'lucide-react';
+import { Edit, Save, ClipboardPen, Umbrella, Info, Loader2 } from 'lucide-react';
 import { differenceInDays, parseISO } from 'date-fns';
 import { cn } from '@/lib/utils';
 
@@ -53,6 +53,7 @@ export default function EditOcorrenciaPage({ params }: { params: Promise<{ id: s
 
   useEffect(() => {
     async function fetchOcorrencia() {
+      if (!id) return;
       try {
         const docRef = doc(db, 'ocorrencias', id);
         const docSnap = await getDoc(docRef);
@@ -123,7 +124,7 @@ export default function EditOcorrenciaPage({ params }: { params: Promise<{ id: s
   if (fetching) {
     return (
       <div className="flex justify-center p-20">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-emerald-600"></div>
+        <Loader2 className="w-12 h-12 text-emerald-600 animate-spin opacity-20" />
       </div>
     );
   }
@@ -131,7 +132,7 @@ export default function EditOcorrenciaPage({ params }: { params: Promise<{ id: s
   const isFerias = formData.tipo === 'Férias';
 
   return (
-    <div className="max-w-2xl mx-auto space-y-10">
+    <div className="max-w-2xl mx-auto space-y-10 animate-in fade-in duration-700">
       <div className="flex flex-col items-center text-center gap-6 mb-12">
         <div className={cn(
           "p-4 rounded-[2.5rem] shadow-2xl rotate-3",
@@ -237,7 +238,7 @@ export default function EditOcorrenciaPage({ params }: { params: Promise<{ id: s
                   isFerias ? "focus:ring-amber-500" : "focus:ring-emerald-600"
                 )}
                 value={formData.observacao}
-                onChange={(e) => setFormData({ ...formData, someAttr: e.target.value })}
+                onChange={(e) => setFormData({ ...formData, observacao: e.target.value })}
               />
             </div>
           </CardContent>
