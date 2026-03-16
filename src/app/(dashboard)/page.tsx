@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { collection, query, where, Timestamp, getDocs } from 'firebase/firestore';
+import { collection, query, where, Timestamp, getDocs, writeBatch, doc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { 
   Users, 
@@ -15,14 +15,30 @@ import {
   ChevronRight,
   ScrollText,
   ShieldCheck,
-  Trophy
+  RefreshCcw,
+  AlertTriangle
 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function DashboardPage() {
   const { isAdmin } = useAuth();
+  const { toast } = useToast();
+  const [resetting, setResetting] = useState(false);
   const [stats, setStats] = useState({
     totalServidores: 0,
     faltasMes: 0,
@@ -30,61 +46,93 @@ export default function DashboardPage() {
     servidoresFerias: 0
   });
 
+  const fetchStats = async () => {
+    const now = new Date();
+    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    
+    const servidoresSnap = await getDocs(collection(db, 'servidores'));
+    
+    const ocorrenciasSnap = await getDocs(
+      query(
+        collection(db, 'ocorrencias'),
+        where('dataRegistro', '>=', Timestamp.fromDate(firstDayOfMonth))
+      )
+    );
+
+    let faltas = 0;
+    let atestados = 0;
+    
+    ocorrenciasSnap.forEach(doc => {
+      const data = doc.data();
+      if (data.tipo === 'Falta justificada' || data.tipo === 'Falta não justificada') {
+        faltas++;
+      }
+      if (data.tipo === 'Licença médica') {
+        atestados++;
+      }
+    });
+
+    const feriasSnap = await getDocs(
+      query(collection(db, 'ocorrencias'), where('tipo', '==', 'Férias'))
+    );
+    
+    let feriasAtivas = 0;
+    const today = new Date().toISOString().split('T')[0];
+    feriasSnap.forEach(doc => {
+      const d = doc.data();
+      if (d.dataInicio <= today && d.dataFim >= today) {
+        feriasAtivas++;
+      }
+    });
+
+    setStats({
+      totalServidores: servidoresSnap.size,
+      faltasMes: faltas,
+      atestadosMes: atestados,
+      servidoresFerias: feriasAtivas
+    });
+  };
+
   useEffect(() => {
-    async function fetchStats() {
-      const now = new Date();
-      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      
-      // Busca total de servidores
-      const servidoresSnap = await getDocs(collection(db, 'servidores'));
-      
-      // Busca ocorrências do mês para estatísticas rápidas
-      const ocorrenciasSnap = await getDocs(
-        query(
-          collection(db, 'ocorrencias'),
-          where('dataRegistro', '>=', Timestamp.fromDate(firstDayOfMonth))
-        )
-      );
-
-      let faltas = 0;
-      let atestados = 0;
-      
-      ocorrenciasSnap.forEach(doc => {
-        const data = doc.data();
-        // Contabiliza faltas (Justificadas e Não Justificadas)
-        if (data.tipo === 'Falta justificada' || data.tipo === 'Falta não justificada') {
-          faltas++;
-        }
-        // Contabiliza Atestados como Licença Médica
-        if (data.tipo === 'Licença médica') {
-          atestados++;
-        }
-      });
-
-      // Busca férias para verificar quem está em gozo hoje
-      const feriasSnap = await getDocs(
-        query(collection(db, 'ocorrencias'), where('tipo', '==', 'Férias'))
-      );
-      
-      let feriasAtivas = 0;
-      const today = new Date().toISOString().split('T')[0];
-      feriasSnap.forEach(doc => {
-        const d = doc.data();
-        if (d.dataInicio <= today && d.dataFim >= today) {
-          feriasAtivas++;
-        }
-      });
-
-      setStats({
-        totalServidores: servidoresSnap.size,
-        faltasMes: faltas,
-        atestadosMes: atestados,
-        servidoresFerias: feriasAtivas
-      });
-    }
-
     fetchStats();
   }, []);
+
+  const handleSystemReset = async () => {
+    setResetting(true);
+    try {
+      const batch = writeBatch(db);
+      
+      // Busca todos os servidores
+      const servidoresSnap = await getDocs(collection(db, 'servidores'));
+      servidoresSnap.forEach((d) => {
+        batch.delete(doc(db, 'servidores', d.id));
+      });
+
+      // Busca todas as ocorrências
+      const ocorrenciasSnap = await getDocs(collection(db, 'ocorrencias'));
+      ocorrenciasSnap.forEach((d) => {
+        batch.delete(doc(db, 'ocorrencias', d.id));
+      });
+
+      await batch.commit();
+      
+      toast({
+        title: "Sistema Redefinido",
+        description: "Todos os dados foram apagados com sucesso.",
+      });
+      
+      fetchStats();
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Erro no Reset",
+        description: "Não foi possível limpar a base de dados.",
+      });
+    } finally {
+      setResetting(false);
+    }
+  };
 
   const statsCards = [
     { 
@@ -127,7 +175,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 perspective-container">
-      {/* Cabeçalho de Boas-vindas Exclusivo do Painel */}
+      {/* Cabeçalho de Boas-vindas */}
       <div className="flex flex-col items-center justify-center mb-12 animate-in zoom-in-95 duration-700">
         <div className="p-4 bg-primary rounded-[2.5rem] shadow-2xl shadow-primary/40 mb-4 rotate-3 hover:rotate-0 transition-transform duration-500">
           <ScrollText className="w-12 h-12 text-white" />
@@ -202,7 +250,7 @@ export default function DashboardPage() {
               </div>
               <div className="flex-1 flex items-center justify-between">
                 <span className="font-black text-slate-800 tracking-tight text-xl leading-tight">
-                  Ordem de<br/>Férias
+                  Ordem da<br/>Férias
                 </span>
                 <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center group-hover:bg-amber-200 transition-colors">
                   <ChevronRight className="w-6 h-6 text-amber-600 group-hover:translate-x-1 transition-transform" />
@@ -244,6 +292,40 @@ export default function DashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* Ferramenta de Reset Administrativo */}
+      {isAdmin && (
+        <div className="pt-12 flex justify-center">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" className="text-slate-400 hover:text-rose-500 font-bold uppercase tracking-[0.2em] text-[10px] gap-2">
+                <RefreshCcw className={cn("w-3 h-3", resetting && "animate-spin")} />
+                {resetting ? "Processando Limpeza..." : "Redefinir Sistema Elite"}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="rounded-[2.5rem] border-2 border-rose-100">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-2xl font-black flex items-center gap-3 text-slate-900">
+                  <AlertTriangle className="w-8 h-8 text-rose-500" />
+                  Protocolo de Limpeza Total
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-base font-medium text-slate-500 italic mt-4">
+                  Esta ação é irreversível. Ao confirmar, **todos os servidores, registros de ocorrências e férias** serão permanentemente excluídos do banco de dados para iniciar o sistema do zero.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="mt-8 gap-3">
+                <AlertDialogCancel className="h-14 rounded-2xl font-black">Abortar Missão</AlertDialogCancel>
+                <AlertDialogAction 
+                  onClick={handleSystemReset}
+                  className="bg-rose-500 hover:bg-rose-600 h-14 rounded-2xl font-black text-white shadow-xl shadow-rose-500/20"
+                >
+                  Confirmar Reset Total
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      )}
     </div>
   );
 }
