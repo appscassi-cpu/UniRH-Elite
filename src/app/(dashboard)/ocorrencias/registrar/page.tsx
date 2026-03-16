@@ -163,6 +163,7 @@ function RegistrarOcorrenciaContent() {
       console.error(error);
       toast({ variant: "destructive", title: "Erro de Protocolo", description: "Falha ao registrar ocorrências." });
     } finally {
+      // Use non-blocking principle: navigation can happen before loading is set to false if we don't care about the final state
       setLoading(false);
     }
   };
@@ -174,7 +175,7 @@ function RegistrarOcorrenciaContent() {
       <div className="flex flex-col items-center text-center gap-6 mb-12">
         <div className={cn(
           "p-4 rounded-[2.5rem] shadow-2xl rotate-3",
-          isFeriasMode ? "bg-amber-500 shadow-amber-500/40" : "bg-primary shadow-primary/40"
+          isFeriasMode ? "bg-amber-500 shadow-amber-500/40" : "bg-emerald-600 shadow-emerald-600/40"
         )}>
           {isFeriasMode ? (
             <Umbrella className="w-12 h-12 text-white" />
@@ -183,11 +184,11 @@ function RegistrarOcorrenciaContent() {
           )}
         </div>
         <div className="space-y-2 w-full overflow-hidden">
-          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
+          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter">
             {isFeriasMode ? (
               <>Nova <span className="text-amber-500 italic">Férias</span></>
             ) : (
-              <>Novo <span className="text-primary italic">Registro</span></>
+              <>Novo <span className="text-emerald-600 italic">Registro</span></>
             )}
           </h1>
           <p className="text-slate-500 font-medium italic">Protocolo de lançamento {isFeriasMode ? 'estratégico de descanso' : 'de ocorrência administrativa'}</p>
@@ -196,19 +197,19 @@ function RegistrarOcorrenciaContent() {
 
       <Card className={cn(
         "shadow-2xl border-t-8 rounded-[3rem] overflow-hidden bg-white/80 backdrop-blur-sm",
-        isFeriasMode ? "border-t-amber-500" : "border-t-primary"
+        isFeriasMode ? "border-t-amber-500" : "border-t-emerald-600"
       )}>
         <form onSubmit={handleSubmit}>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-3 text-2xl font-black text-slate-800">
               <div className={cn(
                 "p-2 rounded-xl",
-                isFeriasMode ? "bg-amber-100" : "bg-primary/10"
+                isFeriasMode ? "bg-amber-100" : "bg-emerald-50"
               )}>
                 {isFeriasMode ? (
                   <Umbrella className="w-6 h-6 text-amber-500" />
                 ) : (
-                  <FileText className="w-6 h-6 text-primary" />
+                  <FileText className="w-6 h-6 text-emerald-600" />
                 )}
               </div>
               {isFeriasMode ? 'Cronograma de Férias' : 'Detalhes da Ocorrência'}
@@ -223,7 +224,7 @@ function RegistrarOcorrenciaContent() {
               >
                 <SelectTrigger className={cn(
                   "h-14 border-2 border-slate-200 bg-white rounded-2xl px-6 font-black text-lg text-slate-900 [&>span]:opacity-100",
-                  isFeriasMode ? "focus:ring-amber-500" : "focus:ring-primary"
+                  isFeriasMode ? "focus:ring-amber-500" : "focus:ring-emerald-600"
                 )}>
                   <SelectValue placeholder="Selecione um servidor" />
                 </SelectTrigger>
@@ -246,7 +247,7 @@ function RegistrarOcorrenciaContent() {
               >
                 <SelectTrigger className={cn(
                   "h-14 border-2 border-slate-200 bg-white rounded-2xl px-6 font-black text-lg text-slate-900 [&>span]:opacity-100",
-                  isFeriasMode ? "focus:ring-amber-500" : "focus:ring-primary"
+                  isFeriasMode ? "focus:ring-amber-500" : "focus:ring-emerald-600"
                 )}>
                   <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
@@ -280,7 +281,7 @@ function RegistrarOcorrenciaContent() {
                         required
                         className={cn(
                           "h-12 border-2 border-slate-300 bg-white rounded-xl px-3 sm:px-4 font-black text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full shadow-sm",
-                          isFeriasMode ? "focus:ring-amber-500" : "focus:ring-primary"
+                          isFeriasMode ? "focus:ring-amber-500" : "focus:ring-emerald-600"
                         )}
                         value={p.dataInicio}
                         onChange={(e) => handlePeriodoChange(index, 'dataInicio', e.target.value)}
@@ -293,7 +294,7 @@ function RegistrarOcorrenciaContent() {
                         required
                         className={cn(
                           "h-12 border-2 border-slate-300 bg-white rounded-xl px-3 sm:px-4 font-black text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full shadow-sm",
-                          isFeriasMode ? "focus:ring-amber-500" : "focus:ring-primary"
+                          isFeriasMode ? "focus:ring-amber-500" : "focus:ring-emerald-600"
                         )}
                         value={p.dataFim}
                         onChange={(e) => handlePeriodoChange(index, 'dataFim', e.target.value)}
@@ -306,7 +307,7 @@ function RegistrarOcorrenciaContent() {
                       "text-xs font-black px-3 py-1.5 rounded-full border whitespace-nowrap italic",
                       isFeriasMode 
                         ? "text-amber-600 bg-amber-50 border-amber-100" 
-                        : "text-primary bg-primary/5 border-primary/10"
+                        : "text-emerald-700 bg-emerald-50 border-emerald-100"
                     )}>
                       {p.dias} {p.dias === 1 ? 'dia corrido' : 'dias corridos'}
                     </div>
@@ -334,7 +335,7 @@ function RegistrarOcorrenciaContent() {
                       "w-full h-14 border-2 border-dashed rounded-2xl font-black text-lg shadow-sm transition-all",
                       isFeriasMode 
                         ? "border-amber-300 text-amber-600 hover:bg-amber-50" 
-                        : "border-primary/30 text-primary hover:bg-primary/5"
+                        : "border-emerald-300 text-emerald-600 hover:bg-emerald-50"
                     )}
                     onClick={addPeriodo}
                   >
@@ -358,7 +359,7 @@ function RegistrarOcorrenciaContent() {
                 placeholder="Descreva detalhes importantes para o histórico..."
                 className={cn(
                   "min-h-[120px] border-2 border-slate-200 bg-white rounded-3xl px-6 py-4 font-black text-lg text-slate-900 placeholder:text-slate-400",
-                  isFeriasMode ? "focus:ring-amber-500" : "focus:ring-primary"
+                  isFeriasMode ? "focus:ring-amber-500" : "focus:ring-emerald-600"
                 )}
                 value={observacao}
                 onChange={(e) => setObservacao(e.target.value)}
@@ -372,7 +373,7 @@ function RegistrarOcorrenciaContent() {
                   "relative border-4 border-dashed rounded-[2rem] p-6 sm:p-8 transition-all text-center group",
                   isFeriasMode 
                     ? "border-amber-200 hover:bg-amber-50" 
-                    : "border-primary/20 hover:bg-primary/5"
+                    : "border-emerald-200 hover:bg-emerald-50"
                 )}>
                   <Input 
                     type="file" 
@@ -383,9 +384,9 @@ function RegistrarOcorrenciaContent() {
                   <div className="flex flex-col items-center gap-2 pointer-events-none">
                     <div className={cn(
                       "p-3 rounded-full",
-                      isFeriasMode ? "bg-amber-100" : "bg-primary/10"
+                      isFeriasMode ? "bg-amber-100" : "bg-emerald-100"
                     )}>
-                      <Upload className={cn("w-8 h-8", isFeriasMode ? "text-amber-500" : "text-primary")} />
+                      <Upload className={cn("w-8 h-8", isFeriasMode ? "text-amber-500" : "text-emerald-600")} />
                     </div>
                     <span className="text-sm sm:text-base font-black text-slate-900 break-all px-2">
                       {file ? file.name : "Anexar Documento"}
@@ -397,7 +398,7 @@ function RegistrarOcorrenciaContent() {
                 {preview && (
                   <div className={cn(
                     "relative w-full aspect-video rounded-[2rem] overflow-hidden border-4 shadow-2xl",
-                    isFeriasMode ? "border-amber-100" : "border-primary/10"
+                    isFeriasMode ? "border-amber-100" : "border-emerald-100"
                   )}>
                     <img src={preview} alt="Preview" className="w-full h-full object-cover" />
                     <Button 
@@ -421,7 +422,7 @@ function RegistrarOcorrenciaContent() {
                 "w-full h-16 sm:h-20 text-xl sm:text-2xl font-black rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl transition-all hover:scale-[1.02] active:scale-95",
                 isFeriasMode 
                   ? "bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/40" 
-                  : "bg-primary hover:bg-primary/90 text-white shadow-primary/40"
+                  : "bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/40"
               )} 
               disabled={loading}
             >
@@ -436,7 +437,7 @@ function RegistrarOcorrenciaContent() {
 
 export default function RegistrarOcorrenciaPage() {
   return (
-    <Suspense fallback={<div className="flex justify-center p-20"><div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div></div>}>
+    <Suspense fallback={<div className="flex justify-center p-20"><div className="animate-spin rounded-full h-16 w-16 border-t-4 border-emerald-600"></div></div>}>
       <RegistrarOcorrenciaContent />
     </Suspense>
   );

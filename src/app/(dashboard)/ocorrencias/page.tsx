@@ -69,18 +69,18 @@ function OcorrenciasListContent() {
   return (
     <div className="space-y-10">
       <div className="flex flex-col items-center text-center gap-6 mb-12">
-        <div className="p-4 bg-primary rounded-[2.5rem] shadow-2xl shadow-primary/40 -rotate-3">
+        <div className="p-4 bg-emerald-600 rounded-[2.5rem] shadow-2xl shadow-emerald-600/40 -rotate-3">
           <ClipboardPen className="w-12 h-12 text-white" />
         </div>
         <div className="space-y-2 w-full">
           <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
-            Lista de <span className="text-primary italic">Eventos</span>
+            Lista de <span className="text-emerald-600 italic">Eventos</span>
           </h1>
           <p className="text-slate-500 font-medium text-lg italic">
             Monitoramento de {tipoFilter ? `registros de ${tipoFilter}` : 'histórico administrativo'}
           </p>
         </div>
-        <Button asChild className="w-full h-16 text-xl font-black rounded-2xl shadow-2xl shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99] mt-4">
+        <Button asChild className="w-full h-16 text-xl font-black rounded-2xl shadow-2xl shadow-emerald-600/20 transition-all hover:scale-[1.01] active:scale-[0.99] mt-4 bg-emerald-600 hover:bg-emerald-700">
           <Link href="/ocorrencias/registrar">
             <CalendarPlus className="w-6 h-6 mr-3" />
             Registrar Nova Ocorrência
@@ -89,10 +89,10 @@ function OcorrenciasListContent() {
       </div>
 
       <div className="relative group">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-emerald-600 transition-colors" />
         <Input
           placeholder="Pesquisar por servidor ou tipo..."
-          className="pl-12 h-14 border-2 rounded-2xl shadow-sm focus-visible:ring-primary text-lg"
+          className="pl-12 h-14 border-2 rounded-2xl shadow-sm focus-visible:ring-emerald-600 text-lg"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -111,18 +111,18 @@ function OcorrenciasListContent() {
             <Table>
               <TableHeader className="bg-slate-50/50">
                 <TableRow className="h-16 border-b-2">
-                  <TableHead className="font-bold text-primary pl-6">Servidor</TableHead>
-                  <TableHead className="font-bold text-primary">Tipo</TableHead>
-                  <TableHead className="font-bold text-primary">Período</TableHead>
-                  <TableHead className="text-center font-bold text-primary">Dias</TableHead>
-                  <TableHead className="text-right pr-6 font-bold text-primary">Ações</TableHead>
+                  <TableHead className="font-bold text-emerald-600 pl-6">Servidor</TableHead>
+                  <TableHead className="font-bold text-emerald-600">Tipo</TableHead>
+                  <TableHead className="font-bold text-emerald-600">Período</TableHead>
+                  <TableHead className="text-center font-bold text-emerald-600">Dias</TableHead>
+                  <TableHead className="text-right pr-6 font-bold text-emerald-600">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filtered.map((o) => (
                   <TableRow key={o.id} className="h-20 hover:bg-slate-50 transition-colors">
                     <TableCell className="pl-6">
-                      <Link href={`/servidores/${o.servidorId}`} className="font-bold text-slate-800 hover:text-primary transition-colors text-lg">
+                      <Link href={`/servidores/${o.servidorId}`} className="font-bold text-slate-800 hover:text-emerald-600 transition-colors text-lg">
                         {o.servidorNome}
                       </Link>
                     </TableCell>
@@ -134,11 +134,11 @@ function OcorrenciasListContent() {
                     <TableCell className="text-sm font-semibold text-slate-600">
                       {o.dataInicio ? format(new Date(o.dataInicio), "dd/MM/yy") : '-'} a {o.dataFim ? format(new Date(o.dataFim), "dd/MM/yy") : '-'}
                     </TableCell>
-                    <TableCell className="text-center font-black text-primary text-xl">
+                    <TableCell className="text-center font-black text-emerald-600 text-xl">
                       {o.dias}
                     </TableCell>
                     <TableCell className="text-right pr-6">
-                      <Button variant="ghost" size="sm" asChild className="rounded-full h-10 px-6 font-bold">
+                      <Button variant="ghost" size="sm" asChild className="rounded-full h-10 px-6 font-bold hover:text-emerald-600 hover:bg-emerald-50">
                         <Link href={`/servidores/${o.servidorId}`}>
                           Ver Perfil
                         </Link>

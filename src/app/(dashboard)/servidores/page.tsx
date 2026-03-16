@@ -72,13 +72,13 @@ export default function ServidoresListPage() {
         </div>
         <div className="space-y-2 w-full">
           <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
-            Lista de <span className="text-primary italic">Servidores</span>
+            Lista de <span className="text-indigo-600 italic">Servidores</span>
           </h1>
           <p className="text-slate-500 font-medium text-lg italic">Controle estratégico do quadro universitário</p>
         </div>
         
         {isAdmin && (
-          <Button asChild className="w-full h-16 text-xl font-black rounded-2xl shadow-2xl shadow-primary/20 transition-all hover:scale-[1.01] active:scale-[0.99] mt-4">
+          <Button asChild className="w-full h-16 text-xl font-black rounded-2xl shadow-2xl shadow-indigo-600/20 transition-all hover:scale-[1.01] active:scale-[0.99] mt-4 bg-indigo-600 hover:bg-indigo-700">
             <Link href="/servidores/novo">
               <UserPlus className="w-6 h-6 mr-3" />
               Cadastrar Novo Servidor
@@ -88,10 +88,10 @@ export default function ServidoresListPage() {
       </div>
 
       <div className="relative group">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-indigo-600 transition-colors" />
         <Input
           placeholder="Pesquisar por nome ou matrícula..."
-          className="pl-12 h-14 border-2 rounded-2xl shadow-sm focus-visible:ring-primary text-lg"
+          className="pl-12 h-14 border-2 rounded-2xl shadow-sm focus-visible:ring-indigo-600 text-lg"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -112,13 +112,13 @@ export default function ServidoresListPage() {
             {filtered.map((servidor) => (
               <Card 
                 key={servidor.id} 
-                className="rounded-[2rem] border-2 border-primary/20 shadow-xl overflow-hidden group hover:border-primary/60 transition-all bg-white hover:scale-[1.01] hover:shadow-2xl active:scale-[0.99] active:shadow-inner"
+                className="rounded-[2rem] border-2 border-indigo-600/20 shadow-xl overflow-hidden group hover:border-indigo-600/60 transition-all bg-white hover:scale-[1.01] hover:shadow-2xl active:scale-[0.99] active:shadow-inner"
               >
                 <CardContent className="p-3 md:p-6 space-y-3">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-8">
                     <div className="flex items-center gap-4 lg:gap-6 flex-1 min-w-0">
-                      <div className="p-2 sm:p-3 bg-primary/10 rounded-2xl shrink-0 group-hover:bg-primary group-hover:rotate-6 transition-all duration-500 flex">
-                        <UserCircle className="w-6 h-6 sm:w-8 sm:h-8 text-primary group-hover:text-white" />
+                      <div className="p-2 sm:p-3 bg-indigo-600/10 rounded-2xl shrink-0 group-hover:bg-indigo-600 group-hover:rotate-6 transition-all duration-500 flex">
+                        <UserCircle className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-600 group-hover:text-white" />
                       </div>
                       <div className="space-y-1 flex-1 min-w-0">
                         <h3 className="font-black text-slate-900 text-lg md:text-2xl tracking-tight leading-none uppercase truncate whitespace-nowrap">
@@ -134,7 +134,7 @@ export default function ServidoresListPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 flex-1 lg:px-6">
                       <div className="flex items-center gap-3 text-slate-700 min-w-0">
                         <div className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 hidden sm:flex">
-                          <Briefcase className="w-4 h-4 text-primary/70" />
+                          <Briefcase className="w-4 h-4 text-indigo-600/70" />
                         </div>
                         <div className="min-w-0">
                           <p className="text-[8px] text-slate-400 uppercase font-black tracking-widest">Cargo</p>
@@ -153,7 +153,7 @@ export default function ServidoresListPage() {
                     </div>
 
                     <div className="flex items-center gap-2 pt-3 lg:pt-0 border-t lg:border-t-0 border-dashed border-slate-200">
-                      <Button variant="outline" size="sm" asChild className="flex-1 lg:flex-none h-10 md:h-12 rounded-xl font-black border-2 hover:bg-primary/5 hover:text-primary transition-all shadow-md px-4 md:px-6 hover-3d text-xs md:text-sm">
+                      <Button variant="outline" size="sm" asChild className="flex-1 lg:flex-none h-10 md:h-12 rounded-xl font-black border-2 hover:bg-indigo-600/5 hover:text-indigo-600 transition-all shadow-md px-4 md:px-6 hover-3d text-xs md:text-sm border-indigo-600/30">
                         <Link href={`/servidores/${servidor.id}`}>
                           <Eye className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                           Perfil
@@ -162,7 +162,7 @@ export default function ServidoresListPage() {
                       
                       {isAdmin && (
                         <div className="flex gap-2">
-                          <Button variant="outline" size="icon" asChild className="w-10 h-10 md:w-12 md:h-12 rounded-xl border-2 hover:bg-indigo-50 hover:text-indigo-600 transition-all shadow-md hover-3d">
+                          <Button variant="outline" size="icon" asChild className="w-10 h-10 md:w-12 md:h-12 rounded-xl border-2 hover:bg-indigo-50 hover:text-indigo-600 transition-all shadow-md hover-3d border-indigo-600/30">
                             <Link href={`/servidores/${servidor.id}/editar`}>
                               <Edit className="w-4 h-4 md:w-5 md:h-5" />
                             </Link>
@@ -170,7 +170,7 @@ export default function ServidoresListPage() {
                           
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button variant="outline" size="icon" className="w-10 h-10 md:w-12 md:h-12 rounded-xl border-2 text-destructive hover:bg-rose-50 transition-all shadow-md hover-3d">
+                              <Button variant="outline" size="icon" className="w-10 h-10 md:w-12 md:h-12 rounded-xl border-2 text-destructive hover:bg-rose-50 transition-all shadow-md hover-3d border-rose-500/30">
                                 <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
                               </Button>
                             </AlertDialogTrigger>

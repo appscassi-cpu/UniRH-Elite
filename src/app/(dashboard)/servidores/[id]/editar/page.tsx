@@ -108,7 +108,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
   if (fetching) {
     return (
       <div className="flex justify-center p-20">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-600"></div>
       </div>
     );
   }
@@ -120,19 +120,19 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
           <Users className="w-12 h-12 text-white" />
         </div>
         <div className="space-y-2 w-full">
-          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
-            Editar <span className="text-primary italic">Servidor</span>
+          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter">
+            Editar <span className="text-indigo-600 italic">Servidor</span>
           </h1>
           <p className="text-slate-500 font-medium italic">Atualização de dossiê cadastral no sistema elite</p>
         </div>
       </div>
 
-      <Card className="shadow-2xl border-t-8 border-t-primary rounded-[3rem] overflow-hidden bg-white/80 backdrop-blur-sm">
+      <Card className="shadow-2xl border-t-8 border-t-indigo-600 rounded-[3rem] overflow-hidden bg-white/80 backdrop-blur-sm">
         <form onSubmit={handleSubmit}>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-3 text-2xl font-black text-slate-800">
-              <div className="p-2 bg-primary/10 rounded-xl">
-                <Edit className="w-6 h-6 text-primary" />
+              <div className="p-2 bg-indigo-600/10 rounded-xl">
+                <Edit className="w-6 h-6 text-indigo-600" />
               </div>
               Modificar Ativo
             </CardTitle>
@@ -145,7 +145,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
                 required
                 value={formData.nome}
                 onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
-                className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900"
+                className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-indigo-600 font-black text-lg text-slate-900"
               />
             </div>
             
@@ -157,7 +157,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
                   required
                   value={formData.matricula}
                   onChange={(e) => setFormData({ ...formData, matricula: e.target.value })}
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-indigo-600 font-black text-lg text-slate-900"
                 />
               </div>
               <div className="grid gap-2">
@@ -167,7 +167,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
                   required
                   value={formData.cargo}
                   onChange={(e) => setFormData({ ...formData, cargo: e.target.value })}
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-indigo-600 font-black text-lg text-slate-900"
                 />
               </div>
             </div>
@@ -180,7 +180,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
                   required
                   value={formData.setor}
                   onChange={(e) => setFormData({ ...formData, setor: e.target.value })}
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-indigo-600 font-black text-lg text-slate-900"
                 />
               </div>
               <div className="grid gap-2">
@@ -190,7 +190,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
                   value={formData.telefone}
                   onChange={handlePhoneChange}
                   maxLength={15}
-                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900"
+                  className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-indigo-600 font-black text-lg text-slate-900"
                 />
               </div>
             </div>
@@ -204,7 +204,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
                   required
                   value={formData.dataNascimento}
                   onChange={(e) => setFormData({ ...formData, dataNascimento: e.target.value })}
-                  className="h-14 border-2 border-slate-300 bg-slate-50 rounded-2xl px-3 sm:px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full shadow-sm"
+                  className="h-14 border-2 border-slate-300 bg-slate-50 rounded-2xl px-3 sm:px-6 focus:ring-2 focus:ring-indigo-600 font-black text-lg text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full shadow-sm"
                 />
               </div>
               <div className="grid gap-2 min-w-0">
@@ -215,7 +215,7 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
                   required
                   value={formData.dataAdmissao}
                   onChange={(e) => setFormData({ ...formData, dataAdmissao: e.target.value })}
-                  className="h-14 border-2 border-slate-300 bg-slate-50 rounded-2xl px-3 sm:px-6 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full shadow-sm"
+                  className="h-14 border-2 border-slate-300 bg-slate-50 rounded-2xl px-3 sm:px-6 focus:ring-2 focus:ring-indigo-600 font-black text-lg text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full shadow-sm"
                 />
               </div>
             </div>
@@ -226,12 +226,12 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
                 id="observacao"
                 value={formData.observacao}
                 onChange={(e) => setFormData({ ...formData, observacao: e.target.value })}
-                className="min-h-[120px] border-none bg-slate-100/50 rounded-3xl px-6 py-4 focus:ring-2 focus:ring-primary font-black text-lg text-slate-900"
+                className="min-h-[120px] border-none bg-slate-100/50 rounded-3xl px-6 py-4 focus:ring-2 focus:ring-indigo-600 font-black text-lg text-slate-900"
               />
             </div>
           </CardContent>
           <CardFooter className="p-4 sm:p-8">
-            <Button type="submit" className="w-full h-16 sm:h-20 text-xl sm:text-2xl font-black rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl shadow-primary/40 transition-all hover:scale-[1.02] active:scale-95" disabled={loading}>
+            <Button type="submit" className="w-full h-16 sm:h-20 text-xl sm:text-2xl font-black rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl shadow-indigo-600/40 transition-all hover:scale-[1.02] active:scale-95 bg-indigo-600 hover:bg-indigo-700 text-white" disabled={loading}>
               <Save className="w-6 h-6 mr-3" />
               {loading ? "Consolidando..." : "Salvar Alterações Elite"}
             </Button>
