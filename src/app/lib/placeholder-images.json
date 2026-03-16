@@ -3,9 +3,9 @@
   "placeholderImages": [
     {
       "id": "app-logo",
-      "description": "App logo placeholder",
-      "imageUrl": "https://picsum.photos/seed/unirh-logo/200/200",
-      "imageHint": "management logo"
+      "description": "App logo with initials",
+      "imageUrl": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='128' fill='%232D60B2'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.35em' fill='white' font-family='Arial, sans-serif' font-size='250' font-weight='900'%3EUR%3C/text%3E%3C/svg%3E",
+      "imageHint": "app initials logo"
     },
     {
       "id": "hero-bg",

@@ -5,8 +5,10 @@ import { AuthProvider } from '@/components/auth-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { Navbar } from '@/components/layout/Navbar';
 
+const APP_ICON_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='128' fill='%232D60B2'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.35em' fill='white' font-family='Arial, sans-serif' font-size='250' font-weight='900'%3EUR%3C/text%3E%3C/svg%3E";
+
 export const metadata: Metadata = {
-  title: 'UniRH - Gestão de Servidores',
+  title: 'UniRH Elite - Gestão de Servidores',
   description: 'Controle simples de faltas, férias e ocorrências de servidores escolares.',
   manifest: '/manifest.json',
   appleWebApp: {
@@ -14,10 +16,16 @@ export const metadata: Metadata = {
     statusBarStyle: 'black-translucent',
     title: 'UniRH Elite',
   },
+  icons: {
+    icon: APP_ICON_SVG,
+    apple: [
+      { url: APP_ICON_SVG, sizes: '180x180', type: 'image/svg+xml' },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: '#3b82f6',
+  themeColor: '#2D60B2',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
@@ -35,8 +43,9 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
       <body className="font-body antialiased bg-background overflow-x-hidden">
         <AuthProvider>
