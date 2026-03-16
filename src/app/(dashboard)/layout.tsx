@@ -51,15 +51,17 @@ function DashboardContent({
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 space-y-6">
-        <div className="p-5 bg-primary rounded-[2.5rem] shadow-2xl shadow-primary/40 animate-pulse">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 space-y-8 animate-in fade-in duration-500">
+        <div className="p-6 bg-primary rounded-[2.5rem] shadow-2xl shadow-primary/40 animate-bounce">
           <ScrollText className="w-16 h-16 text-white" />
         </div>
-        <div className="flex flex-col items-center gap-2">
-          <h2 className="text-2xl font-black text-slate-900 tracking-tighter">UniRH Elite</h2>
-          <div className="flex items-center gap-2">
+        <div className="flex flex-col items-center gap-4">
+          <h2 className="text-4xl font-black text-slate-900 tracking-tighter">
+            UniRH <span className="text-primary italic">Elite</span>
+          </h2>
+          <div className="flex items-center gap-2 bg-white/50 px-4 py-2 rounded-full border border-slate-200">
             <Loader2 className="w-4 h-4 text-primary animate-spin" />
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sincronizando Protocolos...</span>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Sincronizando Protocolos...</span>
           </div>
         </div>
       </div>
@@ -89,7 +91,7 @@ function DashboardContent({
   if (!user) return null;
 
   return (
-    <main className="container mx-auto px-4 pt-28 sm:pt-40 pb-32 animate-in fade-in duration-500">
+    <main className="container mx-auto px-4 pt-24 sm:pt-32 pb-32 animate-in fade-in duration-500">
       {!isHome && (
         <div className="mb-8 flex justify-start">
           <Button 
@@ -120,8 +122,16 @@ export default function DashboardLayout({
 }) {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
-        <Loader2 className="w-10 h-10 text-primary animate-spin opacity-20" />
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 space-y-8">
+        <div className="p-6 bg-slate-200 rounded-[2.5rem] animate-pulse">
+          <ScrollText className="w-16 h-16 text-slate-400" />
+        </div>
+        <div className="flex flex-col items-center gap-4">
+          <h2 className="text-4xl font-black text-slate-300 tracking-tighter">
+            UniRH <span className="italic">Elite</span>
+          </h2>
+          <Loader2 className="w-8 h-8 text-primary animate-spin opacity-20" />
+        </div>
       </div>
     }>
       <DashboardContent>{children}</DashboardContent>
