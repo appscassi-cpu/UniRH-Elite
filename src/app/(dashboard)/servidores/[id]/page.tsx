@@ -22,7 +22,9 @@ import {
   UserCircle,
   Edit,
   Trash2,
-  MessageCircle
+  MessageCircle,
+  Cake,
+  PartyPopper
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -47,13 +49,24 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
   const [servidor, setServidor] = useState<any>(null);
   const [ocorrencias, setOcorrencias] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isBirthdayToday, setIsBirthdayToday] = useState(false);
 
   useEffect(() => {
     async function fetchServidor() {
       const docRef = doc(db, 'servidores', id);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setServidor({ id: docSnap.id, ...docSnap.data() });
+        const data = docSnap.data();
+        setServidor({ id: docSnap.id, ...data });
+
+        // Verificação de Aniversário
+        if (data.dataNascimento) {
+          const today = new Date();
+          const [year, month, day] = data.dataNascimento.split('-').map(Number);
+          if (today.getDate() === day && (today.getMonth() + 1) === month) {
+            setIsBirthdayToday(true);
+          }
+        }
       }
     }
 
@@ -66,9 +79,6 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const today = new Date().toISOString().split('T')[0];
 
-      // Ordenação Estratégica: 
-      // 1. Períodos em gozo ou futuros vêm primeiro, ordenados pelo início mais próximo (ASC)
-      // 2. Períodos passados vêm depois, ordenados pelo início mais recente (DESC)
       const sortedData = data.sort((a: any, b: any) => {
         const startA = a.dataInicio || '';
         const startB = b.dataInicio || '';
@@ -78,16 +88,13 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
         const isPastA = endA < today;
         const isPastB = endB < today;
 
-        // Prioriza quem não é passado (andamento ou futuro)
         if (isPastA !== isPastB) {
           return isPastA ? 1 : -1;
         }
 
         if (!isPastA) {
-          // Futuros/Atuais: Ordena pela data de início ascendente (o mais próximo hoje no topo)
           return startA.localeCompare(startB);
         } else {
-          // Passados: Ordena pela data de início descendente (o mais recente primeiro)
           return startB.localeCompare(startA);
         }
       });
@@ -141,6 +148,19 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
   return (
     <div className="space-y-12">
+      {/* Banner de Aniversário Elite */}
+      {isBirthdayToday && (
+        <div className="w-full bg-gradient-to-r from-amber-400 via-primary to-rose-400 p-6 rounded-[2.5rem] shadow-2xl text-white flex items-center gap-6 animate-in zoom-in-95 duration-700 mb-8 border-4 border-white/20">
+          <div className="bg-white/20 p-4 rounded-2xl shadow-inner">
+            <PartyPopper className="w-12 h-12 text-white animate-bounce" />
+          </div>
+          <div className="space-y-1">
+            <h2 className="text-3xl font-black italic tracking-tighter">Parabéns Elite! 🥳</h2>
+            <p className="font-bold text-white/90">Hoje celebramos a vida de <span className="underline decoration-white/50">{servidor.nome}</span>. Que sua excelência continue inspirando nossa gestão!</p>
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col items-center text-center gap-6 w-full">
         <div className="p-1 border-4 border-primary/20 rounded-full">
           <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center">
@@ -177,6 +197,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
                 <p className="font-bold text-slate-800 text-lg">{servidor.matricula}</p>
               </div>
             </div>
+
             <div className="flex items-center gap-4 group">
               <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                 <MapPin className="w-5 h-5 text-slate-500 group-hover:text-primary" />
@@ -187,19 +208,31 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               </div>
             </div>
 
+            <div className="flex items-center gap-4 group">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                <Cake className="w-5 h-5 text-slate-500 group-hover:text-primary" />
+              </div>
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Nascimento</p>
+                <p className="font-bold text-slate-800 text-lg">
+                  {servidor.dataNascimento ? format(new Date(servidor.dataNascimento + 'T00:00:00'), 'dd/MM/yyyy') : '-'}
+                </p>
+              </div>
+            </div>
+
             {servidor.telefone ? (
               <a 
                 href={`https://wa.me/55${cleanPhone(servidor.telefone)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 group hover:bg-emerald-50 p-2 -m-2 rounded-2xl transition-all duration-300"
+                className="flex items-center gap-4 group bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200 transition-all duration-300 hover:scale-[1.02] shadow-sm"
               >
-                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center group-hover:bg-emerald-500 transition-colors">
-                  <MessageCircle className="w-5 h-5 text-slate-500 group-hover:text-white" />
+                <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                  <MessageCircle className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">WhatsApp / Contato</p>
-                  <p className="font-bold text-slate-800 text-lg group-hover:text-emerald-600 transition-colors">{servidor.telefone}</p>
+                  <p className="text-[10px] text-emerald-600 uppercase font-black tracking-widest">WhatsApp / Contato</p>
+                  <p className="font-bold text-emerald-700 text-xl tracking-tight">{servidor.telefone}</p>
                 </div>
               </a>
             ) : (
@@ -221,10 +254,11 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               <div>
                 <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Admissão</p>
                 <p className="font-bold text-slate-800 text-lg">
-                  {servidor.dataAdmissao ? format(new Date(servidor.dataAdmissao), 'dd/MM/yyyy') : '-'}
+                  {servidor.dataAdmissao ? format(new Date(servidor.dataAdmissao + 'T00:00:00'), 'dd/MM/yyyy') : '-'}
                 </p>
               </div>
             </div>
+
             {servidor.observacao && (
               <div className="pt-6 border-t-2 border-dashed">
                 <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest mb-2">Notas da Gestão</p>
@@ -272,9 +306,9 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
                         </div>
                         <div>
                           <p className="text-xl font-black text-slate-800 tracking-tight">
-                            {o.dataInicio ? format(new Date(o.dataInicio), "dd 'de' MMM", { locale: ptBR }) : '-'} 
+                            {o.dataInicio ? format(new Date(o.dataInicio + 'T00:00:00'), "dd 'de' MMM", { locale: ptBR }) : '-'} 
                             {' '}—{' '} 
-                            {o.dataFim ? format(new Date(o.dataFim), "dd 'de' MMM 'de' yyyy", { locale: ptBR }) : '-'}
+                            {o.dataFim ? format(new Date(o.dataFim + 'T00:00:00'), "dd 'de' MMM 'de' yyyy", { locale: ptBR }) : '-'}
                           </p>
                         </div>
                         {o.observacao && (
