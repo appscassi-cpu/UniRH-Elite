@@ -30,6 +30,7 @@ const OCORRENCIA_TIPOS = [
   "Licença maternidade",
   "Licença médica",
   "Licença nojo",
+  "Licença profissional",
   "Licença paternidade",
   "Outros",
   "Serviço eleitoral",
@@ -132,7 +133,7 @@ function RegistrarOcorrenciaContent() {
     setLoading(true);
     try {
       let anexoUrl = '';
-      if (file) {
+      if (file && tipo !== 'Férias') {
         const storageRef = ref(storage, `anexos/${Date.now()}_${file.name}`);
         const snapshot = await uploadBytes(storageRef, file);
         anexoUrl = await getDownloadURL(snapshot.ref);
@@ -366,54 +367,48 @@ function RegistrarOcorrenciaContent() {
               />
             </div>
 
-            <div className="grid gap-2">
-              <Label className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Anexo Comprobatório (Opcional)</Label>
-              <div className="flex flex-col gap-4">
-                <div className={cn(
-                  "relative border-4 border-dashed rounded-[2rem] p-6 sm:p-8 transition-all text-center group",
-                  isFeriasMode 
-                    ? "border-amber-200 hover:bg-amber-50" 
-                    : "border-emerald-200 hover:bg-emerald-50"
-                )}>
-                  <Input 
-                    type="file" 
-                    className="absolute inset-0 opacity-0 cursor-pointer" 
-                    accept="image/*,application/pdf"
-                    onChange={handleFileChange}
-                  />
-                  <div className="flex flex-col items-center gap-2 pointer-events-none">
-                    <div className={cn(
-                      "p-3 rounded-full",
-                      isFeriasMode ? "bg-amber-100" : "bg-emerald-100"
-                    )}>
-                      <Upload className={cn("w-8 h-8", isFeriasMode ? "text-amber-500" : "text-emerald-600")} />
-                    </div>
-                    <span className="text-sm sm:text-base font-black text-slate-900 break-all px-2">
-                      {file ? file.name : "Anexar Documento"}
-                    </span>
-                    <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Imagens ou PDF • Máx 5MB</span>
-                  </div>
-                </div>
-
-                {preview && (
+            {tipo !== 'Férias' && (
+              <div className="grid gap-2">
+                <Label className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Anexo Comprobatório (Opcional)</Label>
+                <div className="flex flex-col gap-4">
                   <div className={cn(
-                    "relative w-full aspect-video rounded-[2rem] overflow-hidden border-4 shadow-2xl",
-                    isFeriasMode ? "border-amber-100" : "border-emerald-100"
+                    "relative border-4 border-dashed rounded-[2rem] p-6 sm:p-8 transition-all text-center group",
+                    "border-emerald-200 hover:bg-emerald-50"
                   )}>
-                    <img src={preview} alt="Preview" className="w-full h-full object-cover" />
-                    <Button 
-                      type="button" 
-                      variant="destructive" 
-                      size="icon" 
-                      className="absolute top-4 right-4 rounded-full h-10 w-10"
-                      onClick={() => { setFile(null); setPreview(null); }}
-                    >
-                      <X className="w-5 h-5" />
-                    </Button>
+                    <Input 
+                      type="file" 
+                      className="absolute inset-0 opacity-0 cursor-pointer" 
+                      accept="image/*,application/pdf"
+                      onChange={handleFileChange}
+                    />
+                    <div className="flex flex-col items-center gap-2 pointer-events-none">
+                      <div className="p-3 rounded-full bg-emerald-100">
+                        <Upload className="w-8 h-8 text-emerald-600" />
+                      </div>
+                      <span className="text-sm sm:text-base font-black text-slate-900 break-all px-2">
+                        {file ? file.name : "Anexar Documento"}
+                      </span>
+                      <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">Imagens ou PDF • Máx 5MB</span>
+                    </div>
                   </div>
-                )}
+
+                  {preview && (
+                    <div className="relative w-full aspect-video rounded-[2rem] overflow-hidden border-4 border-emerald-100 shadow-2xl">
+                      <img src={preview} alt="Preview" className="w-full h-full object-cover" />
+                      <Button 
+                        type="button" 
+                        variant="destructive" 
+                        size="icon" 
+                        className="absolute top-4 right-4 rounded-full h-10 w-10"
+                        onClick={() => { setFile(null); setPreview(null); }}
+                      >
+                        <X className="w-5 h-5" />
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </CardContent>
           <CardFooter className="p-4 sm:p-8">
             <Button 
@@ -438,7 +433,13 @@ function RegistrarOcorrenciaContent() {
 export default function RegistrarOcorrenciaPage() {
   return (
     <Suspense fallback={<div className="flex justify-center p-20"><div className="animate-spin rounded-full h-16 w-16 border-t-4 border-emerald-600"></div></div>}>
-      <RegistrarOcorrenciaContent />
+      <RegistrarOcorrenciaPageContent />
     </Suspense>
+  );
+}
+
+function RegistrarOcorrenciaPageContent() {
+  return (
+    <RegistrarOcorrenciaContent />
   );
 }
