@@ -174,7 +174,7 @@ function RegistrarOcorrenciaContent() {
   return (
     <div className="max-w-3xl mx-auto space-y-10">
       <div className="text-center space-y-2 w-full">
-        <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
+        <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter">
           {isFeriasMode ? (
             <>Novo <span className="text-amber-500 italic">Registro de Férias</span></>
           ) : (
