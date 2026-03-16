@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -15,7 +14,8 @@ import {
   UserCircle,
   Briefcase,
   MapPin,
-  IdCard
+  IdCard,
+  Users
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -41,7 +41,6 @@ export default function ServidoresListPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // A lista é sempre mantida em ordem alfabética através do orderBy no Firestore
     const q = query(collection(db, 'servidores'), orderBy('nome', 'asc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -68,6 +67,9 @@ export default function ServidoresListPage() {
   return (
     <div className="space-y-10">
       <div className="flex flex-col items-center text-center gap-6 mb-12">
+        <div className="p-4 bg-indigo-600 rounded-[2.5rem] shadow-2xl shadow-indigo-600/40 rotate-3">
+          <Users className="w-12 h-12 text-white" />
+        </div>
         <div className="space-y-2 w-full">
           <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
             Lista de <span className="text-primary italic">Servidores</span>
@@ -114,7 +116,6 @@ export default function ServidoresListPage() {
               >
                 <CardContent className="p-3 md:p-6 space-y-3">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 lg:gap-8">
-                    {/* Identificação Principal */}
                     <div className="flex items-center gap-4 lg:gap-6 flex-1 min-w-0">
                       <div className="p-2 sm:p-3 bg-primary/10 rounded-2xl shrink-0 group-hover:bg-primary group-hover:rotate-6 transition-all duration-500 flex">
                         <UserCircle className="w-6 h-6 sm:w-8 sm:h-8 text-primary group-hover:text-white" />
@@ -130,7 +131,6 @@ export default function ServidoresListPage() {
                       </div>
                     </div>
 
-                    {/* Dados Cadastrais */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 flex-1 lg:px-6">
                       <div className="flex items-center gap-3 text-slate-700 min-w-0">
                         <div className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center shrink-0 hidden sm:flex">
@@ -152,7 +152,6 @@ export default function ServidoresListPage() {
                       </div>
                     </div>
 
-                    {/* Botões de Ação */}
                     <div className="flex items-center gap-2 pt-3 lg:pt-0 border-t lg:border-t-0 border-dashed border-slate-200">
                       <Button variant="outline" size="sm" asChild className="flex-1 lg:flex-none h-10 md:h-12 rounded-xl font-black border-2 hover:bg-primary/5 hover:text-primary transition-all shadow-md px-4 md:px-6 hover-3d text-xs md:text-sm">
                         <Link href={`/servidores/${servidor.id}`}>

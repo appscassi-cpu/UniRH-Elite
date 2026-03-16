@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { FileText, Upload, X, Plus, Calendar, Trash2, Info, Umbrella } from 'lucide-react';
+import { FileText, Upload, X, Plus, Calendar, Trash2, Info, Umbrella, ClipboardPen } from 'lucide-react';
 import { differenceInDays, parseISO } from 'date-fns';
 import { useAuth } from '@/components/auth-provider';
 import { cn } from '@/lib/utils';
@@ -52,7 +52,6 @@ function RegistrarOcorrenciaContent() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
-  // Pre-seleciona o tipo se vier via URL
   const initialTipo = searchParams.get('tipo') || '';
   const isFeriasMode = initialTipo === 'Férias';
   
@@ -61,7 +60,6 @@ function RegistrarOcorrenciaContent() {
   const [observacao, setObservacao] = useState('');
   const [periodos, setPeriodos] = useState<Periodo[]>([{ dataInicio: '', dataFim: '', dias: 0 }]);
 
-  // Filtra as opções de tipos baseado na origem do acesso
   const tiposDisponiveis = isFeriasMode ? ['Férias'] : OCORRENCIA_TIPOS;
 
   useEffect(() => {
@@ -173,15 +171,27 @@ function RegistrarOcorrenciaContent() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-10">
-      <div className="text-center space-y-2 w-full overflow-hidden">
-        <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
+      <div className="flex flex-col items-center text-center gap-6 mb-12">
+        <div className={cn(
+          "p-4 rounded-[2.5rem] shadow-2xl rotate-3",
+          isFeriasMode ? "bg-amber-500 shadow-amber-500/40" : "bg-primary shadow-primary/40"
+        )}>
           {isFeriasMode ? (
-            <>Nova <span className="text-amber-500 italic">Férias</span></>
+            <Umbrella className="w-12 h-12 text-white" />
           ) : (
-            <>Novo <span className="text-primary italic">Registro</span></>
+            <ClipboardPen className="w-12 h-12 text-white" />
           )}
-        </h1>
-        <p className="text-slate-500 font-medium italic">Protocolo de lançamento {isFeriasMode ? 'estratégico de descanso' : 'de ocorrência administrativa'}</p>
+        </div>
+        <div className="space-y-2 w-full overflow-hidden">
+          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
+            {isFeriasMode ? (
+              <>Nova <span className="text-amber-500 italic">Férias</span></>
+            ) : (
+              <>Novo <span className="text-primary italic">Registro</span></>
+            )}
+          </h1>
+          <p className="text-slate-500 font-medium italic">Protocolo de lançamento {isFeriasMode ? 'estratégico de descanso' : 'de ocorrência administrativa'}</p>
+        </div>
       </div>
 
       <Card className={cn(

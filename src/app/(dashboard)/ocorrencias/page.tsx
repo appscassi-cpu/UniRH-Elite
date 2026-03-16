@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, Suspense } from 'react';
@@ -16,7 +15,8 @@ import {
 import { 
   Search, 
   CalendarPlus, 
-  Filter
+  Filter,
+  ClipboardPen
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -33,13 +33,11 @@ function OcorrenciasListContent() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Buscamos todas as ocorrências ordenadas por data para evitar a necessidade de índices compostos complexos
     const q = query(collection(db, 'ocorrencias'), orderBy('dataRegistro', 'desc'));
     
     const unsubscribe = onSnapshot(q, (snapshot) => {
       let data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       
-      // Filtramos por tipo em memória caso o filtro esteja ativo
       if (tipoFilter) {
         data = data.filter(item => item.tipo === tipoFilter);
       }
@@ -71,6 +69,9 @@ function OcorrenciasListContent() {
   return (
     <div className="space-y-10">
       <div className="flex flex-col items-center text-center gap-6 mb-12">
+        <div className="p-4 bg-primary rounded-[2.5rem] shadow-2xl shadow-primary/40 -rotate-3">
+          <ClipboardPen className="w-12 h-12 text-white" />
+        </div>
         <div className="space-y-2 w-full">
           <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
             Lista de <span className="text-primary italic">Eventos</span>

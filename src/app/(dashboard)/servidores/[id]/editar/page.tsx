@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Edit, Save, ArrowLeft } from 'lucide-react';
+import { Edit, Save, ArrowLeft, Users } from 'lucide-react';
 import Link from 'next/link';
 
 export default function EditServidorPage({ params }: { params: Promise<{ id: string }> }) {
@@ -115,11 +115,16 @@ export default function EditServidorPage({ params }: { params: Promise<{ id: str
 
   return (
     <div className="max-w-2xl mx-auto space-y-10">
-      <div className="text-center space-y-2 w-full">
-        <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
-          Editar <span className="text-primary italic">Servidor</span>
-        </h1>
-        <p className="text-slate-500 font-medium italic">Atualização de dossiê cadastral no sistema elite</p>
+      <div className="flex flex-col items-center text-center gap-6 mb-12">
+        <div className="p-4 bg-indigo-600 rounded-[2.5rem] shadow-2xl shadow-indigo-600/40 -rotate-6">
+          <Users className="w-12 h-12 text-white" />
+        </div>
+        <div className="space-y-2 w-full">
+          <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter whitespace-nowrap">
+            Editar <span className="text-primary italic">Servidor</span>
+          </h1>
+          <p className="text-slate-500 font-medium italic">Atualização de dossiê cadastral no sistema elite</p>
+        </div>
       </div>
 
       <Card className="shadow-2xl border-t-8 border-t-primary rounded-[3rem] overflow-hidden bg-white/80 backdrop-blur-sm">
