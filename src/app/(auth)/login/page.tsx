@@ -118,10 +118,13 @@ export default function LoginPage() {
               </div>
             </div>
           </CardContent>
-          <CardFooter className="pb-8">
+          <CardFooter className="pb-8 flex flex-col gap-4 items-center">
             <Button type="submit" className="w-full h-16 text-lg font-black rounded-2xl shadow-2xl shadow-primary/30 transition-all hover:scale-[1.02] active:scale-95" disabled={loading}>
               {loading ? "Validando Protocolos..." : "Iniciar Sessão Elite"}
             </Button>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest whitespace-nowrap text-center">
+              Desenvolvedor: <span className="text-primary">Lucas Gregório do Nascimento</span>
+            </p>
           </CardFooter>
         </form>
       </Card>
