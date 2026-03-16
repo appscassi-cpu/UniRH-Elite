@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -160,7 +161,7 @@ export default function ServidoresListPage() {
                           {isOnVacation ? <Umbrella className="w-6 h-6 sm:w-8 sm:h-8" /> : <UserCircle className="w-6 h-6 sm:w-8 sm:h-8" />}
                         </div>
                         <div className="space-y-1 flex-1 min-w-0">
-                          <h3 className="font-black text-slate-900 text-lg md:text-2xl tracking-tight leading-none uppercase truncate whitespace-nowrap">
+                          <h3 className="font-black text-slate-900 text-lg md:text-2xl tracking-tight leading-none uppercase">
                             {servidor.nome}
                           </h3>
                           <div className="flex items-center gap-2 text-slate-500 font-mono text-[10px] md:text-sm font-bold tracking-widest uppercase">

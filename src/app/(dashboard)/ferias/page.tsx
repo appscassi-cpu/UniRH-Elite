@@ -109,14 +109,14 @@ export default function FeriasRankingPage() {
                           "w-12 h-12 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-transform group-hover:rotate-12",
                           isFirst ? "bg-amber-500 text-white" : "bg-slate-900 text-white"
                         )}>
-                          <span className="text-xl sm:text-3xl font-black">{index + 1}º</span>
+                          <span className="text-2xl sm:text-4xl font-black">{index + 1}º</span>
                         </div>
 
                         {/* Identificação do Servidor */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <UserCircle className="w-4 h-4 text-slate-400 shrink-0" />
-                            <h3 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight uppercase truncate">
+                            <h3 className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight uppercase">
                               {f.servidorNome}
                             </h3>
                           </div>
@@ -135,21 +135,21 @@ export default function FeriasRankingPage() {
                       <div className="grid grid-cols-3 sm:flex sm:flex-row items-center gap-2 sm:gap-8 bg-white/50 p-3 sm:p-4 rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm">
                         <div className="text-center">
                           <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Início</p>
-                          <p className="text-sm sm:text-2xl font-black text-slate-900">
+                          <p className="text-base sm:text-3xl font-black text-slate-900">
                             {format(parseISO(f.dataInicio), "dd/MM/yy")}
                           </p>
                         </div>
                         <div className="h-6 w-px bg-slate-200 hidden sm:block" />
                         <div className="text-center">
                           <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Duração</p>
-                          <p className="text-sm sm:text-2xl font-black text-amber-500 italic">
+                          <p className="text-base sm:text-3xl font-black text-amber-500 italic">
                             {f.dias} d
                           </p>
                         </div>
                         <div className="h-6 w-px bg-slate-200 hidden sm:block" />
                         <div className="text-center">
                           <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Retorno</p>
-                          <p className="text-sm sm:text-2xl font-black text-slate-900">
+                          <p className="text-base sm:text-3xl font-black text-slate-900">
                             {format(parseISO(f.dataFim), "dd/MM/yy")}
                           </p>
                         </div>
