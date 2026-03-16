@@ -35,7 +35,6 @@ export default function FeriasRankingPage() {
       const sorted = data.sort((a, b) => {
         const dateA = a.dataInicio || '';
         const dateB = b.dataInicio || '';
-        // Ordem cronológica: o que começa primeiro aparece primeiro
         return dateA.localeCompare(dateB);
       });
 
@@ -80,8 +79,8 @@ export default function FeriasRankingPage() {
 
       <div className="space-y-4 sm:space-y-6">
         {loading ? (
-          <div className="p-8 sm:p-12 text-center text-lg sm:text-xl font-bold animate-pulse text-slate-400 bg-white rounded-[2rem] sm:rounded-[3rem] shadow-xl">
-            Sincronizando cronograma elite...
+          <div className="p-12 flex justify-center items-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-500"></div>
           </div>
         ) : ferias.length === 0 ? (
           <div className="p-10 sm:p-20 text-center bg-white rounded-[2rem] sm:rounded-[3rem] shadow-xl border-4 border-dashed border-slate-100">
@@ -106,7 +105,6 @@ export default function FeriasRankingPage() {
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex flex-col lg:flex-row lg:items-center gap-4 sm:gap-6">
                       <div className="flex items-center gap-4">
-                        {/* Posição Cronológica */}
                         <div className={cn(
                           "w-12 h-12 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-transform group-hover:rotate-12",
                           isFirst ? "bg-amber-500 text-white" : "bg-slate-900 text-white"
@@ -114,7 +112,6 @@ export default function FeriasRankingPage() {
                           <span className="text-2xl sm:text-4xl font-black">{index + 1}º</span>
                         </div>
 
-                        {/* Identificação do Servidor */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <UserCircle className="w-4 h-4 text-slate-400 shrink-0" />
@@ -133,7 +130,6 @@ export default function FeriasRankingPage() {
                         </div>
                       </div>
 
-                      {/* Período e Retorno */}
                       <div className="flex-1 space-y-3">
                         <div className="grid grid-cols-3 sm:flex sm:flex-row items-center gap-4 sm:gap-8 bg-white/50 p-2 sm:p-3 rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm w-fit mx-auto lg:mx-0">
                           <div className="text-center">
@@ -169,7 +165,6 @@ export default function FeriasRankingPage() {
                         )}
                       </div>
 
-                      {/* Botão de Ação */}
                       <Button variant="outline" size="lg" asChild className="h-10 sm:h-14 rounded-xl sm:rounded-2xl border-2 font-black hover:bg-slate-900 hover:text-white transition-all px-4 sm:px-8 group-hover:scale-105 text-xs sm:text-sm">
                         <Link href={`/servidores/${f.servidorId}`}>
                           Ver Perfil

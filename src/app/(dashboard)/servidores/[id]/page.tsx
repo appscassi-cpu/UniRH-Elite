@@ -125,15 +125,11 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
   const handleFullDelete = async () => {
     try {
       const oQuery = query(collection(db, 'ocorrencias'), where('servidorId', '==', id));
-      const snapshot = await getDoc(doc(db, 'servidores', id)); // Re-check if exists
-      
-      // Delete occurrences
       const { getDocs } = await import('firebase/firestore');
       const oSnap = await getDocs(oQuery);
       const deletePromises = oSnap.docs.map(item => deleteDoc(doc(db, 'ocorrencias', item.id)));
       await Promise.all(deletePromises);
 
-      // Delete server
       await deleteDoc(doc(db, 'servidores', id));
       
       toast({ title: "Protocolo de Limpeza Concluído", description: "Servidor e registros removidos com sucesso." });
@@ -236,7 +232,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
   if (loading) {
     return (
-      <div className="flex justify-center p-20">
+      <div className="flex justify-center items-center p-20">
         <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div>
       </div>
     );
@@ -247,7 +243,6 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
       <div className="max-w-md mx-auto p-12 text-center space-y-4">
         <ShieldAlert className="w-16 h-16 text-rose-500 mx-auto" />
         <h2 className="text-2xl font-black text-slate-900 uppercase">Dossiê Inacessível</h2>
-        <p className="text-slate-500 font-medium italic">O registro solicitado não foi localizado na base elite.</p>
         <Button asChild className="w-full h-14 rounded-xl">
           <Link href="/servidores">Retornar à Listagem</Link>
         </Button>

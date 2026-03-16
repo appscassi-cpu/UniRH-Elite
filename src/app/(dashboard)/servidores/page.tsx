@@ -45,7 +45,6 @@ export default function ServidoresListPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Sincroniza Servidores
     const qServidores = query(collection(db, 'servidores'), orderBy('nome', 'asc'));
     const unsubscribeServidores = onSnapshot(qServidores, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -53,7 +52,6 @@ export default function ServidoresListPage() {
       setLoading(false);
     });
 
-    // Sincroniza Férias Ativas
     const today = new Date().toISOString().split('T')[0];
     const qVacations = query(
       collection(db, 'ocorrencias'), 
@@ -79,13 +77,11 @@ export default function ServidoresListPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      // 1. Busca e deleta todas as ocorrências vinculadas ao servidor (Cascata)
       const q = query(collection(db, 'ocorrencias'), where('servidorId', '==', id));
       const snapshot = await getDocs(q);
       const deletePromises = snapshot.docs.map(item => deleteDoc(doc(db, 'ocorrencias', item.id)));
       await Promise.all(deletePromises);
 
-      // 2. Deleta o servidor
       await deleteDoc(doc(db, 'servidores', id));
       
       toast({ 
@@ -142,8 +138,8 @@ export default function ServidoresListPage() {
 
       <div className="space-y-6">
         {loading ? (
-          <div className="p-12 text-center text-muted-foreground animate-pulse font-medium text-xl bg-white rounded-[2rem] shadow-xl">
-            Sincronizando base elite...
+          <div className="p-12 flex justify-center items-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
           </div>
         ) : filtered.length === 0 ? (
           <div className="p-16 text-center bg-white rounded-[2rem] shadow-xl border-2 border-slate-100">

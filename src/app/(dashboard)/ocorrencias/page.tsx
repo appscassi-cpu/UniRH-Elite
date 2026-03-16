@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, Suspense } from 'react';
@@ -65,7 +66,7 @@ function OcorrenciasListContent() {
   const getBadgeStyle = (tipo: string) => {
     switch (tipo) {
       case 'Férias': return 'bg-amber-100 text-amber-700';
-      case 'Atestado Médico': return 'bg-emerald-100 text-emerald-700';
+      case 'Licença médica': return 'bg-emerald-100 text-emerald-700';
       case 'Falta': return 'bg-rose-100 text-rose-700';
       default: return 'bg-slate-100 text-slate-700';
     }
@@ -105,8 +106,8 @@ function OcorrenciasListContent() {
 
       <div className="space-y-6">
         {loading ? (
-          <div className="p-12 text-center animate-pulse text-muted-foreground font-medium text-xl bg-white rounded-[2rem] shadow-xl">
-            Sincronizando banco de dados...
+          <div className="p-12 flex justify-center items-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
           </div>
         ) : filtered.length === 0 ? (
           <div className="p-20 text-center bg-white rounded-[2rem] shadow-xl border-2 border-slate-100">
@@ -141,7 +142,7 @@ function OcorrenciasListContent() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-sm font-semibold text-slate-600">
-                        {o.dataInicio ? format(new Date(o.dataInicio), "dd/MM/yy") : '-'} a {o.dataFim ? format(new Date(o.dataFim), "dd/MM/yy") : '-'}
+                        {o.dataInicio ? format(new Date(o.dataInicio + 'T00:00:00'), "dd/MM/yy") : '-'} a {o.dataFim ? format(new Date(o.dataFim + 'T00:00:00'), "dd/MM/yy") : '-'}
                       </TableCell>
                       <TableCell className="text-center font-black text-emerald-600 text-xl">
                         {o.dias}
@@ -186,7 +187,7 @@ function OcorrenciasListContent() {
                       <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-slate-400" />
                         <span className="text-sm font-bold text-slate-600">
-                          {o.dataInicio ? format(new Date(o.dataInicio), "dd/MM/yy") : '-'} a {o.dataFim ? format(new Date(o.dataFim), "dd/MM/yy") : '-'}
+                          {o.dataInicio ? format(new Date(o.dataInicio + 'T00:00:00'), "dd/MM/yy") : '-'} a {o.dataFim ? format(new Date(o.dataFim + 'T00:00:00'), "dd/MM/yy") : '-'}
                         </span>
                       </div>
                       <Link href={`/servidores/${o.servidorId}`} className="text-emerald-600 p-1">
@@ -206,7 +207,11 @@ function OcorrenciasListContent() {
 
 export default function OcorrenciasListPage() {
   return (
-    <Suspense fallback={<div className="p-12 text-center text-xl font-bold animate-pulse">Iniciando sistema de listagem elite...</div>}>
+    <Suspense fallback={
+      <div className="p-12 flex justify-center items-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+      </div>
+    }>
       <OcorrenciasListContent />
     </Suspense>
   );
