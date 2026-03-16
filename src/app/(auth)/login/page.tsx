@@ -60,7 +60,7 @@ export default function LoginPage() {
       <div className="absolute top-0 -left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
       <div className="absolute bottom-0 -right-20 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
 
-      <Card className="w-full max-w-md glass-card rounded-[3rem] p-4 relative z-10 animate-in zoom-in-95 duration-700">
+      <Card className="w-full max-w-md glass-card rounded-[3rem] p-4 relative z-10 animate-in zoom-in-95 duration-700 border-2 border-primary/20 shadow-[0_0_50px_-12px_rgba(45,96,178,0.3)] hover:shadow-[0_0_60px_-10px_rgba(45,96,178,0.4)] transition-all ring-1 ring-primary/5">
         <CardHeader className="text-center space-y-4">
           <div className="flex justify-center mb-2">
             <div className="p-4 bg-primary rounded-[2rem] shadow-2xl shadow-primary/40 rotate-12">
