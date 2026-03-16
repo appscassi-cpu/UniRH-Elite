@@ -64,7 +64,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
     let unsubOcorrencias: () => void;
 
-    async function initDossie() {
+    async function initCadastro() {
       try {
         const docRef = doc(db, 'servidores', id);
         const docSnap = await getDoc(docRef);
@@ -115,7 +115,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
       }
     }
 
-    initDossie();
+    initCadastro();
     return () => {
       if (unsubOcorrencias) unsubOcorrencias();
     };
@@ -277,7 +277,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
           <CardHeader className="bg-slate-900 text-white p-8">
             <CardTitle className="text-xl font-black flex items-center gap-3">
               <IdCard className="w-6 h-6 text-primary" />
-              Cadastro Cadastral
+              Cadastro do Servidor
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-8">
@@ -402,7 +402,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
                       <div className="flex gap-3 items-center">
                         {o.anexo && (
                           <Button variant="outline" size="sm" className="h-10 rounded-xl" asChild>
-                            <a href={o.anexo} target="_blank" rel="noopener noreferrer"><LucideImage className="w-4 h-4 mr-2" />Dossier</a>
+                            <a href={o.anexo} target="_blank" rel="noopener noreferrer"><LucideImage className="w-4 h-4 mr-2" />Anexo</a>
                           </Button>
                         )}
                         {isAdmin && (
