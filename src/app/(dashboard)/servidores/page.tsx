@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { collection, query, onSnapshot, deleteDoc, doc, orderBy, where } from 'firebase/firestore';
+import { collection, query, onSnapshot, deleteDoc, doc, orderBy, where, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -79,10 +79,26 @@ export default function ServidoresListPage() {
 
   const handleDelete = async (id: string) => {
     try {
+      // 1. Busca e deleta todas as ocorrências vinculadas ao servidor (Cascata)
+      const q = query(collection(db, 'ocorrencias'), where('servidorId', '==', id));
+      const snapshot = await getDocs(q);
+      const deletePromises = snapshot.docs.map(item => deleteDoc(doc(db, 'ocorrencias', item.id)));
+      await Promise.all(deletePromises);
+
+      // 2. Deleta o servidor
       await deleteDoc(doc(db, 'servidores', id));
-      toast({ title: "Excluído", description: "Servidor removido com sucesso." });
+      
+      toast({ 
+        title: "Protocolo de Limpeza Concluído", 
+        description: "Servidor e todos os registros históricos foram removidos com sucesso." 
+      });
     } catch (error) {
-      toast({ variant: "destructive", title: "Erro", description: "Falha ao excluir." });
+      console.error(error);
+      toast({ 
+        variant: "destructive", 
+        title: "Erro de Protocolo", 
+        description: "Falha ao realizar a exclusão em cascata." 
+      });
     }
   };
 
@@ -234,9 +250,9 @@ export default function ServidoresListPage() {
                                 </AlertDialogTrigger>
                                 <AlertDialogContent className="rounded-[2.5rem] p-6 md:p-10 border-2 shadow-3xl">
                                   <AlertDialogHeader>
-                                    <AlertDialogTitle className="text-2xl md:text-3xl font-black tracking-tighter text-slate-900 leading-tight">Protocolo de Exclusão</AlertDialogTitle>
+                                    <AlertDialogTitle className="text-2xl md:text-3xl font-black tracking-tighter text-slate-900 leading-tight">Protocolo de Exclusão em Cascata</AlertDialogTitle>
                                     <AlertDialogDescription className="text-base md:text-lg font-medium leading-relaxed text-slate-500 italic mt-4">
-                                      Confirmar a remoção definitiva de <strong className="text-slate-900 not-italic">{servidor.nome}</strong>? Todos os dados históricos e ocorrências serão perdidos permanentemente.
+                                      Confirmar a remoção definitiva de <strong className="text-slate-900 not-italic">{servidor.nome}</strong>? Esta ação removerá também <strong>todas as ocorrências e férias</strong> vinculadas permanentemente.
                                     </AlertDialogDescription>
                                   </AlertDialogHeader>
                                   <AlertDialogFooter className="mt-8 gap-3">
@@ -245,7 +261,7 @@ export default function ServidoresListPage() {
                                       onClick={() => handleDelete(servidor.id)} 
                                       className="bg-destructive hover:bg-destructive/90 rounded-xl h-12 md:h-14 text-sm md:text-lg font-black shadow-2xl shadow-destructive/20"
                                     >
-                                      Confirmar Exclusão
+                                      Confirmar Limpeza Total
                                     </AlertDialogAction>
                                   </AlertDialogFooter>
                                 </AlertDialogContent>

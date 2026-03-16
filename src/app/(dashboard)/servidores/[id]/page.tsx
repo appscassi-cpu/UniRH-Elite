@@ -24,7 +24,8 @@ import {
   Trash2,
   MessageCircle,
   Cake,
-  PartyPopper
+  PartyPopper,
+  Share2
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -59,7 +60,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
         const data = docSnap.data();
         setServidor({ id: docSnap.id, ...data });
 
-        // Verificação de Aniversário
+        // Verificação de Aniversário Elite
         if (data.dataNascimento) {
           const today = new Date();
           const [year, month, day] = data.dataNascimento.split('-').map(Number);
@@ -126,6 +127,32 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
     }
   };
 
+  const handleShareWhatsApp = () => {
+    if (!servidor) return;
+
+    let message = `*🛡️ UniRH ELITE - DOSSIÊ ESTRATÉGICO*\n\n`;
+    message += `*NOME:* ${servidor.nome.toUpperCase()}\n`;
+    message += `*MATRÍCULA:* ${servidor.matricula}\n`;
+    message += `*CARGO:* ${servidor.cargo}\n`;
+    message += `*SETOR:* ${servidor.setor}\n`;
+    message += `*ADMISSÃO:* ${servidor.dataAdmissao ? format(new Date(servidor.dataAdmissao + 'T00:00:00'), 'dd/MM/yyyy') : '-'}\n`;
+    message += `*NASCIMENTO:* ${servidor.dataNascimento ? format(new Date(servidor.dataNascimento + 'T00:00:00'), 'dd/MM/yyyy') : '-'}\n\n`;
+
+    if (ocorrencias.length > 0) {
+      message += `*📊 HISTÓRICO DE OCORRÊNCIAS / FÉRIAS:*\n`;
+      ocorrencias.forEach((o, i) => {
+        const start = o.dataInicio ? format(new Date(o.dataInicio + 'T00:00:00'), 'dd/MM/yy') : '-';
+        const end = o.dataFim ? format(new Date(o.dataFim + 'T00:00:00'), 'dd/MM/yy') : '-';
+        message += `• ${o.tipo} (${o.dias}d): ${start} a ${end}\n`;
+      });
+    } else {
+      message += `_Nenhum registro histórico detectado na base de dados._`;
+    }
+
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/?text=${encodedMessage}`, '_blank');
+  };
+
   if (loading) {
     return <div className="flex justify-center p-20"><div className="animate-spin rounded-full h-16 w-16 border-t-4 border-primary"></div></div>;
   }
@@ -147,7 +174,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
   const cleanPhone = (phone: string) => phone.replace(/\D/g, '');
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 pb-20">
       {/* Banner de Aniversário Elite */}
       {isBirthdayToday && (
         <div className="w-full bg-gradient-to-r from-amber-400 via-primary to-rose-400 p-6 rounded-[2.5rem] shadow-2xl text-white flex items-center gap-6 animate-in zoom-in-95 duration-700 mb-8 border-4 border-white/20">
@@ -231,8 +258,8 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
                   <MessageCircle className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-emerald-600 uppercase font-black tracking-widest">WhatsApp / Contato</p>
-                  <p className="font-bold text-emerald-700 text-xl tracking-tight">{servidor.telefone}</p>
+                  <p className="text-[10px] text-emerald-600 uppercase font-black tracking-widest leading-none mb-1">WhatsApp / Contato</p>
+                  <p className="font-black text-emerald-700 text-xl tracking-tight leading-none">{servidor.telefone}</p>
                 </div>
               </a>
             ) : (
@@ -258,6 +285,14 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
                 </p>
               </div>
             </div>
+
+            <Button 
+              onClick={handleShareWhatsApp}
+              className="w-full h-14 bg-slate-900 hover:bg-black text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:scale-[1.02] active:scale-95"
+            >
+              <Share2 className="w-4 h-4 mr-2" />
+              Compartilhar no WhatsApp
+            </Button>
 
             {servidor.observacao && (
               <div className="pt-6 border-t-2 border-dashed">
