@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -9,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, UserPlus, Users } from 'lucide-react';
 import Link from 'next/link';
@@ -24,6 +26,7 @@ export default function NewServidorPage() {
     cargo: '',
     setor: '',
     telefone: '',
+    vinculo: 'Efetivo',
     dataNascimento: '',
     dataAdmissao: '',
     observacao: ''
@@ -75,7 +78,7 @@ export default function NewServidorPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-10">
+    <div className="max-w-2xl mx-auto space-y-10 pt-12">
       <div className="flex flex-col items-center text-center gap-6 mb-12">
         <div className="p-4 bg-indigo-600 rounded-[2.5rem] shadow-2xl shadow-indigo-600/40 rotate-12">
           <Users className="w-12 h-12 text-white" />
@@ -149,6 +152,24 @@ export default function NewServidorPage() {
                 />
               </div>
               <div className="grid gap-2">
+                <Label htmlFor="vinculo" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Vínculo</Label>
+                <Select 
+                  value={formData.vinculo} 
+                  onValueChange={(val) => setFormData({ ...formData, vinculo: val })}
+                >
+                  <SelectTrigger className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-indigo-600 font-black text-lg text-slate-900">
+                    <SelectValue placeholder="Selecione o vínculo" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="Efetivo">Efetivo</SelectItem>
+                    <SelectItem value="Terceirizado">Terceirizado</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid gap-2">
                 <Label htmlFor="telefone" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Telefone de Contato</Label>
                 <Input
                   id="telefone"
@@ -159,9 +180,6 @@ export default function NewServidorPage() {
                   className="h-14 border-none bg-slate-100/50 rounded-2xl px-6 focus:ring-2 focus:ring-indigo-600 font-black text-lg text-slate-900 placeholder:text-slate-400"
                 />
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="grid gap-2 min-w-0">
                 <Label htmlFor="dataNascimento" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Data de Nascimento</Label>
                 <Input
@@ -173,6 +191,9 @@ export default function NewServidorPage() {
                   className="h-14 border-2 border-slate-300 bg-slate-50 rounded-2xl px-3 sm:px-6 focus:ring-2 focus:ring-indigo-600 font-black text-lg text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full shadow-sm"
                 />
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="grid gap-2 min-w-0">
                 <Label htmlFor="dataAdmissao" className="text-sm font-bold uppercase tracking-widest text-slate-800 ml-1">Data de Admissão</Label>
                 <Input
@@ -183,6 +204,9 @@ export default function NewServidorPage() {
                   onChange={(e) => setFormData({ ...formData, dataAdmissao: e.target.value })}
                   className="h-14 border-2 border-slate-300 bg-slate-50 rounded-2xl px-3 sm:px-6 focus:ring-2 focus:ring-indigo-600 font-black text-lg text-slate-900 opacity-100 [&::-webkit-datetime-edit]:text-slate-900 [&::-webkit-datetime-edit]:opacity-100 w-full shadow-sm"
                 />
+              </div>
+              <div className="grid gap-2">
+                {/* Espaço reservado para manter o grid alinhado */}
               </div>
             </div>
 

@@ -25,12 +25,13 @@
         "cargo": { "type": "string" },
         "setor": { "type": "string" },
         "telefone": { "type": "string" },
+        "vinculo": { "type": "string", "enum": ["Efetivo", "Terceirizado"] },
         "dataNascimento": { "type": "string", "format": "date" },
         "dataAdmissao": { "type": "string", "format": "date" },
         "observacao": { "type": "string" },
         "dataCadastro": { "type": "string", "format": "date-time" }
       },
-      "required": ["id", "nome", "matricula", "cargo", "setor", "dataAdmissao", "dataCadastro"]
+      "required": ["id", "nome", "matricula", "cargo", "setor", "vinculo", "dataAdmissao", "dataCadastro"]
     },
     "Occurrence": {
       "title": "Occurrence",

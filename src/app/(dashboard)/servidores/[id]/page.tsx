@@ -31,7 +31,8 @@ import {
   Share2,
   FileDown,
   ShieldAlert,
-  Loader2
+  Loader2,
+  Lock
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -81,7 +82,6 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
             }
           }
 
-          // Carrega ocorrências em tempo real
           const oQuery = query(
             collection(db, 'ocorrencias'), 
             where('servidorId', '==', id)
@@ -152,6 +152,7 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
     let message = `*🛡️ UniRH ELITE - CADASTRO ESTRATÉGICO*\n\n`;
     message += `*NOME:* ${servidor?.nome?.toUpperCase()}\n`;
+    message += `*VÍNCULO:* ${servidor?.vinculo?.toUpperCase()}\n`;
     message += `*MATRÍCULA:* ${servidor?.matricula}\n`;
     message += `*CARGO:* ${servidor?.cargo}\n`;
     message += `*SETOR:* ${servidor?.setor}\n`;
@@ -194,19 +195,24 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
-    doc.text("MATRÍCULA:", 15, 70);
+    doc.text("VÍNCULO:", 15, 70);
     doc.setFont("helvetica", "normal");
-    doc.text(servidor?.matricula || "-", 45, 70);
+    doc.text(servidor?.vinculo || "-", 45, 70);
 
     doc.setFont("helvetica", "bold");
-    doc.text("CARGO:", 15, 78);
+    doc.text("MATRÍCULA:", 15, 78);
     doc.setFont("helvetica", "normal");
-    doc.text(servidor?.cargo || "-", 45, 78);
+    doc.text(servidor?.matricula || "-", 45, 78);
 
     doc.setFont("helvetica", "bold");
-    doc.text("ADMISSÃO:", 110, 70);
+    doc.text("CARGO:", 110, 70);
     doc.setFont("helvetica", "normal");
-    doc.text(servidor?.dataAdmissao ? format(new Date(servidor.dataAdmissao + 'T00:00:00'), 'dd/MM/yyyy') : '-', 140, 70);
+    doc.text(servidor?.cargo || "-", 140, 70);
+
+    doc.setFont("helvetica", "bold");
+    doc.text("ADMISSÃO:", 110, 78);
+    doc.setFont("helvetica", "normal");
+    doc.text(servidor?.dataAdmissao ? format(new Date(servidor.dataAdmissao + 'T00:00:00'), 'dd/MM/yyyy') : '-', 140, 78);
 
     const tableData = ocorrencias.map((o, index) => [
       index + 1,
@@ -238,14 +244,14 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[50vh]">
+      <div className="flex justify-center items-center min-h-[50vh] pt-32">
         <Loader2 className="w-12 h-12 text-primary animate-spin opacity-20" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-12 pb-20 animate-in fade-in duration-700">
+    <div className="space-y-12 pb-20 animate-in fade-in duration-700 pt-12">
       {isBirthdayToday && (
         <div className="w-full bg-gradient-to-r from-amber-400 via-primary to-rose-400 p-6 rounded-[2.5rem] shadow-2xl text-white flex items-center gap-6 animate-in zoom-in-95 duration-700 mb-8 border-4 border-white/20">
           <div className="bg-white/20 p-4 rounded-2xl">
@@ -268,7 +274,15 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
           <h1 className="text-[2.6rem] sm:text-5xl font-black text-slate-900 tracking-tighter">
             Cadastro <span className="text-primary italic">Pessoal</span>
           </h1>
-          <p className="text-2xl sm:text-3xl font-black text-primary tracking-tight mt-2">{servidor?.nome}</p>
+          <p className="text-2xl sm:text-3xl font-black text-primary tracking-tight mt-2 uppercase">{servidor?.nome}</p>
+          <div className="flex justify-center mt-2">
+            <Badge className={cn(
+              "px-6 py-1.5 text-xs font-black uppercase tracking-widest border-2",
+              servidor?.vinculo === 'Efetivo' ? "bg-indigo-50 text-indigo-700 border-indigo-200" : "bg-slate-50 text-slate-700 border-slate-200"
+            )}>
+              {servidor?.vinculo}
+            </Badge>
+          </div>
         </div>
       </div>
 
@@ -298,6 +312,16 @@ export default function ServidorProfilePage({ params }: { params: Promise<{ id: 
               <div>
                 <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Lotação</p>
                 <p className="font-bold text-slate-800 text-lg">{servidor?.setor}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+                <Lock className="w-5 h-5 text-slate-500" />
+              </div>
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">Vínculo</p>
+                <p className="font-bold text-slate-800 text-lg">{servidor?.vinculo}</p>
               </div>
             </div>
 

@@ -17,7 +17,8 @@ import {
   MapPin,
   IdCard,
   Users,
-  Umbrella
+  Umbrella,
+  ShieldCheck
 } from 'lucide-react';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
@@ -34,6 +35,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 export default function ServidoresListPage() {
@@ -104,7 +106,7 @@ export default function ServidoresListPage() {
   );
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 pt-12">
       <div className="flex flex-col items-center text-center gap-6 mb-12">
         <div className="p-4 bg-indigo-600 rounded-[2.5rem] shadow-2xl shadow-indigo-600/40 rotate-3">
           <Users className="w-12 h-12 text-white" />
@@ -176,9 +178,17 @@ export default function ServidoresListPage() {
                           <h3 className="font-black text-slate-900 text-lg md:text-2xl tracking-tight leading-none uppercase">
                             {servidor.nome}
                           </h3>
-                          <div className="flex items-center gap-2 text-slate-500 font-mono text-[10px] md:text-sm font-bold tracking-widest uppercase">
-                            <IdCard className="w-3.5 h-3.5" />
-                            MAT: {servidor.matricula}
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge className={cn(
+                              "px-2 py-0.5 text-[10px] font-black uppercase tracking-widest",
+                              servidor.vinculo === 'Efetivo' ? "bg-indigo-100 text-indigo-700" : "bg-slate-100 text-slate-700"
+                            )}>
+                              {servidor.vinculo}
+                            </Badge>
+                            <div className="flex items-center gap-1 text-slate-500 font-mono text-[10px] font-bold tracking-widest uppercase ml-2">
+                              <IdCard className="w-3 h-3" />
+                              {servidor.matricula}
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -226,7 +236,7 @@ export default function ServidoresListPage() {
                           >
                             <Link href={`/servidores/${servidor.id}`}>
                               <Eye className="w-4 h-4 md:w-5 md:h-5 mr-2" />
-                              Perfil
+                              Cadastro
                             </Link>
                           </Button>
                           
