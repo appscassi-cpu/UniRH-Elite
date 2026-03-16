@@ -106,10 +106,10 @@ export default function FeriasRankingPage() {
                       <div className="flex items-center gap-4">
                         {/* Posição no Ranking */}
                         <div className={cn(
-                          "w-10 h-10 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-transform group-hover:rotate-12",
+                          "w-12 h-12 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl flex items-center justify-center shrink-0 shadow-lg transition-transform group-hover:rotate-12",
                           isFirst ? "bg-amber-500 text-white" : "bg-slate-900 text-white"
                         )}>
-                          <span className="text-lg sm:text-2xl font-black">{index + 1}º</span>
+                          <span className="text-xl sm:text-3xl font-black">{index + 1}º</span>
                         </div>
 
                         {/* Identificação do Servidor */}
@@ -121,10 +121,10 @@ export default function FeriasRankingPage() {
                             </h3>
                           </div>
                           <div className="flex flex-wrap items-center gap-2 mt-1">
-                            <Badge className={cn("px-2 sm:px-4 py-0.5 text-[8px] sm:text-[10px] font-black uppercase tracking-widest border-none", status.color)}>
+                            <Badge className={cn("px-2 sm:px-4 py-0.5 text-[10px] sm:text-xs font-black uppercase tracking-widest border-none", status.color)}>
                               {status.label}
                             </Badge>
-                            <span className="text-slate-400 font-bold text-[8px] sm:text-xs uppercase tracking-tighter">
+                            <span className="text-slate-400 font-bold text-[10px] sm:text-sm uppercase tracking-tighter">
                               #{f.id.slice(0, 6)}
                             </span>
                           </div>
@@ -134,22 +134,22 @@ export default function FeriasRankingPage() {
                       {/* Período e Destaque */}
                       <div className="grid grid-cols-3 sm:flex sm:flex-row items-center gap-2 sm:gap-8 bg-white/50 p-3 sm:p-4 rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm">
                         <div className="text-center">
-                          <p className="text-[7px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Início</p>
-                          <p className="text-xs sm:text-xl font-black text-slate-900">
+                          <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Início</p>
+                          <p className="text-sm sm:text-2xl font-black text-slate-900">
                             {format(parseISO(f.dataInicio), "dd/MM/yy")}
                           </p>
                         </div>
                         <div className="h-6 w-px bg-slate-200 hidden sm:block" />
                         <div className="text-center">
-                          <p className="text-[7px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Duração</p>
-                          <p className="text-xs sm:text-xl font-black text-amber-500 italic">
+                          <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Duração</p>
+                          <p className="text-sm sm:text-2xl font-black text-amber-500 italic">
                             {f.dias} d
                           </p>
                         </div>
                         <div className="h-6 w-px bg-slate-200 hidden sm:block" />
                         <div className="text-center">
-                          <p className="text-[7px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Retorno</p>
-                          <p className="text-xs sm:text-xl font-black text-slate-900">
+                          <p className="text-[9px] sm:text-xs font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Retorno</p>
+                          <p className="text-sm sm:text-2xl font-black text-slate-900">
                             {format(parseISO(f.dataFim), "dd/MM/yy")}
                           </p>
                         </div>
