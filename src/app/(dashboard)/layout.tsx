@@ -136,7 +136,7 @@ function DashboardContent({
   if (!user) return null;
 
   return (
-    <main className="container mx-auto px-4 pt-16 sm:pt-20 pb-32 animate-in fade-in duration-500">
+    <main className="container mx-auto px-4 pt-12 sm:pt-16 pb-32 animate-in fade-in duration-500">
       {!isHome && (
         <div className="mb-8 flex justify-start">
           <Button 

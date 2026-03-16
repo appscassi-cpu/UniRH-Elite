@@ -124,7 +124,7 @@ export default function DashboardPage() {
         
         <div className="mt-8 text-center space-y-2">
           <h2 className="text-3xl font-black text-slate-800 tracking-tight flex items-center justify-center gap-3">
-            Olá, {profile?.nome || 'Lilian Tenório'}
+            Olá, {profile?.nome || 'Administrador!'}
             <ShieldCheck className="w-8 h-8 text-primary animate-pulse" />
           </h2>
           <p className="text-slate-500 font-medium italic">Gestão estratégica UniRH ativa</p>
